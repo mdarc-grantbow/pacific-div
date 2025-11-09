@@ -1,4 +1,4 @@
-import { User, Bell, Moon, Sun, Info, MessageSquare, CheckCircle2 } from "lucide-react";
+import { User, Bell, Moon, Sun, Info, MessageSquare, CheckCircle2, ExternalLink } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -44,6 +44,9 @@ export default function ProfilePage() {
     badgeNumber: "147",
     licenseClass: "Extra",
   };
+
+  // TODO: Replace with actual registration status
+  const isRegistered = false;
 
   // TODO: Replace with actual survey completion status
   const [surveys, setSurveys] = useState<SurveyCategory[]>([
@@ -91,6 +94,45 @@ export default function ProfilePage() {
       </header>
 
       <main className="flex-1 overflow-y-auto px-4 py-4 pb-20">
+        {!isRegistered && (
+          <Card className="p-4 mb-4 bg-primary/10 border-primary">
+            <h3 className="font-medium text-foreground mb-2">Register for Pacificon</h3>
+            <p className="text-sm text-muted-foreground mb-3">
+              Complete your registration to access all conference features
+            </p>
+            
+            <div className="space-y-2">
+              <a
+                href="https://www.pacificon.org/registration/attendees"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between p-2 rounded-md bg-card hover-elevate"
+                data-testid="link-attendee-registration"
+              >
+                <div>
+                  <p className="text-sm font-medium text-foreground">Attendees & Exhibitors</p>
+                  <p className="text-xs text-muted-foreground">Via Constant Contact</p>
+                </div>
+                <ExternalLink className="w-4 h-4 text-muted-foreground" />
+              </a>
+              
+              <a
+                href="https://www.pacificon.org/registration/volunteers"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between p-2 rounded-md bg-card hover-elevate"
+                data-testid="link-volunteer-registration"
+              >
+                <div>
+                  <p className="text-sm font-medium text-foreground">Volunteers & Speakers</p>
+                  <p className="text-xs text-muted-foreground">Via Google Forms</p>
+                </div>
+                <ExternalLink className="w-4 h-4 text-muted-foreground" />
+              </a>
+            </div>
+          </Card>
+        )}
+        
         <Card className="p-6 mb-4">
           <div className="flex items-center gap-4">
             <Avatar className="w-16 h-16">

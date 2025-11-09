@@ -1,4 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Card } from "@/components/ui/card";
+import { ExternalLink } from "lucide-react";
 import RadioContactCard from "@/components/RadioContactCard";
 import VenueInfoCard from "@/components/VenueInfoCard";
 import VendorCard from "@/components/VendorCard";
@@ -91,11 +94,22 @@ const mockVendors: Vendor[] = [
 ];
 
 export default function InfoPage() {
+  // TODO: Replace with actual registration status
+  const isRegistered = false;
+
   return (
     <div className="flex flex-col h-full">
       <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3">
         <h1 className="text-xl font-medium text-foreground">Essential Info</h1>
       </header>
+
+      {!isRegistered && (
+        <Alert className="mx-4 mt-4 bg-primary/10 border-primary">
+          <AlertDescription className="text-sm text-foreground">
+            Haven't registered yet? Visit the registration pages to secure your spot!
+          </AlertDescription>
+        </Alert>
+      )}
 
       <main className="flex-1 overflow-y-auto pb-20">
         <Tabs defaultValue="radio" className="w-full">
@@ -134,6 +148,52 @@ export default function InfoPage() {
           </TabsContent>
 
           <TabsContent value="venue" className="px-4 py-4 mt-0">
+            {!isRegistered && (
+              <Card className="p-4 mb-4 bg-muted/50">
+                <h3 className="font-medium text-foreground mb-3">Conference Registration</h3>
+                
+                <div className="space-y-3 mb-3">
+                  <div>
+                    <h4 className="text-sm font-medium text-foreground mb-1">
+                      Attendees & Exhibitors
+                    </h4>
+                    <p className="text-xs text-muted-foreground mb-2">
+                      For attendees, vendors, and non-profit exhibitors
+                    </p>
+                    <a
+                      href="https://www.pacificon.org/registration/attendees"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-sm text-primary hover:underline"
+                      data-testid="link-attendee-registration"
+                    >
+                      Register via Constant Contact
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
+                  
+                  <div>
+                    <h4 className="text-sm font-medium text-foreground mb-1">
+                      Volunteers & Speakers
+                    </h4>
+                    <p className="text-xs text-muted-foreground mb-2">
+                      For volunteers and conference presenters
+                    </p>
+                    <a
+                      href="https://www.pacificon.org/registration/volunteers"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-sm text-primary hover:underline"
+                      data-testid="link-volunteer-registration"
+                    >
+                      Register via Google Forms
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
+                </div>
+              </Card>
+            )}
+            
             <div className="space-y-3">
               {mockVenueInfo.map((info) => (
                 <VenueInfoCard key={info.id} info={info} />
