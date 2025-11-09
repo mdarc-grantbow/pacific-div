@@ -17,6 +17,15 @@ export const insertUserSchema = createInsertSchema(users).pick({
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 
+// User Profile
+export type UserProfile = {
+  callSign: string;
+  name: string;
+  badgeNumber: string;
+  licenseClass: string;
+  isRegistered: boolean;
+};
+
 // Conference Session/Forum
 export type Session = {
   id: string;
@@ -88,4 +97,14 @@ export type VenueInfo = {
   title: string;
   details: string;
   hours?: string;
+};
+
+// Survey Response
+export type SurveyResponse = {
+  id: string;
+  userId: string;
+  surveyType: 'attendee' | 'exhibitor' | 'speaker' | 'volunteer' | 'staff';
+  responses: Record<string, any>;
+  timestamp: string;
+  completed: boolean;
 };

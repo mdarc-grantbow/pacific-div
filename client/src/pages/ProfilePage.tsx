@@ -7,6 +7,10 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { useState, useEffect } from "react";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
+import type { UserProfile } from "@shared/schema";
 
 type SurveyCategory = {
   id: string;
@@ -16,6 +20,7 @@ type SurveyCategory = {
 };
 
 export default function ProfilePage() {
+  const { toast } = useToast();
   const [darkMode, setDarkMode] = useState(false);
   const [notifications, setNotifications] = useState(true);
 
@@ -37,19 +42,20 @@ export default function ProfilePage() {
     }
   };
 
-  // TODO: Replace with actual user data
-  const userData = {
-    callSign: "W6ABC",
-    name: "John Smith",
-    badgeNumber: "147",
-    licenseClass: "Extra",
+  const { data: userProfile } = useQuery<UserProfile>({
+    queryKey: ['/api/profile'],
+  });
+
+  const userData = userProfile || {
+    callSign: "Loading...",
+    name: "Loading...",
+    badgeNumber: "---",
+    licenseClass: "---",
   };
 
-  // TODO: Replace with actual registration status
-  const isRegistered = false;
+  const isRegistered = userProfile?.isRegistered ?? false;
 
-  // TODO: Replace with actual survey completion status
-  const [surveys, setSurveys] = useState<SurveyCategory[]>([
+  const surveyCategories: SurveyCategory[] = [
     {
       id: "attendee",
       title: "Attendee Feedback",
@@ -80,11 +86,52 @@ export default function ProfilePage() {
       description: "Provide feedback as a conference staff member",
       completed: false,
     },
-  ]);
+  ];
+
+  const { data: surveyResponses = [] } = useQuery<{surveyType: string}[]>({
+    queryKey: ['/api/surveys'],
+  });
+
+  const completedSurveys = new Set(surveyResponses.map(r => r.surveyType));
+  
+  const surveys = surveyCategories.map(cat => ({
+    ...cat,
+    completed: completedSurveys.has(cat.id),
+  }));
+
+  const markSurveyCompleteMutation = useMutation({
+    mutationFn: (surveyId: string) => 
+      apiRequest('POST', `/api/surveys/${surveyId}`, { responses: {} }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/surveys'] });
+      toast({
+        title: "Survey marked complete",
+        description: "Your feedback has been recorded. Thank you!",
+      });
+    },
+    onError: () => {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to mark survey as complete. Please try again.",
+      });
+    },
+  });
 
   const handleSurveyClick = (surveyId: string) => {
-    console.log('Opening survey:', surveyId);
-    // TODO: Implement survey navigation
+    const surveyUrls: Record<string, string> = {
+      attendee: 'https://www.pacificon.org/feedback/attendees',
+      exhibitor: 'https://www.pacificon.org/feedback/exhibitors',
+      speaker: 'https://www.pacificon.org/feedback/speakers',
+      volunteer: 'https://www.pacificon.org/feedback/volunteers',
+      staff: 'https://www.pacificon.org/feedback/staff',
+    };
+    
+    const url = surveyUrls[surveyId];
+    if (url) {
+      window.open(url, '_blank');
+      markSurveyCompleteMutation.mutate(surveyId);
+    }
   };
 
   return (
@@ -134,31 +181,42 @@ export default function ProfilePage() {
         )}
         
         <Card className="p-6 mb-4">
-          <div className="flex items-center gap-4">
-            <Avatar className="w-16 h-16">
-              <AvatarFallback className="bg-primary text-primary-foreground text-xl font-medium">
-                {userData.callSign.substring(0, 2)}
-              </AvatarFallback>
-            </Avatar>
-            
-            <div className="flex-1">
-              <h2 className="text-lg font-medium text-foreground" data-testid="text-callsign">
-                {userData.callSign}
-              </h2>
-              <p className="text-sm text-muted-foreground" data-testid="text-name">
-                {userData.name}
-              </p>
-              <div className="flex items-center gap-2 mt-1">
-                <span className="text-xs text-muted-foreground">
-                  Badge #{userData.badgeNumber}
-                </span>
-                <span className="text-xs text-muted-foreground">•</span>
-                <span className="text-xs text-muted-foreground">
-                  {userData.licenseClass} Class
-                </span>
+          {!userProfile ? (
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 bg-muted animate-pulse rounded-full" />
+              <div className="flex-1 space-y-2">
+                <div className="h-6 bg-muted animate-pulse rounded w-32" />
+                <div className="h-4 bg-muted animate-pulse rounded w-48" />
+                <div className="h-3 bg-muted animate-pulse rounded w-40" />
               </div>
             </div>
-          </div>
+          ) : (
+            <div className="flex items-center gap-4">
+              <Avatar className="w-16 h-16">
+                <AvatarFallback className="bg-primary text-primary-foreground text-xl font-medium">
+                  {userData.callSign.substring(0, 2)}
+                </AvatarFallback>
+              </Avatar>
+              
+              <div className="flex-1">
+                <h2 className="text-lg font-medium text-foreground" data-testid="text-callsign">
+                  {userData.callSign}
+                </h2>
+                <p className="text-sm text-muted-foreground" data-testid="text-name">
+                  {userData.name}
+                </p>
+                <div className="flex items-center gap-2 mt-1">
+                  <span className="text-xs text-muted-foreground">
+                    Badge #{userData.badgeNumber}
+                  </span>
+                  <span className="text-xs text-muted-foreground">•</span>
+                  <span className="text-xs text-muted-foreground">
+                    {userData.licenseClass} Class
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
         </Card>
 
         <Card className="p-4 mb-4">

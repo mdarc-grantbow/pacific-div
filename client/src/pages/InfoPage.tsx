@@ -5,97 +5,27 @@ import { ExternalLink } from "lucide-react";
 import RadioContactCard from "@/components/RadioContactCard";
 import VenueInfoCard from "@/components/VenueInfoCard";
 import VendorCard from "@/components/VendorCard";
-import type { RadioContact, VenueInfo, Vendor } from "@shared/schema";
-
-// TODO: Remove mock data
-const mockRadioContacts: RadioContact[] = [
-  {
-    id: "1",
-    type: "talk-in",
-    frequency: "146.850 MHz",
-    label: "Conference Talk-In",
-    notes: "PL 100.0 Hz, -0.6 MHz offset",
-  },
-  {
-    id: "2",
-    type: "simplex",
-    frequency: "146.520 MHz",
-    label: "National Simplex",
-    notes: "Primary calling frequency",
-  },
-  {
-    id: "3",
-    type: "qrp",
-    frequency: "7.030 MHz",
-    label: "QRP CW",
-    notes: "40m band activity",
-  },
-  {
-    id: "4",
-    type: "qrp",
-    frequency: "14.060 MHz",
-    label: "QRP SSB",
-    notes: "20m band activity",
-  },
-];
-
-const mockVenueInfo: VenueInfo[] = [
-  {
-    id: "1",
-    category: "hotel",
-    title: "San Ramon Marriott",
-    details: "2600 Bishop Drive, San Ramon, CA 94583 • (925) 867-9200",
-    hours: "Check-in: 4:00 PM • Check-out: 12:00 PM",
-  },
-  {
-    id: "2",
-    category: "parking",
-    title: "Hotel Parking",
-    details: "Free parking available for conference attendees who book at Pacificon rate",
-  },
-  {
-    id: "3",
-    category: "registration",
-    title: "Registration Desk",
-    details: "Main lobby near Grand Ballroom entrance",
-    hours: "Fri 7AM-5PM • Sat 6AM-4PM • Sun 7:30AM-11AM",
-  },
-  {
-    id: "4",
-    category: "testing",
-    title: "License Testing",
-    details: "Conference Room 2 • Bring photo ID and $15 test fee",
-    hours: "Saturday 10:00 AM - 2:00 PM",
-  },
-];
-
-const mockVendors: Vendor[] = [
-  {
-    id: "1",
-    name: "Ham Radio Outlet",
-    boothNumber: "12",
-    category: "Equipment",
-    description: "Complete line of amateur radio transceivers, antennas, and accessories",
-  },
-  {
-    id: "2",
-    name: "DX Engineering",
-    boothNumber: "15",
-    category: "Antennas",
-    description: "Premium antenna systems and tower accessories for serious operators",
-  },
-  {
-    id: "3",
-    name: "Elecraft",
-    boothNumber: "8",
-    category: "QRP Equipment",
-    description: "High-performance portable and QRP transceivers and accessories",
-  },
-];
+import { useQuery } from "@tanstack/react-query";
+import type { RadioContact, VenueInfo, Vendor, UserProfile } from "@shared/schema";
 
 export default function InfoPage() {
-  // TODO: Replace with actual registration status
-  const isRegistered = false;
+  const { data: userProfile } = useQuery<UserProfile>({
+    queryKey: ['/api/profile'],
+  });
+
+  const isRegistered = userProfile?.isRegistered ?? false;
+
+  const { data: radioContacts = [], isLoading: contactsLoading } = useQuery<RadioContact[]>({
+    queryKey: ['/api/radio-contacts'],
+  });
+
+  const { data: venueInfo = [], isLoading: venueLoading } = useQuery<VenueInfo[]>({
+    queryKey: ['/api/venue-info'],
+  });
+
+  const { data: vendors = [], isLoading: vendorsLoading } = useQuery<Vendor[]>({
+    queryKey: ['/api/vendors'],
+  });
 
   return (
     <div className="flex flex-col h-full">
@@ -140,11 +70,23 @@ export default function InfoPage() {
           </div>
 
           <TabsContent value="radio" className="px-4 py-4 mt-0">
-            <div className="space-y-3">
-              {mockRadioContacts.map((contact) => (
-                <RadioContactCard key={contact.id} contact={contact} />
-              ))}
-            </div>
+            {contactsLoading ? (
+              <div className="space-y-3">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="h-20 bg-muted animate-pulse rounded" />
+                ))}
+              </div>
+            ) : radioContacts.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-muted-foreground">No radio contacts available</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {radioContacts.map((contact) => (
+                  <RadioContactCard key={contact.id} contact={contact} />
+                ))}
+              </div>
+            )}
           </TabsContent>
 
           <TabsContent value="venue" className="px-4 py-4 mt-0">
@@ -194,23 +136,47 @@ export default function InfoPage() {
               </Card>
             )}
             
-            <div className="space-y-3">
-              {mockVenueInfo.map((info) => (
-                <VenueInfoCard key={info.id} info={info} />
-              ))}
-            </div>
+            {venueLoading ? (
+              <div className="space-y-3">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="h-24 bg-muted animate-pulse rounded" />
+                ))}
+              </div>
+            ) : venueInfo.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-muted-foreground">No venue information available</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {venueInfo.map((info) => (
+                  <VenueInfoCard key={info.id} info={info} />
+                ))}
+              </div>
+            )}
           </TabsContent>
 
           <TabsContent value="vendors" className="px-4 py-4 mt-0">
-            <div className="space-y-3">
-              {mockVendors.map((vendor) => (
-                <VendorCard
-                  key={vendor.id}
-                  vendor={vendor}
-                  onViewDetails={(id) => console.log('View vendor:', id)}
-                />
-              ))}
-            </div>
+            {vendorsLoading ? (
+              <div className="space-y-3">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="h-28 bg-muted animate-pulse rounded" />
+                ))}
+              </div>
+            ) : vendors.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-muted-foreground">No vendors available</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {vendors.map((vendor) => (
+                  <VendorCard
+                    key={vendor.id}
+                    vendor={vendor}
+                    onViewDetails={(id) => console.log('View vendor:', id)}
+                  />
+                ))}
+              </div>
+            )}
           </TabsContent>
         </Tabs>
       </main>

@@ -3,74 +3,25 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Sparkles } from "lucide-react";
 import PrizeCard from "@/components/PrizeCard";
 import THuntingCard from "@/components/THuntingCard";
-import type { DoorPrize, THuntingWinner } from "@shared/schema";
-
-// TODO: Remove mock data
-const mockDoorPrizes: DoorPrize[] = [
-  {
-    id: "1",
-    badgeNumber: "147",
-    callSign: "W6ABC",
-    prizeName: "Handheld VHF/UHF Transceiver",
-    timestamp: new Date(Date.now() - 3600000).toISOString(),
-    claimed: false,
-  },
-  {
-    id: "2",
-    badgeNumber: "89",
-    callSign: "K6DEF",
-    prizeName: "Antenna Analyzer",
-    timestamp: new Date(Date.now() - 7200000).toISOString(),
-    claimed: true,
-  },
-  {
-    id: "3",
-    badgeNumber: "256",
-    callSign: "N6GHI",
-    prizeName: "Power Supply 25A",
-    timestamp: new Date(Date.now() - 10800000).toISOString(),
-    claimed: false,
-  },
-];
-
-const mockTHuntingWinners: THuntingWinner[] = [
-  {
-    id: "1",
-    rank: 1,
-    callSign: "K6XYZ",
-    completionTime: "24:35",
-    huntNumber: 1,
-    prize: "Portable Antenna Kit",
-  },
-  {
-    id: "2",
-    rank: 2,
-    callSign: "W6LMN",
-    completionTime: "28:42",
-    huntNumber: 1,
-    prize: "RF Attenuator Set",
-  },
-  {
-    id: "3",
-    rank: 3,
-    callSign: "N6OPQ",
-    completionTime: "31:15",
-    huntNumber: 1,
-    prize: "Coax Cable Kit",
-  },
-  {
-    id: "4",
-    rank: 4,
-    callSign: "KJ6RST",
-    completionTime: "35:20",
-    huntNumber: 1,
-  },
-];
+import { useQuery } from "@tanstack/react-query";
+import type { DoorPrize, THuntingWinner, UserProfile } from "@shared/schema";
 
 export default function PrizesPage() {
-  // TODO: Replace with actual user badge number
-  const userBadgeNumber = "147";
-  const userHasWon = mockDoorPrizes.some(p => p.badgeNumber === userBadgeNumber);
+  const { data: userProfile } = useQuery<UserProfile>({
+    queryKey: ['/api/profile'],
+  });
+
+  const userBadgeNumber = userProfile?.badgeNumber || "";
+
+  const { data: doorPrizes = [], isLoading: prizesLoading } = useQuery<DoorPrize[]>({
+    queryKey: ['/api/door-prizes'],
+  });
+
+  const { data: tHuntingWinners = [], isLoading: winnersLoading } = useQuery<THuntingWinner[]>({
+    queryKey: ['/api/thunting/winners'],
+  });
+
+  const userHasWon = doorPrizes.some(p => p.badgeNumber === userBadgeNumber);
 
   return (
     <div className="flex flex-col h-full">
@@ -109,15 +60,27 @@ export default function PrizesPage() {
           </div>
 
           <TabsContent value="door" className="px-4 py-4 mt-0">
-            <div className="space-y-3">
-              {mockDoorPrizes.map((prize) => (
-                <PrizeCard 
-                  key={prize.id} 
-                  prize={prize}
-                  isWinner={prize.badgeNumber === userBadgeNumber}
-                />
-              ))}
-            </div>
+            {prizesLoading ? (
+              <div className="space-y-3">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="h-24 bg-muted animate-pulse rounded" />
+                ))}
+              </div>
+            ) : doorPrizes.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-muted-foreground">No door prizes announced yet</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {doorPrizes.map((prize) => (
+                  <PrizeCard 
+                    key={prize.id} 
+                    prize={prize}
+                    isWinner={prize.badgeNumber === userBadgeNumber}
+                  />
+                ))}
+              </div>
+            )}
           </TabsContent>
 
           <TabsContent value="thunting" className="px-4 py-4 mt-0">
@@ -126,11 +89,23 @@ export default function PrizesPage() {
               <p className="text-sm text-muted-foreground">Saturday, 2:00 PM</p>
             </div>
             
-            <div className="space-y-3">
-              {mockTHuntingWinners.map((winner) => (
-                <THuntingCard key={winner.id} winner={winner} />
-              ))}
-            </div>
+            {winnersLoading ? (
+              <div className="space-y-3">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="h-16 bg-muted animate-pulse rounded" />
+                ))}
+              </div>
+            ) : tHuntingWinners.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-muted-foreground">No T-hunting results available yet</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {tHuntingWinners.map((winner) => (
+                  <THuntingCard key={winner.id} winner={winner} />
+                ))}
+              </div>
+            )}
           </TabsContent>
         </Tabs>
       </main>

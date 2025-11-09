@@ -4,73 +4,44 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import DaySelector from "@/components/DaySelector";
 import SessionCard from "@/components/SessionCard";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { apiRequest, queryClient } from "@/lib/queryClient";
 import type { Session } from "@shared/schema";
-
-// TODO: Remove mock data
-const mockSessions: Session[] = [
-  {
-    id: "1",
-    title: "Advanced Antenna Design for DX Communications",
-    speaker: "John Smith, W6ABC",
-    day: "friday",
-    startTime: "09:00",
-    endTime: "10:30",
-    room: "Grand Ballroom A",
-    category: "Antennas",
-    isBookmarked: false,
-  },
-  {
-    id: "2",
-    title: "Introduction to Digital Mode Operations",
-    speaker: "Sarah Johnson, K6DEF",
-    day: "friday",
-    startTime: "09:00",
-    endTime: "10:00",
-    room: "Conference Room 1",
-    category: "Digital Modes",
-    isBookmarked: true,
-  },
-  {
-    id: "3",
-    title: "ARRL Update and Legislative Matters",
-    speaker: "Mike Davis, N6GHI",
-    day: "friday",
-    startTime: "11:00",
-    endTime: "12:00",
-    room: "Grand Ballroom B",
-    category: "ARRL",
-    isBookmarked: false,
-  },
-  {
-    id: "4",
-    title: "Building QRP Transceivers",
-    speaker: "Tom Wilson, KJ6LMN",
-    day: "saturday",
-    startTime: "10:00",
-    endTime: "11:30",
-    room: "Workshop Area",
-    category: "QRP",
-    isBookmarked: false,
-  },
-  {
-    id: "5",
-    title: "Contest Operating Techniques",
-    speaker: "Lisa Brown, W6OPQ",
-    day: "saturday",
-    startTime: "14:00",
-    endTime: "15:30",
-    room: "Grand Ballroom A",
-    category: "Contesting",
-    isBookmarked: true,
-  },
-];
 
 export default function SchedulePage() {
   const [selectedDay, setSelectedDay] = useState<'friday' | 'saturday' | 'sunday'>('friday');
   const [searchQuery, setSearchQuery] = useState("");
-  const [sessions, setSessions] = useState(mockSessions);
 
-  const filteredSessions = sessions.filter(
+  const { data: sessions = [], isLoading: sessionsLoading } = useQuery<Session[]>({
+    queryKey: ['/api/sessions'],
+  });
+
+  const { data: bookmarks = [] } = useQuery<string[]>({
+    queryKey: ['/api/bookmarks'],
+  });
+
+  const addBookmarkMutation = useMutation({
+    mutationFn: (sessionId: string) => 
+      apiRequest('POST', `/api/bookmarks/${sessionId}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/bookmarks'] });
+    },
+  });
+
+  const removeBookmarkMutation = useMutation({
+    mutationFn: (sessionId: string) => 
+      apiRequest('DELETE', `/api/bookmarks/${sessionId}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/bookmarks'] });
+    },
+  });
+
+  const sessionsWithBookmarks = sessions.map(session => ({
+    ...session,
+    isBookmarked: bookmarks.includes(session.id),
+  }));
+
+  const filteredSessions = sessionsWithBookmarks.filter(
     (session) =>
       session.day === selectedDay &&
       (searchQuery === "" ||
@@ -80,9 +51,12 @@ export default function SchedulePage() {
   );
 
   const handleBookmark = (id: string) => {
-    setSessions((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, isBookmarked: !s.isBookmarked } : s))
-    );
+    const isBookmarked = bookmarks.includes(id);
+    if (isBookmarked) {
+      removeBookmarkMutation.mutate(id);
+    } else {
+      addBookmarkMutation.mutate(id);
+    }
   };
 
   return (
@@ -111,7 +85,11 @@ export default function SchedulePage() {
       </header>
 
       <main className="flex-1 overflow-y-auto px-4 py-4 pb-20">
-        {filteredSessions.length === 0 ? (
+        {sessionsLoading ? (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">Loading sessions...</p>
+          </div>
+        ) : filteredSessions.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-muted-foreground">No sessions found</p>
           </div>
