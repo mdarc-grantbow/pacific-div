@@ -1,11 +1,19 @@
-import { User, Bell, Moon, Sun, Info } from "lucide-react";
+import { User, Bell, Moon, Sun, Info, MessageSquare, CheckCircle2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 import { useState, useEffect } from "react";
+
+type SurveyCategory = {
+  id: string;
+  title: string;
+  description: string;
+  completed: boolean;
+};
 
 export default function ProfilePage() {
   const [darkMode, setDarkMode] = useState(false);
@@ -35,6 +43,45 @@ export default function ProfilePage() {
     name: "John Smith",
     badgeNumber: "147",
     licenseClass: "Extra",
+  };
+
+  // TODO: Replace with actual survey completion status
+  const [surveys, setSurveys] = useState<SurveyCategory[]>([
+    {
+      id: "attendee",
+      title: "Attendee Feedback",
+      description: "Share your experience as a conference attendee",
+      completed: false,
+    },
+    {
+      id: "exhibitor",
+      title: "Exhibitor Feedback",
+      description: "Provide feedback on the vendor and exhibit experience",
+      completed: false,
+    },
+    {
+      id: "speaker",
+      title: "Speaker Feedback",
+      description: "Share your experience as a presenter or forum speaker",
+      completed: false,
+    },
+    {
+      id: "volunteer",
+      title: "Volunteer Feedback",
+      description: "Tell us about your volunteer experience",
+      completed: false,
+    },
+    {
+      id: "staff",
+      title: "Staff Feedback",
+      description: "Provide feedback as a conference staff member",
+      completed: false,
+    },
+  ]);
+
+  const handleSurveyClick = (surveyId: string) => {
+    console.log('Opening survey:', surveyId);
+    // TODO: Implement survey navigation
   };
 
   return (
@@ -111,6 +158,47 @@ export default function ProfilePage() {
                 data-testid="switch-notifications"
               />
             </div>
+          </div>
+        </Card>
+
+        <Card className="p-4 mb-4">
+          <div className="flex items-center gap-2 mb-3">
+            <MessageSquare className="w-5 h-5 text-muted-foreground" />
+            <h3 className="font-medium text-foreground">Provide Feedback</h3>
+          </div>
+          <p className="text-sm text-muted-foreground mb-4">
+            Help us improve! Share your feedback in any areas that apply to you.
+          </p>
+          
+          <div className="space-y-2">
+            {surveys.map((survey) => (
+              <Card
+                key={survey.id}
+                className="p-3 hover-elevate cursor-pointer"
+                onClick={() => handleSurveyClick(survey.id)}
+                data-testid={`survey-${survey.id}`}
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h4 className="text-sm font-medium text-foreground">
+                        {survey.title}
+                      </h4>
+                      {survey.completed && (
+                        <Badge variant="secondary" className="text-xs gap-1">
+                          <CheckCircle2 className="w-3 h-3" />
+                          Done
+                        </Badge>
+                      )}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      {survey.description}
+                    </p>
+                  </div>
+                  <span className="text-muted-foreground">›</span>
+                </div>
+              </Card>
+            ))}
           </div>
         </Card>
 
