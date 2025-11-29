@@ -8,12 +8,30 @@ import memoize from "memoizee";
 import connectPg from "connect-pg-simple";
 import { storage } from "./storage";
 
+async function discoverOidcWithRetry(maxRetries = 3): Promise<client.Configuration> {
+  const issuerUrl = new URL(process.env.ISSUER_URL ?? "https://replit.com/oidc");
+  let lastError: Error | null = null;
+  
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      return await client.discovery(issuerUrl, process.env.REPL_ID!);
+    } catch (error) {
+      lastError = error as Error;
+      console.warn(`OIDC discovery attempt ${attempt}/${maxRetries} failed:`, 
+        error instanceof Error ? error.message : error);
+      
+      if (attempt < maxRetries) {
+        await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+      }
+    }
+  }
+  
+  throw lastError;
+}
+
 const getOidcConfig = memoize(
   async () => {
-    return await client.discovery(
-      new URL(process.env.ISSUER_URL ?? "https://replit.com/oidc"),
-      process.env.REPL_ID!
-    );
+    return await discoverOidcWithRetry();
   },
   { maxAge: 3600 * 1000 }
 );
