@@ -8,7 +8,7 @@ import memoize from "memoizee";
 import connectPg from "connect-pg-simple";
 import { storage } from "./storage";
 
-async function discoverOidcWithRetry(maxRetries = 3): Promise<client.Configuration> {
+async function discoverOidcWithRetry(maxRetries = 5): Promise<client.Configuration> {
   const issuerUrl = new URL(process.env.ISSUER_URL ?? "https://replit.com/oidc");
   let lastError: Error | null = null;
   
@@ -17,10 +17,18 @@ async function discoverOidcWithRetry(maxRetries = 3): Promise<client.Configurati
       return await client.discovery(issuerUrl, process.env.REPL_ID!);
     } catch (error) {
       lastError = error as Error;
-      console.warn(`OIDC discovery attempt ${attempt}/${maxRetries} failed:`, 
-        error instanceof Error ? error.message : error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.warn(`OIDC discovery attempt ${attempt}/${maxRetries} failed:`, errorMessage);
       
-      if (attempt < maxRetries) {
+      const isDnsError = errorMessage.includes('EAI_AGAIN') || 
+                         errorMessage.includes('ENOTFOUND') ||
+                         errorMessage.includes('getaddrinfo');
+      
+      if (isDnsError && attempt < maxRetries) {
+        const delay = 2000 * attempt;
+        console.log(`DNS error detected, waiting ${delay}ms before retry...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      } else if (attempt < maxRetries) {
         await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
       }
     }
