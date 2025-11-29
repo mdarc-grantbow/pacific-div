@@ -4,6 +4,7 @@ import { storage } from "./storage";
 import { randomUUID } from "crypto";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  await storage.seedDatabase();
   // Sessions
   app.get("/api/sessions", async (_req, res) => {
     try {
@@ -149,16 +150,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = "demo-user";
       const { responses } = req.body;
       
-      const surveyResponse = {
-        id: randomUUID(),
+      const surveyData = {
         userId,
-        surveyType: req.params.surveyType as any,
-        responses,
+        surveyType: req.params.surveyType,
+        responses: responses || {},
         timestamp: new Date().toISOString(),
         completed: true,
       };
       
-      await storage.submitSurvey(surveyResponse);
+      const surveyResponse = await storage.submitSurvey(surveyData);
       res.json(surveyResponse);
     } catch (error) {
       res.status(500).json({ error: "Failed to submit survey" });

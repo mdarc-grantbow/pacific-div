@@ -1,12 +1,18 @@
-import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, timestamp, integer, boolean } from "drizzle-orm/pg-core";
+import { sql, relations } from "drizzle-orm";
+import { pgTable, text, varchar, timestamp, integer, boolean, json } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+// Users table
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
+  callSign: text("call_sign"),
+  name: text("name"),
+  badgeNumber: text("badge_number"),
+  licenseClass: text("license_class"),
+  isRegistered: boolean("is_registered").default(false),
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({
@@ -17,7 +23,7 @@ export const insertUserSchema = createInsertSchema(users).pick({
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 
-// User Profile
+// User Profile type (for API responses)
 export type UserProfile = {
   callSign: string;
   name: string;
@@ -26,85 +32,127 @@ export type UserProfile = {
   isRegistered: boolean;
 };
 
-// Conference Session/Forum
-export type Session = {
-  id: string;
-  title: string;
-  speaker: string;
-  speakerBio?: string;
-  abstract?: string;
-  day: 'friday' | 'saturday' | 'sunday';
-  startTime: string;
-  endTime: string;
-  room: string;
-  category: string;
-  isBookmarked?: boolean;
-};
+// Sessions table
+export const sessions = pgTable("sessions", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  title: text("title").notNull(),
+  speaker: text("speaker").notNull(),
+  speakerBio: text("speaker_bio"),
+  abstract: text("abstract"),
+  day: text("day").notNull(), // 'friday' | 'saturday' | 'sunday'
+  startTime: text("start_time").notNull(),
+  endTime: text("end_time").notNull(),
+  room: text("room").notNull(),
+  category: text("category").notNull(),
+});
 
-// Vendor
-export type Vendor = {
-  id: string;
-  name: string;
-  boothNumber: string;
-  category: string;
-  description: string;
-  website?: string;
-};
+export const insertSessionSchema = createInsertSchema(sessions).omit({ id: true });
+export type InsertSession = z.infer<typeof insertSessionSchema>;
+export type Session = typeof sessions.$inferSelect & { isBookmarked?: boolean };
 
-// Door Prize Winner
-export type DoorPrize = {
-  id: string;
-  badgeNumber: string;
-  callSign: string;
-  prizeName: string;
-  timestamp: string;
-  claimed: boolean;
-};
+// Bookmarks table
+export const bookmarks = pgTable("bookmarks", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull(),
+  sessionId: varchar("session_id").notNull(),
+});
 
-// T-Hunting Schedule
-export type THuntingSchedule = {
-  id: string;
-  huntNumber: number;
-  startTime: string;
-  location: string;
-  difficulty: 'easy' | 'medium' | 'hard';
-  registrationOpen: boolean;
-};
+export const insertBookmarkSchema = createInsertSchema(bookmarks).omit({ id: true });
+export type InsertBookmark = z.infer<typeof insertBookmarkSchema>;
+export type Bookmark = typeof bookmarks.$inferSelect;
 
-// T-Hunting Winner
-export type THuntingWinner = {
-  id: string;
-  rank: number;
-  callSign: string;
-  completionTime: string;
-  huntNumber: number;
-  prize?: string;
-};
+// Vendors table
+export const vendors = pgTable("vendors", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull(),
+  boothNumber: text("booth_number").notNull(),
+  category: text("category").notNull(),
+  description: text("description").notNull(),
+  website: text("website"),
+});
 
-// Radio Contact Info
-export type RadioContact = {
-  id: string;
-  type: 'talk-in' | 'simplex' | 'qrp';
-  frequency: string;
-  label: string;
-  notes?: string;
-};
+export const insertVendorSchema = createInsertSchema(vendors).omit({ id: true });
+export type InsertVendor = z.infer<typeof insertVendorSchema>;
+export type Vendor = typeof vendors.$inferSelect;
 
-// Venue Info
-export type VenueInfo = {
-  id: string;
-  category: 'hotel' | 'parking' | 'registration' | 'testing';
-  title: string;
-  details: string;
-  hours?: string;
-};
+// Door Prizes table
+export const doorPrizes = pgTable("door_prizes", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  badgeNumber: text("badge_number").notNull(),
+  callSign: text("call_sign").notNull(),
+  prizeName: text("prize_name").notNull(),
+  timestamp: text("timestamp").notNull(),
+  claimed: boolean("claimed").default(false),
+});
 
-// Survey Response
-export type SurveyResponse = {
-  id: string;
-  userId: string;
-  surveyType: 'attendee' | 'exhibitor' | 'speaker' | 'volunteer' | 'staff';
-  responses: Record<string, any>;
-  timestamp: string;
-  completed: boolean;
-};
+export const insertDoorPrizeSchema = createInsertSchema(doorPrizes).omit({ id: true });
+export type InsertDoorPrize = z.infer<typeof insertDoorPrizeSchema>;
+export type DoorPrize = typeof doorPrizes.$inferSelect;
+
+// T-Hunting Schedule table
+export const tHuntingSchedule = pgTable("t_hunting_schedule", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  huntNumber: integer("hunt_number").notNull(),
+  startTime: text("start_time").notNull(),
+  location: text("location").notNull(),
+  difficulty: text("difficulty").notNull(), // 'easy' | 'medium' | 'hard'
+  registrationOpen: boolean("registration_open").default(true),
+});
+
+export const insertTHuntingScheduleSchema = createInsertSchema(tHuntingSchedule).omit({ id: true });
+export type InsertTHuntingSchedule = z.infer<typeof insertTHuntingScheduleSchema>;
+export type THuntingSchedule = typeof tHuntingSchedule.$inferSelect;
+
+// T-Hunting Winners table
+export const tHuntingWinners = pgTable("t_hunting_winners", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  rank: integer("rank").notNull(),
+  callSign: text("call_sign").notNull(),
+  completionTime: text("completion_time").notNull(),
+  huntNumber: integer("hunt_number").notNull(),
+  prize: text("prize"),
+});
+
+export const insertTHuntingWinnerSchema = createInsertSchema(tHuntingWinners).omit({ id: true });
+export type InsertTHuntingWinner = z.infer<typeof insertTHuntingWinnerSchema>;
+export type THuntingWinner = typeof tHuntingWinners.$inferSelect;
+
+// Radio Contacts table
+export const radioContacts = pgTable("radio_contacts", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  type: text("type").notNull(), // 'talk-in' | 'simplex' | 'qrp'
+  frequency: text("frequency").notNull(),
+  label: text("label").notNull(),
+  notes: text("notes"),
+});
+
+export const insertRadioContactSchema = createInsertSchema(radioContacts).omit({ id: true });
+export type InsertRadioContact = z.infer<typeof insertRadioContactSchema>;
+export type RadioContact = typeof radioContacts.$inferSelect;
+
+// Venue Info table
+export const venueInfo = pgTable("venue_info", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  category: text("category").notNull(), // 'hotel' | 'parking' | 'registration' | 'testing'
+  title: text("title").notNull(),
+  details: text("details").notNull(),
+  hours: text("hours"),
+});
+
+export const insertVenueInfoSchema = createInsertSchema(venueInfo).omit({ id: true });
+export type InsertVenueInfo = z.infer<typeof insertVenueInfoSchema>;
+export type VenueInfo = typeof venueInfo.$inferSelect;
+
+// Survey Responses table
+export const surveyResponses = pgTable("survey_responses", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull(),
+  surveyType: text("survey_type").notNull(), // 'attendee' | 'exhibitor' | 'speaker' | 'volunteer' | 'staff'
+  responses: json("responses").$type<Record<string, any>>().default({}),
+  timestamp: text("timestamp").notNull(),
+  completed: boolean("completed").default(true),
+});
+
+export const insertSurveyResponseSchema = createInsertSchema(surveyResponses).omit({ id: true });
+export type InsertSurveyResponse = z.infer<typeof insertSurveyResponseSchema>;
+export type SurveyResponse = typeof surveyResponses.$inferSelect;
