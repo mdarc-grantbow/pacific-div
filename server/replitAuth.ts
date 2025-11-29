@@ -5,11 +5,8 @@ import passport from "passport";
 import session from "express-session";
 import type { Express, RequestHandler } from "express";
 import memoize from "memoizee";
-import connectPg from "connect-pg-simple";
 import MemoryStore from "memorystore";
 import { storage } from "./storage";
-
-const isDeployment = !!process.env.REPLIT_DEPLOYMENT;
 
 async function discoverOidcWithRetry(maxRetries = 5): Promise<client.Configuration> {
   const issuerUrl = new URL(process.env.ISSUER_URL ?? "https://replit.com/oidc");
@@ -50,34 +47,12 @@ const getOidcConfig = memoize(
 export function getSession() {
   const sessionTtl = 7 * 24 * 60 * 60 * 1000; // 1 week
   
-  let sessionStore;
-  
-  if (isDeployment) {
-    // Use memory store in production deployments (internal DB not accessible)
-    console.log("Using memory session store for deployment");
-    const MemStore = MemoryStore(session);
-    sessionStore = new MemStore({
-      checkPeriod: 86400000, // prune expired entries every 24h
-    });
-  } else {
-    // Use PostgreSQL store in development
-    console.log("Using PostgreSQL session store for development");
-    const pgStore = connectPg(session);
-    sessionStore = new pgStore({
-      conString: process.env.DATABASE_URL,
-      createTableIfMissing: false,
-      ttl: sessionTtl,
-      tableName: "auth_sessions",
-      errorLog: (err: Error) => {
-        console.error("Session store error (non-fatal):", err.message);
-      },
-    });
-    
-    // Handle store errors gracefully
-    sessionStore.on('error', (err: Error) => {
-      console.error('Session store connection error:', err.message);
-    });
-  }
+  // Use memory store for both development and production
+  console.log("Using memory session store");
+  const MemStore = MemoryStore(session);
+  const sessionStore = new MemStore({
+    checkPeriod: 86400000, // prune expired entries every 24h
+  });
   
   return session({
     secret: process.env.SESSION_SECRET!,
