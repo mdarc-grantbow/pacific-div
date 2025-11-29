@@ -1,4 +1,4 @@
-import { User, Bell, Moon, Sun, Info, MessageSquare, CheckCircle2, ExternalLink } from "lucide-react";
+import { User, Bell, Moon, Sun, Info, MessageSquare, CheckCircle2, ExternalLink, LogOut } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -257,6 +257,23 @@ export default function ProfilePage() {
                 onCheckedChange={setNotifications}
                 data-testid="switch-notifications"
               />
+            </div>
+
+            <Separator />
+
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <LogOut className="w-5 h-5 text-muted-foreground" />
+                <span className="text-sm">Sign Out</span>
+              </div>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => window.location.href = '/api/logout'}
+                data-testid="button-logout"
+              >
+                Logout
+              </Button>
             </div>
           </div>
         </Card>
