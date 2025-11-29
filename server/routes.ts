@@ -2,31 +2,57 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
+import { DatabaseError, isDatabaseConnectionError } from "./dbUtils";
+
+function handleApiError(res: any, error: unknown, defaultMessage: string) {
+  console.error(defaultMessage, error);
+  
+  if (error instanceof DatabaseError && error.isConnectionError) {
+    return res.status(503).json({ 
+      error: "Service temporarily unavailable. Please try again.",
+      retryable: true 
+    });
+  }
+  
+  if (isDatabaseConnectionError(error)) {
+    return res.status(503).json({ 
+      error: "Service temporarily unavailable. Please try again.",
+      retryable: true 
+    });
+  }
+  
+  return res.status(500).json({ error: defaultMessage });
+}
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Auth middleware setup (required for Replit Auth)
-  await setupAuth(app);
+  try {
+    await setupAuth(app);
+  } catch (error) {
+    console.error("Failed to setup auth (non-fatal):", error);
+  }
 
-  // Auth routes
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
       res.json(user);
     } catch (error) {
-      console.error("Error fetching user:", error);
-      res.status(500).json({ message: "Failed to fetch user" });
+      handleApiError(res, error, "Failed to fetch user");
     }
   });
 
-  await storage.seedDatabase();
+  try {
+    await storage.seedDatabase();
+  } catch (error) {
+    console.error("Failed to seed database (non-fatal):", error);
+  }
   // Sessions
   app.get("/api/sessions", async (_req, res) => {
     try {
       const sessions = await storage.getSessions();
       res.json(sessions);
     } catch (error) {
-      res.status(500).json({ error: "Failed to fetch sessions" });
+      handleApiError(res, error, "Failed to fetch sessions");
     }
   });
 
@@ -38,7 +64,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       res.json(session);
     } catch (error) {
-      res.status(500).json({ error: "Failed to fetch session" });
+      handleApiError(res, error, "Failed to fetch session");
     }
   });
 
@@ -48,7 +74,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const vendors = await storage.getVendors();
       res.json(vendors);
     } catch (error) {
-      res.status(500).json({ error: "Failed to fetch vendors" });
+      handleApiError(res, error, "Failed to fetch vendors");
     }
   });
 
@@ -60,7 +86,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       res.json(vendor);
     } catch (error) {
-      res.status(500).json({ error: "Failed to fetch vendor" });
+      handleApiError(res, error, "Failed to fetch vendor");
     }
   });
 
@@ -70,7 +96,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const prizes = await storage.getDoorPrizes();
       res.json(prizes);
     } catch (error) {
-      res.status(500).json({ error: "Failed to fetch door prizes" });
+      handleApiError(res, error, "Failed to fetch door prizes");
     }
   });
 
@@ -80,7 +106,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const winners = await storage.getTHuntingWinners();
       res.json(winners);
     } catch (error) {
-      res.status(500).json({ error: "Failed to fetch T-hunting winners" });
+      handleApiError(res, error, "Failed to fetch T-hunting winners");
     }
   });
 
@@ -89,7 +115,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const schedule = await storage.getTHuntingSchedule();
       res.json(schedule);
     } catch (error) {
-      res.status(500).json({ error: "Failed to fetch T-hunting schedule" });
+      handleApiError(res, error, "Failed to fetch T-hunting schedule");
     }
   });
 
@@ -99,7 +125,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const contacts = await storage.getRadioContacts();
       res.json(contacts);
     } catch (error) {
-      res.status(500).json({ error: "Failed to fetch radio contacts" });
+      handleApiError(res, error, "Failed to fetch radio contacts");
     }
   });
 
@@ -109,7 +135,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const info = await storage.getVenueInfo();
       res.json(info);
     } catch (error) {
-      res.status(500).json({ error: "Failed to fetch venue info" });
+      handleApiError(res, error, "Failed to fetch venue info");
     }
   });
 
@@ -120,7 +146,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const bookmarks = await storage.getUserBookmarks(userId);
       res.json(bookmarks);
     } catch (error) {
-      res.status(500).json({ error: "Failed to fetch bookmarks" });
+      handleApiError(res, error, "Failed to fetch bookmarks");
     }
   });
 
@@ -130,7 +156,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await storage.addBookmark(userId, req.params.sessionId);
       res.json({ success: true });
     } catch (error) {
-      res.status(500).json({ error: "Failed to add bookmark" });
+      handleApiError(res, error, "Failed to add bookmark");
     }
   });
 
@@ -140,7 +166,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await storage.removeBookmark(userId, req.params.sessionId);
       res.json({ success: true });
     } catch (error) {
-      res.status(500).json({ error: "Failed to remove bookmark" });
+      handleApiError(res, error, "Failed to remove bookmark");
     }
   });
 
@@ -151,7 +177,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const responses = await storage.getUserSurveyResponses(userId);
       res.json(responses);
     } catch (error) {
-      res.status(500).json({ error: "Failed to fetch survey responses" });
+      handleApiError(res, error, "Failed to fetch survey responses");
     }
   });
 
@@ -171,7 +197,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const surveyResponse = await storage.submitSurvey(surveyData);
       res.json(surveyResponse);
     } catch (error) {
-      res.status(500).json({ error: "Failed to submit survey" });
+      handleApiError(res, error, "Failed to submit survey");
     }
   });
 
@@ -181,7 +207,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const response = await storage.getSurveyResponse(userId, req.params.surveyType);
       res.json({ completed: !!response });
     } catch (error) {
-      res.status(500).json({ error: "Failed to check survey status" });
+      handleApiError(res, error, "Failed to check survey status");
     }
   });
 
@@ -192,7 +218,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const profile = await storage.getUserProfile(userId);
       res.json(profile);
     } catch (error) {
-      res.status(500).json({ error: "Failed to fetch profile" });
+      handleApiError(res, error, "Failed to fetch profile");
+    }
+  });
+
+  // Health check endpoint
+  app.get("/api/health", async (_req, res) => {
+    try {
+      await storage.getSessions();
+      res.json({ status: "healthy", database: "connected" });
+    } catch (error) {
+      res.status(503).json({ status: "unhealthy", database: "disconnected" });
     }
   });
 
