@@ -52,7 +52,16 @@ export function getSession() {
     createTableIfMissing: false,
     ttl: sessionTtl,
     tableName: "auth_sessions",
+    errorLog: (err: Error) => {
+      console.error("Session store error (non-fatal):", err.message);
+    },
   });
+  
+  // Handle store errors gracefully
+  sessionStore.on('error', (err: Error) => {
+    console.error('Session store connection error:', err.message);
+  });
+  
   return session({
     secret: process.env.SESSION_SECRET!,
     store: sessionStore,
@@ -99,18 +108,29 @@ export async function setupAuth(app: Express) {
   app.use(passport.session());
 
   let config: client.Configuration | null = null;
+  let configError: Error | null = null;
   
-  // Pre-warm OIDC config at startup (non-blocking)
-  getOidcConfig().then(c => {
-    config = c;
-    console.log("OIDC configuration pre-loaded successfully");
-  }).catch(err => {
-    console.warn("OIDC pre-load failed, will retry on first request:", err.message);
-  });
+  // Pre-warm OIDC config at startup (non-blocking, with background retry)
+  const preloadConfig = async () => {
+    try {
+      config = await getOidcConfig();
+      configError = null;
+      console.log("OIDC configuration loaded successfully");
+    } catch (err) {
+      configError = err as Error;
+      console.warn("OIDC config load failed:", (err as Error).message);
+      // Retry in background after 30 seconds
+      setTimeout(preloadConfig, 30000);
+    }
+  };
+  
+  // Start non-blocking preload
+  preloadConfig();
 
   const getConfig = async (): Promise<client.Configuration> => {
     if (config) return config;
-    config = await getOidcConfig();
+    // Try to load on-demand if not preloaded
+    config = await discoverOidcWithRetry(3);
     return config;
   };
 
