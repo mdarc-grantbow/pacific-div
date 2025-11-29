@@ -41,7 +41,7 @@ Preferred communication style: Simple, everyday language.
 
 **Server Framework**: Express.js with TypeScript running on Node.js
 
-**Architecture Pattern**: RESTful API with in-memory storage (MemStorage class) serving as the data layer
+**Architecture Pattern**: RESTful API with PostgreSQL database (DatabaseStorage class) serving as the data layer
 
 **API Endpoints**:
 - Sessions: `/api/sessions`, `/api/sessions/:id`
@@ -97,4 +97,9 @@ Preferred communication style: Simple, everyday language.
 
 **Fonts**: Google Fonts CDN for Roboto and Roboto Mono font families
 
-**Note**: The application is configured to use Drizzle ORM with PostgreSQL, but the current storage implementation (MemStorage) uses in-memory data structures. The infrastructure is prepared for database integration when needed.
+**Database Implementation Notes**:
+- The application uses Drizzle ORM with Neon PostgreSQL for persistent data storage
+- DatabaseStorage class implements the IStorage interface with all CRUD operations
+- Database seeding runs automatically when the sessions table is empty
+- Bookmark uniqueness is enforced at the application level with existence checks before insert
+- Survey responses use database-generated UUIDs
