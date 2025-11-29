@@ -12,6 +12,8 @@ import { storage } from "./storage";
 const CANONICAL_DOMAIN = 'pacific-div.replit.app';
 const isProduction = process.env.NODE_ENV !== 'development';
 
+console.log(`[Auth] NODE_ENV=${process.env.NODE_ENV}, isProduction=${isProduction}, canonicalDomain=${CANONICAL_DOMAIN}`);
+
 async function discoverOidcWithRetry(maxRetries = 5): Promise<client.Configuration> {
   const issuerUrl = new URL(process.env.ISSUER_URL ?? "https://replit.com/oidc");
   let lastError: Error | null = null;
@@ -176,7 +178,9 @@ export async function setupAuth(app: Express) {
 
   app.get("/api/login", async (req, res, next) => {
     try {
+      console.log(`[Auth] Login initiated from hostname: ${req.hostname}`);
       const authDomain = await ensureStrategy(req.hostname);
+      console.log(`[Auth] Using auth domain: ${authDomain} for login`);
       passport.authenticate(`replitauth:${authDomain}`, {
         prompt: "login consent",
         scope: ["openid", "email", "profile", "offline_access"],
@@ -198,7 +202,9 @@ export async function setupAuth(app: Express) {
 
   app.get("/api/callback", async (req, res, next) => {
     try {
+      console.log(`[Auth] Callback received from hostname: ${req.hostname}`);
       const authDomain = await ensureStrategy(req.hostname);
+      console.log(`[Auth] Using auth domain: ${authDomain} for callback`);
       passport.authenticate(`replitauth:${authDomain}`, {
         successReturnToOrRedirect: "/",
         failureRedirect: "/api/login",
