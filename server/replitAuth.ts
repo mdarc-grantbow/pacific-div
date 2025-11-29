@@ -98,7 +98,21 @@ export async function setupAuth(app: Express) {
   app.use(passport.initialize());
   app.use(passport.session());
 
-  const config = await getOidcConfig();
+  let config: client.Configuration | null = null;
+  
+  // Pre-warm OIDC config at startup (non-blocking)
+  getOidcConfig().then(c => {
+    config = c;
+    console.log("OIDC configuration pre-loaded successfully");
+  }).catch(err => {
+    console.warn("OIDC pre-load failed, will retry on first request:", err.message);
+  });
+
+  const getConfig = async (): Promise<client.Configuration> => {
+    if (config) return config;
+    config = await getOidcConfig();
+    return config;
+  };
 
   const verify: VerifyFunction = async (
     tokens: client.TokenEndpointResponse & client.TokenEndpointResponseHelpers,
@@ -110,53 +124,82 @@ export async function setupAuth(app: Express) {
     verified(null, user);
   };
 
-  const registeredStrategies = new Set<string>();
+  const registeredStrategies = new Map<string, client.Configuration>();
 
-  const ensureStrategy = (domain: string) => {
+  const ensureStrategy = async (domain: string) => {
     const strategyName = `replitauth:${domain}`;
+    const currentConfig = await getConfig();
+    
     if (!registeredStrategies.has(strategyName)) {
       const strategy = new Strategy(
         {
           name: strategyName,
-          config,
+          config: currentConfig,
           scope: "openid email profile offline_access",
           callbackURL: `https://${domain}/api/callback`,
         },
         verify,
       );
       passport.use(strategy);
-      registeredStrategies.add(strategyName);
+      registeredStrategies.set(strategyName, currentConfig);
     }
   };
 
   passport.serializeUser((user: Express.User, cb) => cb(null, user));
   passport.deserializeUser((user: Express.User, cb) => cb(null, user));
 
-  app.get("/api/login", (req, res, next) => {
-    ensureStrategy(req.hostname);
-    passport.authenticate(`replitauth:${req.hostname}`, {
-      prompt: "login consent",
-      scope: ["openid", "email", "profile", "offline_access"],
-    })(req, res, next);
+  app.get("/api/login", async (req, res, next) => {
+    try {
+      await ensureStrategy(req.hostname);
+      passport.authenticate(`replitauth:${req.hostname}`, {
+        prompt: "login consent",
+        scope: ["openid", "email", "profile", "offline_access"],
+      })(req, res, next);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.error("Login error:", errorMessage);
+      
+      if (errorMessage.includes('EAI_AGAIN') || errorMessage.includes('getaddrinfo')) {
+        res.status(503).json({ 
+          message: "Authentication service temporarily unavailable. Please try again in a few seconds.",
+          retryable: true 
+        });
+      } else {
+        res.status(500).json({ message: "Authentication error. Please try again." });
+      }
+    }
   });
 
-  app.get("/api/callback", (req, res, next) => {
-    ensureStrategy(req.hostname);
-    passport.authenticate(`replitauth:${req.hostname}`, {
-      successReturnToOrRedirect: "/",
-      failureRedirect: "/api/login",
-    })(req, res, next);
+  app.get("/api/callback", async (req, res, next) => {
+    try {
+      await ensureStrategy(req.hostname);
+      passport.authenticate(`replitauth:${req.hostname}`, {
+        successReturnToOrRedirect: "/",
+        failureRedirect: "/api/login",
+      })(req, res, next);
+    } catch (error) {
+      console.error("Callback error:", error);
+      res.redirect("/?error=auth_failed");
+    }
   });
 
-  app.get("/api/logout", (req, res) => {
-    req.logout(() => {
-      res.redirect(
-        client.buildEndSessionUrl(config, {
-          client_id: process.env.REPL_ID!,
-          post_logout_redirect_uri: `${req.protocol}://${req.hostname}`,
-        }).href
-      );
-    });
+  app.get("/api/logout", async (req, res) => {
+    try {
+      const currentConfig = await getConfig();
+      req.logout(() => {
+        res.redirect(
+          client.buildEndSessionUrl(currentConfig, {
+            client_id: process.env.REPL_ID!,
+            post_logout_redirect_uri: `${req.protocol}://${req.hostname}`,
+          }).href
+        );
+      });
+    } catch (error) {
+      console.error("Logout error:", error);
+      req.logout(() => {
+        res.redirect("/");
+      });
+    }
   });
 }
 
