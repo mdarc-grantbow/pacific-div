@@ -6,6 +6,26 @@ import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
 
+// Canonical domain for production - redirect from replit.com to .replit.app
+const CANONICAL_DOMAIN = 'pacific-div.replit.app';
+
+app.use((req, res, next) => {
+  const host = req.hostname;
+  
+  // In production, redirect non-canonical domains to the canonical .replit.app domain
+  // This ensures cookies are set on the correct domain during OIDC auth flow
+  if (process.env.NODE_ENV !== 'development' && 
+      host !== CANONICAL_DOMAIN && 
+      host !== 'localhost' &&
+      !host.includes('127.0.0.1')) {
+    const redirectUrl = `https://${CANONICAL_DOMAIN}${req.originalUrl}`;
+    console.log(`Redirecting from ${host} to ${CANONICAL_DOMAIN}`);
+    return res.redirect(301, redirectUrl);
+  }
+  
+  next();
+});
+
 declare module 'http' {
   interface IncomingMessage {
     rawBody: unknown
