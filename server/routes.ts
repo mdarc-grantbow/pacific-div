@@ -33,9 +33,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      res.json(user);
+      const claims = req.user.claims;
+      const userId = claims.sub;
+      
+      // Try to get user from database first
+      try {
+        const user = await storage.getUser(userId);
+        if (user) {
+          return res.json(user);
+        }
+      } catch (dbError) {
+        // Database unavailable - fall back to session claims
+        console.warn("Database unavailable, using session claims for user data");
+      }
+      
+      // Fall back to session claims (works when database is unavailable)
+      res.json({
+        id: userId,
+        email: claims.email || null,
+        firstName: claims.first_name || null,
+        lastName: claims.last_name || null,
+        profileImageUrl: claims.profile_image_url || null,
+      });
     } catch (error) {
       handleApiError(res, error, "Failed to fetch user");
     }
