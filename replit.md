@@ -44,11 +44,12 @@ Preferred communication style: Simple, everyday language.
 **Architecture Pattern**: RESTful API with PostgreSQL database (DatabaseStorage class) serving as the data layer
 
 **API Endpoints**:
+- Authentication: `/api/login`, `/api/logout`, `/api/callback`, `/api/auth/user`
 - Sessions: `/api/sessions`, `/api/sessions/:id`
 - Vendors: `/api/vendors`, `/api/vendors/:id`
 - Door Prizes: `/api/door-prizes`
 - T-Hunting: `/api/thunting/schedule`, `/api/thunting/winners`
-- User Data: `/api/profile`, `/api/bookmarks`, `/api/survey-responses`
+- User Data: `/api/profile`, `/api/bookmarks`, `/api/survey-responses` (protected)
 - Venue Information: `/api/radio-contacts`, `/api/venue-info`
 
 **Development Setup**: Vite middleware integration for HMR in development with static file serving in production
@@ -89,7 +90,13 @@ Preferred communication style: Simple, everyday language.
 - esbuild for server bundling
 - TypeScript for type safety across the stack
 
-**Session Management**: connect-pg-simple for PostgreSQL-backed sessions (though current implementation uses in-memory storage)
+**Session Management**: connect-pg-simple for PostgreSQL-backed sessions stored in auth_sessions table
+
+**Authentication**: Replit Auth via OpenID Connect (OIDC)
+- Supports Google, GitHub, X, Apple, and email/password login
+- Server-side session management with PostgreSQL storage
+- Protected routes use isAuthenticated middleware
+- Client-side useAuth hook for authentication state
 
 **Development Tools**:
 - Replit-specific plugins for cartographer and dev banner
@@ -103,3 +110,5 @@ Preferred communication style: Simple, everyday language.
 - Database seeding runs automatically when the sessions table is empty
 - Bookmark uniqueness is enforced at the application level with existence checks before insert
 - Survey responses use database-generated UUIDs
+- auth_sessions table stores authentication sessions for Replit Auth
+- Users table includes both Replit Auth fields (email, firstName, lastName, profileImageUrl) and ham radio profile fields (callSign, badgeNumber, licenseClass)
