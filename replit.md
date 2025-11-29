@@ -112,3 +112,11 @@ Preferred communication style: Simple, everyday language.
 - Survey responses use database-generated UUIDs
 - auth_sessions table stores authentication sessions for Replit Auth
 - Users table includes both Replit Auth fields (email, firstName, lastName, profileImageUrl) and ham radio profile fields (callSign, badgeNumber, licenseClass)
+
+**Error Handling**:
+- Database operations wrapped with retry logic (3 attempts with exponential backoff)
+- Connection errors detected and classified for appropriate HTTP responses
+- API routes return 503 status with retryable flag for temporary database unavailability
+- Auth flow continues gracefully if user upsert fails (non-fatal)
+- Health check endpoint (/api/health) reports database connection status
+- Server startup handles auth and seeding failures without crashing
