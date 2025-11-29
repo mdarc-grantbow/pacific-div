@@ -10,7 +10,7 @@ import {
   venueInfo,
   surveyResponses,
   type User, 
-  type InsertUser,
+  type UpsertUser,
   type Session,
   type Vendor,
   type DoorPrize,
@@ -25,9 +25,9 @@ import { db } from "./db";
 import { eq, and, desc, asc } from "drizzle-orm";
 
 export interface IStorage {
+  // User operations (required for Replit Auth)
   getUser(id: string): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
+  upsertUser(user: UpsertUser): Promise<User>;
   
   getSessions(): Promise<Session[]>;
   getSessionById(id: string): Promise<Session | undefined>;
@@ -59,18 +59,24 @@ export interface IStorage {
 }
 
 export class DatabaseStorage implements IStorage {
+  // User operations (required for Replit Auth)
   async getUser(id: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user || undefined;
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.username, username));
-    return user || undefined;
-  }
-
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const [user] = await db.insert(users).values(insertUser).returning();
+  async upsertUser(userData: UpsertUser): Promise<User> {
+    const [user] = await db
+      .insert(users)
+      .values(userData)
+      .onConflictDoUpdate({
+        target: users.id,
+        set: {
+          ...userData,
+          updatedAt: new Date(),
+        },
+      })
+      .returning();
     return user;
   }
 
@@ -161,20 +167,21 @@ export class DatabaseStorage implements IStorage {
   async getUserProfile(userId: string): Promise<UserProfile> {
     const [user] = await db.select().from(users).where(eq(users.id, userId));
     if (user) {
+      const displayName = [user.firstName, user.lastName].filter(Boolean).join(' ') || 'Unknown User';
       return {
-        callSign: user.callSign || "W6ABC",
-        name: user.name || "John Smith",
-        badgeNumber: user.badgeNumber || "147",
-        licenseClass: user.licenseClass || "Extra",
+        callSign: user.callSign || "",
+        name: displayName,
+        badgeNumber: user.badgeNumber || "",
+        licenseClass: user.licenseClass || "",
         isRegistered: user.isRegistered || false,
       };
     }
     return {
-      callSign: "W6ABC",
-      name: "John Smith",
-      badgeNumber: "147",
-      licenseClass: "Extra",
-      isRegistered: true,
+      callSign: "",
+      name: "Unknown User",
+      badgeNumber: "",
+      licenseClass: "",
+      isRegistered: false,
     };
   }
 
@@ -401,16 +408,6 @@ export class DatabaseStorage implements IStorage {
         registrationOpen: true,
       },
     ]);
-
-    await db.insert(users).values({
-      username: "demo",
-      password: "demo",
-      callSign: "W6ABC",
-      name: "John Smith",
-      badgeNumber: "147",
-      licenseClass: "Extra",
-      isRegistered: true,
-    });
   }
 }
 

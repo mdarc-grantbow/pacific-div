@@ -1,9 +1,24 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { randomUUID } from "crypto";
+import { setupAuth, isAuthenticated } from "./replitAuth";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Auth middleware setup (required for Replit Auth)
+  await setupAuth(app);
+
+  // Auth routes
+  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      res.json(user);
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      res.status(500).json({ message: "Failed to fetch user" });
+    }
+  });
+
   await storage.seedDatabase();
   // Sessions
   app.get("/api/sessions", async (_req, res) => {
@@ -98,11 +113,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Bookmarks (TODO: Add authentication)
-  app.get("/api/bookmarks", async (_req, res) => {
+  // Bookmarks (protected routes)
+  app.get("/api/bookmarks", isAuthenticated, async (req: any, res) => {
     try {
-      // TODO: Get userId from session/auth
-      const userId = "demo-user";
+      const userId = req.user.claims.sub;
       const bookmarks = await storage.getUserBookmarks(userId);
       res.json(bookmarks);
     } catch (error) {
@@ -110,10 +124,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/bookmarks/:sessionId", async (req, res) => {
+  app.post("/api/bookmarks/:sessionId", isAuthenticated, async (req: any, res) => {
     try {
-      // TODO: Get userId from session/auth
-      const userId = "demo-user";
+      const userId = req.user.claims.sub;
       await storage.addBookmark(userId, req.params.sessionId);
       res.json({ success: true });
     } catch (error) {
@@ -121,10 +134,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/bookmarks/:sessionId", async (req, res) => {
+  app.delete("/api/bookmarks/:sessionId", isAuthenticated, async (req: any, res) => {
     try {
-      // TODO: Get userId from session/auth
-      const userId = "demo-user";
+      const userId = req.user.claims.sub;
       await storage.removeBookmark(userId, req.params.sessionId);
       res.json({ success: true });
     } catch (error) {
@@ -132,11 +144,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Survey/Feedback
-  app.get("/api/surveys", async (_req, res) => {
+  // Survey/Feedback (protected routes)
+  app.get("/api/surveys", isAuthenticated, async (req: any, res) => {
     try {
-      // TODO: Get userId from session/auth
-      const userId = "demo-user";
+      const userId = req.user.claims.sub;
       const responses = await storage.getUserSurveyResponses(userId);
       res.json(responses);
     } catch (error) {
@@ -144,10 +155,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/surveys/:surveyType", async (req, res) => {
+  app.post("/api/surveys/:surveyType", isAuthenticated, async (req: any, res) => {
     try {
-      // TODO: Get userId from session/auth
-      const userId = "demo-user";
+      const userId = req.user.claims.sub;
       const { responses } = req.body;
       
       const surveyData = {
@@ -165,10 +175,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/surveys/:surveyType/status", async (req, res) => {
+  app.get("/api/surveys/:surveyType/status", isAuthenticated, async (req: any, res) => {
     try {
-      // TODO: Get userId from session/auth
-      const userId = "demo-user";
+      const userId = req.user.claims.sub;
       const response = await storage.getSurveyResponse(userId, req.params.surveyType);
       res.json({ completed: !!response });
     } catch (error) {
@@ -176,11 +185,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // User Profile
-  app.get("/api/profile", async (_req, res) => {
+  // User Profile (protected route)
+  app.get("/api/profile", isAuthenticated, async (req: any, res) => {
     try {
-      // TODO: Get userId from session/auth
-      const userId = "demo-user";
+      const userId = req.user.claims.sub;
       const profile = await storage.getUserProfile(userId);
       res.json(profile);
     } catch (error) {
