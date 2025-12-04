@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Bell, Clock, MapPin, User } from "lucide-react";
+import { Search, Bell, Clock, MapPin, User, Radio } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -327,7 +327,8 @@ export default function SchedulePage() {
     <div className="flex flex-col h-full">
       <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3">
         <div className="flex items-center justify-between mb-3">
-          <Link href="/welcome" className="hover:opacity-80 transition-opacity" data-testid="link-welcome">
+          <Link href="/welcome" className="hover:opacity-80 transition-opacity flex items-center gap-2" data-testid="link-welcome">
+            <Radio className="h-5 w-5 text-primary" />
             <h1 className="text-xl font-medium text-foreground">Pacificon 2025</h1>
           </Link>
           <Button size="icon" variant="ghost" data-testid="button-notifications">

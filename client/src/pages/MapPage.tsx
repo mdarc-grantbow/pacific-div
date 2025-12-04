@@ -17,7 +17,8 @@ export default function MapPage() {
   return (
     <div className="flex flex-col h-full">
       <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3">
-        <Link href="/welcome" className="hover:opacity-80 transition-opacity" data-testid="link-welcome">
+        <Link href="/welcome" className="hover:opacity-80 transition-opacity flex items-center gap-2" data-testid="link-welcome">
+          <Radio className="h-5 w-5 text-primary" />
           <h1 className="text-xl font-medium text-foreground">Venue Map</h1>
         </Link>
         <p className="text-sm text-muted-foreground">San Ramon Marriott</p>

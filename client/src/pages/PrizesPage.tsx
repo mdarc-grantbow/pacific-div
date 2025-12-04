@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Radio } from "lucide-react";
 import { Link } from "wouter";
 import PrizeCard from "@/components/PrizeCard";
 import THuntingCard from "@/components/THuntingCard";
@@ -31,7 +31,8 @@ export default function PrizesPage() {
   return (
     <div className="flex flex-col h-full">
       <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3">
-        <Link href="/welcome" className="hover:opacity-80 transition-opacity" data-testid="link-welcome">
+        <Link href="/welcome" className="hover:opacity-80 transition-opacity flex items-center gap-2" data-testid="link-welcome">
+          <Radio className="h-5 w-5 text-primary" />
           <h1 className="text-xl font-medium text-foreground">Prize Winners</h1>
         </Link>
       </header>
