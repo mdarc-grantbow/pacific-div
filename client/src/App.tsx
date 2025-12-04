@@ -28,8 +28,8 @@ function Router() {
     );
   }
 
-  // Show landing page at /welcome route (no bottom nav)
-  if (location === "/welcome") {
+  // Show landing/welcome page at root (no bottom nav)
+  if (location === "/" || location === "/welcome") {
     return (
       <AuthContext.Provider value={{ isAuthenticated, user, isLoading }}>
         <LandingPage />
@@ -42,7 +42,6 @@ function Router() {
       <div className="h-screen flex flex-col bg-background">
         <div className="flex-1 overflow-hidden">
           <Switch>
-            <Route path="/" component={SchedulePage} />
             <Route path="/schedule" component={SchedulePage} />
             <Route path="/map" component={MapPage} />
             <Route path="/info" component={InfoPage} />

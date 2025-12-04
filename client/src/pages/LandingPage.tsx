@@ -5,7 +5,7 @@ import { Link } from "wouter";
 
 const featureCards = [
   {
-    path: "/",
+    path: "/schedule",
     icon: Calendar,
     title: "Schedule",
     description: "Browse forums, events, and speakers across all three days"
@@ -56,7 +56,7 @@ export default function LandingPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button size="lg" asChild data-testid="button-get-started">
-              <Link href="/">Browse Schedule</Link>
+              <Link href="/schedule">Browse Schedule</Link>
             </Button>
             <Button size="lg" variant="outline" asChild data-testid="button-login-hero">
               <a href="/api/login">Log In</a>

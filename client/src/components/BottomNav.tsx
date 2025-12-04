@@ -3,7 +3,7 @@ import { useLocation } from "wouter";
 import { useAuthContext } from "@/hooks/useAuth";
 
 const navItems = [
-  { path: "/", icon: Calendar, label: "Schedule" },
+  { path: "/schedule", icon: Calendar, label: "Schedule" },
   { path: "/map", icon: Map, label: "Map" },
   { path: "/info", icon: Info, label: "Info" },
   { path: "/prizes", icon: Award, label: "Prizes" },
