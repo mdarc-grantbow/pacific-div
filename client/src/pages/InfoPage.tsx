@@ -6,14 +6,18 @@ import RadioContactCard from "@/components/RadioContactCard";
 import VenueInfoCard from "@/components/VenueInfoCard";
 import VendorCard from "@/components/VendorCard";
 import { useQuery } from "@tanstack/react-query";
+import { useAuthContext } from "@/hooks/useAuth";
 import type { RadioContact, VenueInfo, Vendor, UserProfile } from "@shared/schema";
 
 export default function InfoPage() {
+  const { isAuthenticated } = useAuthContext();
+  
   const { data: userProfile } = useQuery<UserProfile>({
     queryKey: ['/api/profile'],
+    enabled: isAuthenticated,
   });
 
-  const isRegistered = userProfile?.isRegistered ?? false;
+  const isRegistered = isAuthenticated ? (userProfile?.isRegistered ?? false) : false;
 
   const { data: radioContacts = [], isLoading: contactsLoading } = useQuery<RadioContact[]>({
     queryKey: ['/api/radio-contacts'],

@@ -4,11 +4,15 @@ import { Sparkles } from "lucide-react";
 import PrizeCard from "@/components/PrizeCard";
 import THuntingCard from "@/components/THuntingCard";
 import { useQuery } from "@tanstack/react-query";
+import { useAuthContext } from "@/hooks/useAuth";
 import type { DoorPrize, THuntingWinner, UserProfile } from "@shared/schema";
 
 export default function PrizesPage() {
+  const { isAuthenticated } = useAuthContext();
+  
   const { data: userProfile } = useQuery<UserProfile>({
     queryKey: ['/api/profile'],
+    enabled: isAuthenticated,
   });
 
   const userBadgeNumber = userProfile?.badgeNumber || "";
@@ -21,7 +25,7 @@ export default function PrizesPage() {
     queryKey: ['/api/thunting/winners'],
   });
 
-  const userHasWon = doorPrizes.some(p => p.badgeNumber === userBadgeNumber);
+  const userHasWon = isAuthenticated && doorPrizes.some(p => p.badgeNumber === userBadgeNumber);
 
   return (
     <div className="flex flex-col h-full">

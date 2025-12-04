@@ -14,9 +14,10 @@ import ProfilePage from "@/pages/ProfilePage";
 import LandingPage from "@/pages/LandingPage";
 import NotFound from "@/pages/not-found";
 import { Loader2 } from "lucide-react";
+import { AuthContext } from "@/hooks/useAuth";
 
 function Router() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
 
   if (isLoading) {
     return (
@@ -26,24 +27,23 @@ function Router() {
     );
   }
 
-  if (!isAuthenticated) {
-    return <LandingPage />;
-  }
-
   return (
-    <div className="h-screen flex flex-col bg-background">
-      <div className="flex-1 overflow-hidden">
-        <Switch>
-          <Route path="/" component={SchedulePage} />
-          <Route path="/map" component={MapPage} />
-          <Route path="/info" component={InfoPage} />
-          <Route path="/prizes" component={PrizesPage} />
-          <Route path="/profile" component={ProfilePage} />
-          <Route component={NotFound} />
-        </Switch>
+    <AuthContext.Provider value={{ isAuthenticated, user, isLoading }}>
+      <div className="h-screen flex flex-col bg-background">
+        <div className="flex-1 overflow-hidden">
+          <Switch>
+            <Route path="/" component={SchedulePage} />
+            <Route path="/map" component={MapPage} />
+            <Route path="/info" component={InfoPage} />
+            <Route path="/prizes" component={PrizesPage} />
+            <Route path="/profile" component={ProfilePage} />
+            <Route path="/welcome" component={LandingPage} />
+            <Route component={NotFound} />
+          </Switch>
+        </div>
+        <BottomNav />
       </div>
-      <BottomNav />
-    </div>
+    </AuthContext.Provider>
   );
 }
 

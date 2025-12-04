@@ -6,11 +6,15 @@ import DaySelector from "@/components/DaySelector";
 import SessionCard from "@/components/SessionCard";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useAuthContext } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/use-toast";
 import type { Session } from "@shared/schema";
 
 export default function SchedulePage() {
   const [selectedDay, setSelectedDay] = useState<'friday' | 'saturday' | 'sunday'>('friday');
   const [searchQuery, setSearchQuery] = useState("");
+  const { isAuthenticated } = useAuthContext();
+  const { toast } = useToast();
 
   const { data: sessions = [], isLoading: sessionsLoading } = useQuery<Session[]>({
     queryKey: ['/api/sessions'],
@@ -18,6 +22,7 @@ export default function SchedulePage() {
 
   const { data: bookmarks = [] } = useQuery<string[]>({
     queryKey: ['/api/bookmarks'],
+    enabled: isAuthenticated,
   });
 
   const addBookmarkMutation = useMutation({
@@ -38,7 +43,7 @@ export default function SchedulePage() {
 
   const sessionsWithBookmarks = sessions.map(session => ({
     ...session,
-    isBookmarked: bookmarks.includes(session.id),
+    isBookmarked: isAuthenticated ? bookmarks.includes(session.id) : false,
   }));
 
   const filteredSessions = sessionsWithBookmarks.filter(
@@ -51,6 +56,14 @@ export default function SchedulePage() {
   );
 
   const handleBookmark = (id: string) => {
+    if (!isAuthenticated) {
+      toast({
+        title: "Login required",
+        description: "Please log in to bookmark sessions.",
+        variant: "default",
+      });
+      return;
+    }
     const isBookmarked = bookmarks.includes(id);
     if (isBookmarked) {
       removeBookmarkMutation.mutate(id);

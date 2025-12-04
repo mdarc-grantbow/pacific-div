@@ -1,4 +1,4 @@
-import { User, Bell, Moon, Sun, Info, MessageSquare, CheckCircle2, ExternalLink, LogOut } from "lucide-react";
+import { User, Bell, Moon, Sun, Info, MessageSquare, CheckCircle2, ExternalLink, LogOut, LogIn } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,7 @@ import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { useAuthContext } from "@/hooks/useAuth";
 import type { UserProfile } from "@shared/schema";
 
 type SurveyCategory = {
@@ -21,6 +22,7 @@ type SurveyCategory = {
 
 export default function ProfilePage() {
   const { toast } = useToast();
+  const { isAuthenticated } = useAuthContext();
   const [darkMode, setDarkMode] = useState(false);
   const [notifications, setNotifications] = useState(true);
 
@@ -44,6 +46,7 @@ export default function ProfilePage() {
 
   const { data: userProfile } = useQuery<UserProfile>({
     queryKey: ['/api/profile'],
+    enabled: isAuthenticated,
   });
 
   const userData = userProfile || {
@@ -54,6 +57,79 @@ export default function ProfilePage() {
   };
 
   const isRegistered = userProfile?.isRegistered ?? false;
+
+  if (!isAuthenticated) {
+    return (
+      <div className="flex flex-col h-full">
+        <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3">
+          <h1 className="text-xl font-medium text-foreground">Profile</h1>
+        </header>
+
+        <main className="flex-1 overflow-y-auto px-4 py-4 pb-20">
+          <Card className="p-6 text-center">
+            <LogIn className="w-12 h-12 text-primary mx-auto mb-4" />
+            <h2 className="text-lg font-medium text-foreground mb-2">Sign in to access your profile</h2>
+            <p className="text-sm text-muted-foreground mb-4">
+              Log in to save your bookmarks, track your badge number, and complete feedback surveys.
+            </p>
+            <Button asChild data-testid="button-login-profile">
+              <a href="/api/login">Log In</a>
+            </Button>
+          </Card>
+
+          <Card className="p-4 mt-4">
+            <h3 className="font-medium text-foreground mb-4">Settings</h3>
+            
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                {darkMode ? (
+                  <Moon className="w-5 h-5 text-muted-foreground" />
+                ) : (
+                  <Sun className="w-5 h-5 text-muted-foreground" />
+                )}
+                <Label htmlFor="dark-mode-guest" className="text-sm font-normal cursor-pointer">
+                  Dark Mode
+                </Label>
+              </div>
+              <Switch 
+                id="dark-mode-guest" 
+                checked={darkMode} 
+                onCheckedChange={toggleDarkMode}
+                data-testid="switch-dark-mode"
+              />
+            </div>
+          </Card>
+
+          <Card className="p-4 mt-4">
+            <h3 className="font-medium text-foreground mb-3">About Pacificon</h3>
+            <p className="text-sm text-muted-foreground mb-3">
+              Pacificon is the premier amateur radio event in the Western United States and the ARRL Pacific Division's annual convention.
+            </p>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-sm">
+                <Info className="w-4 h-4 text-muted-foreground" />
+                <span className="text-muted-foreground">October 10-12, 2025</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <Info className="w-4 h-4 text-muted-foreground" />
+                <span className="text-muted-foreground">San Ramon Marriott, CA</span>
+              </div>
+            </div>
+            <Separator className="my-3" />
+            <a 
+              href="https://www.pacificon.org" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-sm text-primary hover:underline"
+              data-testid="link-website"
+            >
+              Visit pacificon.org
+            </a>
+          </Card>
+        </main>
+      </div>
+    );
+  }
 
   const surveyCategories: SurveyCategory[] = [
     {
