@@ -64,7 +64,7 @@ export default function BottomNav() {
             <>
               <LogIn className="w-6 h-6 text-primary" />
               <span className="text-xs text-primary font-medium">
-                Log In
+                App Login
               </span>
             </>
           )}
