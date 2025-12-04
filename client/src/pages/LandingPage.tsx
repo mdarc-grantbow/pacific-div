@@ -1,6 +1,34 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Radio, Calendar, MapPin, Gift, Users } from "lucide-react";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Radio, Calendar, Map, Info, Award } from "lucide-react";
+import { Link } from "wouter";
+
+const featureCards = [
+  {
+    path: "/",
+    icon: Calendar,
+    title: "Schedule",
+    description: "Browse forums, events, and speakers across all three days"
+  },
+  {
+    path: "/map",
+    icon: Map,
+    title: "Map",
+    description: "Navigate the hotel with floor plans and room locations"
+  },
+  {
+    path: "/info",
+    icon: Info,
+    title: "Info",
+    description: "Explore vendors, radio frequencies, and venue information"
+  },
+  {
+    path: "/prizes",
+    icon: Award,
+    title: "Prizes",
+    description: "Stay updated on prize drawings and T-hunting competitions"
+  }
+];
 
 export default function LandingPage() {
   return (
@@ -28,7 +56,7 @@ export default function LandingPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button size="lg" asChild data-testid="button-get-started">
-              <a href="/schedule">Browse Schedule</a>
+              <Link href="/">Browse Schedule</Link>
             </Button>
             <Button size="lg" variant="outline" asChild data-testid="button-login-hero">
               <a href="/api/login">Log In</a>
@@ -37,45 +65,20 @@ export default function LandingPage() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-          <Card className="hover-elevate">
-            <CardHeader>
-              <Calendar className="h-8 w-8 text-primary mb-2" />
-              <CardTitle>Conference Schedule</CardTitle>
-              <CardDescription>
-                Browse sessions, workshops, and speakers across all three days
-              </CardDescription>
-            </CardHeader>
-          </Card>
-
-          <Card className="hover-elevate">
-            <CardHeader>
-              <MapPin className="h-8 w-8 text-primary mb-2" />
-              <CardTitle>Venue Maps</CardTitle>
-              <CardDescription>
-                Navigate the hotel with floor plans and room locations
-              </CardDescription>
-            </CardHeader>
-          </Card>
-
-          <Card className="hover-elevate">
-            <CardHeader>
-              <Gift className="h-8 w-8 text-primary mb-2" />
-              <CardTitle>Door Prizes</CardTitle>
-              <CardDescription>
-                Stay updated on prize drawings and T-hunting competitions
-              </CardDescription>
-            </CardHeader>
-          </Card>
-
-          <Card className="hover-elevate">
-            <CardHeader>
-              <Users className="h-8 w-8 text-primary mb-2" />
-              <CardTitle>Vendor Exhibit</CardTitle>
-              <CardDescription>
-                Explore vendors, radio frequencies, and venue information
-              </CardDescription>
-            </CardHeader>
-          </Card>
+          {featureCards.map((card) => {
+            const Icon = card.icon;
+            return (
+              <Link key={card.path} href={card.path}>
+                <Card className="hover-elevate cursor-pointer h-full" data-testid={`card-${card.title.toLowerCase()}`}>
+                  <CardHeader>
+                    <Icon className="h-8 w-8 text-primary mb-2" />
+                    <CardTitle>{card.title}</CardTitle>
+                    <CardDescription>{card.description}</CardDescription>
+                  </CardHeader>
+                </Card>
+              </Link>
+            );
+          })}
         </div>
       </main>
 
