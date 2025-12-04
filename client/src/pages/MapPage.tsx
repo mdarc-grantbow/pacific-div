@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 import venueMapImage from "@assets/venue_1764883580906.jpg";
+import exhibitorsMapImage from "@assets/exhibitors_1764883755395.png";
 
 const venueLocations = [
   { id: "1", name: "Registration Desk", icon: Users, color: "bg-blue-500" },
@@ -57,7 +58,7 @@ export default function MapPage() {
           </div>
         </div>
 
-        <Card className="p-4">
+        <Card className="p-4 mb-4">
           <h3 className="font-medium text-foreground mb-2">Hotel Address</h3>
           <p className="text-sm text-muted-foreground mb-2">
             San Ramon Marriott<br />
@@ -73,6 +74,16 @@ export default function MapPage() {
           >
             Open in Maps →
           </a>
+        </Card>
+
+        <Card className="p-2 bg-muted/50">
+          <img 
+            src={exhibitorsMapImage}
+            alt="Pacificon Exhibit Space Layout"
+            className="w-full rounded-md"
+            data-testid="img-exhibitors-map"
+          />
+          <p className="text-xs text-muted-foreground text-center mt-2">Exhibit Space Layout</p>
         </Card>
       </main>
     </div>

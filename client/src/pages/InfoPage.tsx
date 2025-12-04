@@ -9,6 +9,7 @@ import VendorCard from "@/components/VendorCard";
 import { useQuery } from "@tanstack/react-query";
 import { useAuthContext } from "@/hooks/useAuth";
 import type { RadioContact, VenueInfo, Vendor, UserProfile } from "@shared/schema";
+import exhibitorsMapImage from "@assets/exhibitors_1764883755395.png";
 
 export default function InfoPage() {
   const { isAuthenticated } = useAuthContext();
@@ -241,6 +242,16 @@ export default function InfoPage() {
           </TabsContent>
 
           <TabsContent value="vendors" className="px-4 py-4 mt-0">
+            <Card className="p-2 mb-4 bg-muted/50">
+              <img 
+                src={exhibitorsMapImage}
+                alt="Pacificon Exhibit Space Layout"
+                className="w-full rounded-md"
+                data-testid="img-exhibitors-map"
+              />
+              <p className="text-xs text-muted-foreground text-center mt-2">Exhibit Space Layout</p>
+            </Card>
+
             {vendorsLoading ? (
               <div className="space-y-3">
                 {[1, 2, 3].map((i) => (
