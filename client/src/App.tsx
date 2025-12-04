@@ -50,6 +50,7 @@ function Router() {
             <Route path="/info" component={InfoPage} />
             <Route path="/prizes" component={PrizesPage} />
             <Route path="/profile" component={ProfilePage} />
+            <Route path="/welcome" component={LandingPage} />
             <Route component={NotFound} />
           </Switch>
         </div>

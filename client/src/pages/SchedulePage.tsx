@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Search, Bell } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Link } from "wouter";
 import DaySelector from "@/components/DaySelector";
 import SessionCard from "@/components/SessionCard";
 import { useQuery, useMutation } from "@tanstack/react-query";
@@ -76,7 +77,9 @@ export default function SchedulePage() {
     <div className="flex flex-col h-full">
       <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3">
         <div className="flex items-center justify-between mb-3">
-          <h1 className="text-xl font-medium text-foreground">Pacificon 2025</h1>
+          <Link href="/welcome" className="hover:opacity-80 transition-opacity" data-testid="link-welcome">
+            <h1 className="text-xl font-medium text-foreground">Pacificon 2025</h1>
+          </Link>
           <Button size="icon" variant="ghost" data-testid="button-notifications">
             <Bell className="w-5 h-5" />
           </Button>
