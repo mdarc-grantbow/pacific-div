@@ -98,52 +98,6 @@ export default function InfoPage() {
           </TabsContent>
 
           <TabsContent value="venue" className="px-4 py-4 mt-0">
-            {!isRegistered && (
-              <Card className="p-4 mb-4 bg-muted/50">
-                <h3 className="font-medium text-foreground mb-3">Conference Registration</h3>
-                
-                <div className="space-y-3 mb-3">
-                  <div>
-                    <h4 className="text-sm font-medium text-foreground mb-1">
-                      Attendees & Exhibitors
-                    </h4>
-                    <p className="text-xs text-muted-foreground mb-2">
-                      For attendees, vendors, and non-profit exhibitors
-                    </p>
-                    <a
-                      href="https://www.pacificon.org/registration/attendees"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-sm text-primary hover:underline"
-                      data-testid="link-attendee-registration"
-                    >
-                      Register via Constant Contact
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  </div>
-                  
-                  <div>
-                    <h4 className="text-sm font-medium text-foreground mb-1">
-                      Volunteers & Speakers
-                    </h4>
-                    <p className="text-xs text-muted-foreground mb-2">
-                      For volunteers and conference presenters
-                    </p>
-                    <a
-                      href="https://www.pacificon.org/registration/volunteers"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-sm text-primary hover:underline"
-                      data-testid="link-volunteer-registration"
-                    >
-                      Register via Google Forms
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  </div>
-                </div>
-              </Card>
-            )}
-            
             {venueLoading ? (
               <div className="space-y-3">
                 {[1, 2, 3, 4].map((i) => (
@@ -239,6 +193,52 @@ export default function InfoPage() {
                 </a>
               </div>
             </Card>
+
+            {!isRegistered && (
+              <Card className="p-4 mt-4 bg-muted/50">
+                <h3 className="font-medium text-foreground mb-3">Conference Registration</h3>
+                
+                <div className="space-y-3 mb-3">
+                  <div>
+                    <h4 className="text-sm font-medium text-foreground mb-1">
+                      Attendees & Exhibitors
+                    </h4>
+                    <p className="text-xs text-muted-foreground mb-2">
+                      For attendees, vendors, and non-profit exhibitors
+                    </p>
+                    <a
+                      href="https://www.pacificon.org/registration/attendees"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-sm text-primary hover:underline"
+                      data-testid="link-attendee-registration"
+                    >
+                      Register via Constant Contact
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
+                  
+                  <div>
+                    <h4 className="text-sm font-medium text-foreground mb-1">
+                      Volunteers & Speakers
+                    </h4>
+                    <p className="text-xs text-muted-foreground mb-2">
+                      For volunteers and conference presenters
+                    </p>
+                    <a
+                      href="https://www.pacificon.org/registration/volunteers"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-sm text-primary hover:underline"
+                      data-testid="link-volunteer-registration"
+                    >
+                      Register via Google Forms
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
+                </div>
+              </Card>
+            )}
           </TabsContent>
 
           <TabsContent value="vendors" className="px-4 py-4 mt-0">
