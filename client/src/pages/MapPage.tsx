@@ -5,11 +5,10 @@ import { Link } from "wouter";
 
 const venueLocations = [
   { id: "1", name: "Registration Desk", icon: Users, color: "bg-blue-500" },
-  { id: "2", name: "Grand Ballroom A", icon: MapPin, color: "bg-green-500" },
-  { id: "3", name: "Grand Ballroom B", icon: MapPin, color: "bg-green-500" },
-  { id: "4", name: "Vendor Hall", icon: Store, color: "bg-purple-500" },
-  { id: "5", name: "W1AW/6 Station", icon: Radio, color: "bg-red-500" },
-  { id: "6", name: "Conference Rooms", icon: MapPin, color: "bg-green-500" },
+  { id: "2", name: "Contra Costa", icon: MapPin, color: "bg-green-500" },
+  { id: "3", name: "Bishop Ranch", icon: Store, color: "bg-purple-500" },
+  { id: "4", name: "W1AW/6 Station", icon: Radio, color: "bg-red-500" },
+  { id: "5", name: "Conference Rooms", icon: MapPin, color: "bg-green-500" },
 ];
 
 export default function MapPage() {
