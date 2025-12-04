@@ -96,7 +96,15 @@ Preferred communication style: Simple, everyday language.
 - Supports Google, GitHub, X, Apple, and email/password login
 - Server-side session management with PostgreSQL storage
 - Protected routes use isAuthenticated middleware
-- Client-side useAuth hook for authentication state
+- Client-side useAuth hook and AuthContext for authentication state
+
+**Guest Mode**:
+- Users can browse Schedule, Map, Info, and Prizes pages without logging in
+- Bookmarking, Profile, and Survey features require authentication
+- Bottom navigation shows "Log In" button for guests (instead of Profile)
+- Clicking bookmark as guest shows friendly "Login required" toast
+- Profile page shows login prompt with dark mode toggle for guests
+- API queries for user-specific data are conditionally disabled when not authenticated
 
 **Development Tools**:
 - Replit-specific plugins for cartographer and dev banner
