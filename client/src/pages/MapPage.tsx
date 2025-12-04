@@ -1,4 +1,4 @@
-import { MapPin, Radio, Store, Users } from "lucide-react";
+import { MapPin, Radio, Store, Users, ExternalLink } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
@@ -22,14 +22,26 @@ export default function MapPage() {
       </header>
 
       <main className="flex-1 overflow-y-auto px-4 py-4 pb-20">
-        <Card className="p-2 mb-4 bg-muted/50">
-          <img 
-            src="https://lh3.googleusercontent.com/sitesv/AAzXCkefxPQL7_TtrL9-qLJhY8AsSadqdCWgwSTCTFH3ZyCi48N8yY_l3aSr7Bocn0VGDVYB0tTs2S87B2gFmU0Z8SNY5R5p5gNp-6cXt4io1ikeMnKaFVmxfPFYm56cd4BKx-Sw48ALhjSZ4EOVL9OunUxcTvsH1D3l9Rkcj8EOnbvUj6LEGU5hONRBtZ7Q78Ew6D7ME1BuT-mh9g-XoFX40XBJpQk93h3Fw_g8=w1280"
-            alt="Pacificon Venue Map"
-            className="w-full rounded-md"
-            data-testid="img-venue-map"
-          />
-        </Card>
+        <a 
+          href="https://www.pacificon.org/finding-everything/hotel-layout-map"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block mb-4"
+          data-testid="link-hotel-map"
+        >
+          <Card className="p-4 bg-primary/10 border-primary hover-elevate">
+            <div className="flex items-center gap-3">
+              <div className="p-3 rounded-lg bg-primary/20">
+                <MapPin className="w-6 h-6 text-primary" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-medium text-foreground">Hotel Layout Map</h3>
+                <p className="text-sm text-muted-foreground">Tap to view full floor plans</p>
+              </div>
+              <ExternalLink className="w-5 h-5 text-primary" />
+            </div>
+          </Card>
+        </a>
 
         <div className="mb-4">
           <h2 className="text-base font-medium text-foreground mb-3">Key Locations</h2>
