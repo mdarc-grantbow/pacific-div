@@ -27,17 +27,29 @@ function Router() {
     );
   }
 
+  // Show landing page for guests who haven't entered the app yet
+  // Once they click "Get Started" or navigate, they see the main app
+  const isInApp = window.location.pathname !== "/" || isAuthenticated;
+  
+  if (!isInApp && !isAuthenticated) {
+    return (
+      <AuthContext.Provider value={{ isAuthenticated, user, isLoading }}>
+        <LandingPage />
+      </AuthContext.Provider>
+    );
+  }
+
   return (
     <AuthContext.Provider value={{ isAuthenticated, user, isLoading }}>
       <div className="h-screen flex flex-col bg-background">
         <div className="flex-1 overflow-hidden">
           <Switch>
             <Route path="/" component={SchedulePage} />
+            <Route path="/schedule" component={SchedulePage} />
             <Route path="/map" component={MapPage} />
             <Route path="/info" component={InfoPage} />
             <Route path="/prizes" component={PrizesPage} />
             <Route path="/profile" component={ProfilePage} />
-            <Route path="/welcome" component={LandingPage} />
             <Route component={NotFound} />
           </Switch>
         </div>

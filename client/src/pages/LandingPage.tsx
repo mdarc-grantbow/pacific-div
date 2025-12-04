@@ -26,9 +26,14 @@ export default function LandingPage() {
             Your companion app for the annual amateur radio conference.
             October 10-12, 2025 at the San Ramon Marriott.
           </p>
-          <Button size="lg" asChild data-testid="button-get-started">
-            <a href="/api/login">Get Started</a>
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Button size="lg" asChild data-testid="button-get-started">
+              <a href="/schedule">Browse Schedule</a>
+            </Button>
+            <Button size="lg" variant="outline" asChild data-testid="button-login-hero">
+              <a href="/api/login">Log In</a>
+            </Button>
+          </div>
         </div>
 
         <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
