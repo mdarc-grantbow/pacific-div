@@ -22,14 +22,13 @@ export default function MapPage() {
       </header>
 
       <main className="flex-1 overflow-y-auto px-4 py-4 pb-20">
-        <Card className="p-6 mb-4 bg-muted/50">
-          <div className="aspect-video rounded-md bg-card border border-card-border flex items-center justify-center">
-            <div className="text-center">
-              <MapPin className="w-12 h-12 text-muted-foreground mx-auto mb-2" />
-              <p className="text-sm text-muted-foreground">Interactive venue map</p>
-              <p className="text-xs text-muted-foreground mt-1">Coming soon</p>
-            </div>
-          </div>
+        <Card className="p-2 mb-4 bg-muted/50">
+          <img 
+            src="https://lh3.googleusercontent.com/sitesv/AAzXCkefxPQL7_TtrL9-qLJhY8AsSadqdCWgwSTCTFH3ZyCi48N8yY_l3aSr7Bocn0VGDVYB0tTs2S87B2gFmU0Z8SNY5R5p5gNp-6cXt4io1ikeMnKaFVmxfPFYm56cd4BKx-Sw48ALhjSZ4EOVL9OunUxcTvsH1D3l9Rkcj8EOnbvUj6LEGU5hONRBtZ7Q78Ew6D7ME1BuT-mh9g-XoFX40XBJpQk93h3Fw_g8=w1280"
+            alt="Pacificon Venue Map"
+            className="w-full rounded-md"
+            data-testid="img-venue-map"
+          />
         </Card>
 
         <div className="mb-4">
