@@ -2,6 +2,7 @@ import { User, Bell, Moon, Sun, Info, MessageSquare, CheckCircle2, ExternalLink,
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Link } from "wouter";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
@@ -62,7 +63,9 @@ export default function ProfilePage() {
     return (
       <div className="flex flex-col h-full">
         <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3">
-          <h1 className="text-xl font-medium text-foreground">Profile</h1>
+          <Link href="/welcome" className="hover:opacity-80 transition-opacity" data-testid="link-welcome">
+            <h1 className="text-xl font-medium text-foreground">Profile</h1>
+          </Link>
         </header>
 
         <main className="flex-1 overflow-y-auto px-4 py-4 pb-20">
@@ -213,7 +216,9 @@ export default function ProfilePage() {
   return (
     <div className="flex flex-col h-full">
       <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3">
-        <h1 className="text-xl font-medium text-foreground">Profile</h1>
+        <Link href="/welcome" className="hover:opacity-80 transition-opacity" data-testid="link-welcome">
+          <h1 className="text-xl font-medium text-foreground">Profile</h1>
+        </Link>
       </header>
 
       <main className="flex-1 overflow-y-auto px-4 py-4 pb-20">

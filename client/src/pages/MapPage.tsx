@@ -1,6 +1,7 @@
 import { MapPin, Radio, Store, Users } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "wouter";
 
 const venueLocations = [
   { id: "1", name: "Registration Desk", icon: Users, color: "bg-blue-500" },
@@ -15,7 +16,9 @@ export default function MapPage() {
   return (
     <div className="flex flex-col h-full">
       <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3">
-        <h1 className="text-xl font-medium text-foreground">Venue Map</h1>
+        <Link href="/welcome" className="hover:opacity-80 transition-opacity" data-testid="link-welcome">
+          <h1 className="text-xl font-medium text-foreground">Venue Map</h1>
+        </Link>
         <p className="text-sm text-muted-foreground">San Ramon Marriott</p>
       </header>
 
