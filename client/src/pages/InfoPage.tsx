@@ -49,16 +49,9 @@ export default function InfoPage() {
       )}
 
       <main className="flex-1 overflow-y-auto pb-20">
-        <Tabs defaultValue="radio" className="w-full">
+        <Tabs defaultValue="venue" className="w-full">
           <div className="sticky top-0 z-30 bg-background border-b border-border">
             <TabsList className="w-full justify-start rounded-none h-12 bg-transparent p-0">
-              <TabsTrigger 
-                value="radio" 
-                className="flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
-                data-testid="tab-radio"
-              >
-                Radio
-              </TabsTrigger>
               <TabsTrigger 
                 value="venue" 
                 className="flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
@@ -72,6 +65,13 @@ export default function InfoPage() {
                 data-testid="tab-vendors"
               >
                 Vendors
+              </TabsTrigger>
+              <TabsTrigger 
+                value="radio" 
+                className="flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
+                data-testid="tab-radio"
+              >
+                Radio
               </TabsTrigger>
             </TabsList>
           </div>
