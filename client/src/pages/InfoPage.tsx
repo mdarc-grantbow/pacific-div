@@ -1,7 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card } from "@/components/ui/card";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, MapPin, Navigation, Phone } from "lucide-react";
 import { Link } from "wouter";
 import RadioContactCard from "@/components/RadioContactCard";
 import VenueInfoCard from "@/components/VenueInfoCard";
@@ -160,6 +160,84 @@ export default function InfoPage() {
                 ))}
               </div>
             )}
+
+            <Card className="p-4 mt-4" data-testid="card-directions">
+              <h3 className="font-medium text-foreground mb-3 flex items-center gap-2">
+                <Navigation className="w-5 h-5 text-primary" />
+                Directions & Map
+              </h3>
+              
+              <div className="space-y-3 mb-4">
+                <div className="flex items-start gap-3">
+                  <MapPin className="w-4 h-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-medium text-foreground">San Ramon Marriott</p>
+                    <p className="text-sm text-muted-foreground">2600 Bishop Drive</p>
+                    <p className="text-sm text-muted-foreground">San Ramon, CA 94583</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-3">
+                  <Phone className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                  <a href="tel:925-867-9200" className="text-sm text-primary hover:underline">
+                    925-867-9200
+                  </a>
+                </div>
+                
+                <div className="text-xs text-muted-foreground bg-muted/50 p-2 rounded">
+                  <p><span className="font-medium">GPS:</span> 37° 45.784' N, 121° 57.927' W</p>
+                  <p><span className="font-medium">Grid Square:</span> CM97as</p>
+                </div>
+              </div>
+
+              <div className="mb-4">
+                <h4 className="text-sm font-medium text-foreground mb-2">From I-680:</h4>
+                <ol className="text-sm text-muted-foreground space-y-1 list-decimal list-inside">
+                  <li>Exit at Bollinger Canyon Road</li>
+                  <li>Turn east (right if northbound, left if southbound)</li>
+                  <li>Turn left at first light (Sunset Dr/Chevron Dr)</li>
+                  <li>Pass shopping center, turn left at Bishop Drive</li>
+                  <li>Hotel entrance is 0.1 miles on the left</li>
+                </ol>
+              </div>
+
+              <div className="rounded-md overflow-hidden border border-border mb-3">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3156.8!2d-121.965!3d37.763!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808ff2e66c2b0f0d%3A0x2e1c4f0c9b7c8c8d!2sSan%20Ramon%20Marriott!5e0!3m2!1sen!2sus!4v1"
+                  width="100%"
+                  height="200"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="San Ramon Marriott Map"
+                  data-testid="map-iframe"
+                />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <a
+                  href="https://www.pacificon.org/resources/parking"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-sm text-primary hover:underline"
+                  data-testid="link-parking"
+                >
+                  Parking Information
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+                <a
+                  href="https://www.marriott.com/en-us/hotels/oaksr-san-ramon-marriott/overview/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-sm text-primary hover:underline"
+                  data-testid="link-hotel-website"
+                >
+                  Hotel Website
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+              </div>
+            </Card>
           </TabsContent>
 
           <TabsContent value="vendors" className="px-4 py-4 mt-0">
