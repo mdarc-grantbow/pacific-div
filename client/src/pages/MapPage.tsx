@@ -22,25 +22,14 @@ export default function MapPage() {
       </header>
 
       <main className="flex-1 overflow-y-auto px-4 py-4 pb-20">
-        <Card className="p-4 mb-4 bg-muted/50">
-          <h2 className="text-base font-medium text-foreground mb-3">Hotel Layout - 1st Floor</h2>
-          <div className="rounded-md overflow-hidden border border-card-border">
-            <img 
-              src="https://lh3.googleusercontent.com/sitesv/AAzXCkeb5IgPdvho4mYEYiJs0dmKyjT6nlHWRzB54JPkX4p6TnZxs9Ud-0dsMl_LqS4szyh4zgEm_AjSjgi-jJxMjxgtZ2zu1N21O6c7y9gfWnT9TXHNXccx9f3NzB1kUqBc7P61Y5gAuuCNlZrYoJrgi09yAYvLzhBpEzKVgibr7XJdLb-PBJBh0Q4Cay9snvGxH6fjRN7tQQvq5_jEBFmGV3Clg6H0huZ0YFvlnXU=w1280"
-              alt="San Ramon Marriott Hotel Layout - 1st Floor"
-              className="w-full h-auto"
-              data-testid="img-hotel-layout"
-            />
+        <Card className="p-6 mb-4 bg-muted/50">
+          <div className="aspect-video rounded-md bg-card border border-card-border flex items-center justify-center">
+            <div className="text-center">
+              <MapPin className="w-12 h-12 text-muted-foreground mx-auto mb-2" />
+              <p className="text-sm text-muted-foreground">Interactive venue map</p>
+              <p className="text-xs text-muted-foreground mt-1">Coming soon</p>
+            </div>
           </div>
-          <a
-            href="https://www.pacificon.org/finding-everything/hotel-layout-map"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs text-primary hover:underline mt-2"
-            data-testid="link-full-map"
-          >
-            View full map on pacificon.org
-          </a>
         </Card>
 
         <div className="mb-4">
