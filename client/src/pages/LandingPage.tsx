@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Radio, Calendar, Map, Info, Award } from "lucide-react";
+import { Radio, Calendar, Map, Info, Award, User } from "lucide-react";
 import { Link } from "wouter";
+import { useAuthContext } from "@/hooks/useAuth";
 
 const featureCards = [
   {
@@ -31,6 +32,8 @@ const featureCards = [
 ];
 
 export default function LandingPage() {
+  const { isAuthenticated } = useAuthContext();
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <header className="border-b bg-card">
@@ -39,9 +42,15 @@ export default function LandingPage() {
             <Radio className="h-6 w-6 text-primary" />
             <span className="font-bold text-lg">Pacificon 2025</span>
           </div>
-          <Button asChild data-testid="button-login">
-            <a href="/api/login">Log In</a>
-          </Button>
+          {isAuthenticated ? (
+            <Button asChild data-testid="button-profile">
+              <Link href="/profile">Profile</Link>
+            </Button>
+          ) : (
+            <Button asChild data-testid="button-login">
+              <a href="/api/login">Log In</a>
+            </Button>
+          )}
         </div>
       </header>
 
@@ -58,9 +67,15 @@ export default function LandingPage() {
             <Button size="lg" asChild data-testid="button-get-started">
               <Link href="/schedule">Browse Schedule</Link>
             </Button>
-            <Button size="lg" variant="outline" asChild data-testid="button-login-hero">
-              <a href="/api/login">Log In</a>
-            </Button>
+            {isAuthenticated ? (
+              <Button size="lg" variant="outline" asChild data-testid="button-profile-hero">
+                <Link href="/profile">View Profile</Link>
+              </Button>
+            ) : (
+              <Button size="lg" variant="outline" asChild data-testid="button-login-hero">
+                <a href="/api/login">Log In</a>
+              </Button>
+            )}
           </div>
         </div>
 
