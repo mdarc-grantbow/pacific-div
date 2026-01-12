@@ -381,22 +381,36 @@ export class DatabaseStorage implements IStorage {
 
   async seedDatabase(): Promise<void> {
     try {
+      // First, seed conferences independently (so it works even if sessions table has issues)
+      await withRetry(async () => {
+        const existingConferences = await db.select().from(conferences).limit(1);
+        if (existingConferences.length === 0) {
+          await db.insert(conferences).values({
+            name: "Pacificon",
+            year: 2025,
+            location: "San Ramon Marriott",
+            startDate: new Date("2025-10-10"),
+            endDate: new Date("2025-10-12T23:59:59"),
+            slug: "pacificon-2025",
+            isActive: true,
+          });
+          console.log("Seeded Pacificon 2025 conference");
+        }
+      });
+
+      // Then seed sessions and other data
       await withRetry(async () => {
         const existingSessions = await db.select().from(sessions).limit(1);
         if (existingSessions.length > 0) {
           return;
         }
 
-        // Create default conference
-        const [conference] = await db.insert(conferences).values({
-          name: "Pacificon",
-          year: 2025,
-          location: "San Ramon, CA",
-          startDate: new Date("2025-10-10"),
-          endDate: new Date("2025-10-12"),
-          slug: "pacificon-2025",
-          isActive: true,
-        }).returning();
+        // Get the conference for linking
+        const [conference] = await db.select().from(conferences).where(eq(conferences.slug, "pacificon-2025")).limit(1);
+        if (!conference) {
+          console.log("No conference found for seeding sessions");
+          return;
+        }
 
         const conferenceId = conference.id;
 
