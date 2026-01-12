@@ -124,6 +124,7 @@ export type DoorPrize = typeof doorPrizes.$inferSelect;
 // T-Hunting Schedule table
 export const tHuntingSchedule = pgTable("t_hunting_schedule", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  conferenceId: varchar("conference_id").notNull(),
   huntNumber: integer("hunt_number").notNull(),
   startTime: text("start_time").notNull(),
   location: text("location").notNull(),
@@ -138,6 +139,7 @@ export type THuntingSchedule = typeof tHuntingSchedule.$inferSelect;
 // T-Hunting Winners table
 export const tHuntingWinners = pgTable("t_hunting_winners", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  conferenceId: varchar("conference_id").notNull(),
   rank: integer("rank").notNull(),
   callSign: text("call_sign").notNull(),
   completionTime: text("completion_time").notNull(),
@@ -152,6 +154,7 @@ export type THuntingWinner = typeof tHuntingWinners.$inferSelect;
 // Radio Contacts table
 export const radioContacts = pgTable("radio_contacts", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  conferenceId: varchar("conference_id").notNull(),
   type: text("type").notNull(), // 'talk-in' | 'simplex' | 'qrp'
   frequency: text("frequency").notNull(),
   label: text("label").notNull(),
@@ -165,6 +168,7 @@ export type RadioContact = typeof radioContacts.$inferSelect;
 // Venue Info table
 export const venueInfo = pgTable("venue_info", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  conferenceId: varchar("conference_id").notNull(),
   category: text("category").notNull(), // 'hotel' | 'parking' | 'registration' | 'testing'
   title: text("title").notNull(),
   details: text("details").notNull(),
@@ -178,6 +182,7 @@ export type VenueInfo = typeof venueInfo.$inferSelect;
 // Survey Responses table
 export const surveyResponses = pgTable("survey_responses", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  conferenceId: varchar("conference_id").notNull(),
   userId: varchar("user_id").notNull(),
   surveyType: text("survey_type").notNull(), // 'attendee' | 'exhibitor' | 'speaker' | 'volunteer' | 'staff'
   responses: json("responses").$type<Record<string, any>>().default({}),

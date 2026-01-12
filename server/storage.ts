@@ -512,24 +512,28 @@ export class DatabaseStorage implements IStorage {
 
         await db.insert(radioContacts).values([
           {
+            conferenceId,
             type: "talk-in",
             frequency: "146.850 MHz",
             label: "Conference Talk-In",
             notes: "PL 100.0 Hz, -0.6 MHz offset",
           },
           {
+            conferenceId,
             type: "simplex",
             frequency: "146.520 MHz",
             label: "National Simplex",
             notes: "Primary calling frequency",
           },
           {
+            conferenceId,
             type: "qrp",
             frequency: "7.030 MHz",
             label: "QRP CW",
             notes: "40m band activity",
           },
           {
+            conferenceId,
             type: "qrp",
             frequency: "14.060 MHz",
             label: "QRP SSB",
@@ -539,23 +543,27 @@ export class DatabaseStorage implements IStorage {
 
         await db.insert(venueInfo).values([
           {
+            conferenceId,
             category: "hotel",
             title: "San Ramon Marriott",
             details: "2600 Bishop Drive, San Ramon, CA 94583 • (925) 867-9200",
             hours: "Check-in: 4:00 PM • Check-out: 12:00 PM",
           },
           {
+            conferenceId,
             category: "parking",
             title: "Hotel Parking",
             details: "Free parking available for conference attendees who book at Pacificon rate",
           },
           {
+            conferenceId,
             category: "registration",
             title: "Registration Desk",
             details: "Main lobby near Grand Ballroom entrance",
             hours: "Fri 7AM-5PM • Sat 6AM-4PM • Sun 7:30AM-11AM",
           },
           {
+            conferenceId,
             category: "testing",
             title: "License Testing",
             details: "Conference Room 2 • Bring photo ID and $15 test fee",
@@ -592,6 +600,7 @@ export class DatabaseStorage implements IStorage {
 
         await db.insert(tHuntingWinners).values([
           {
+            conferenceId,
             rank: 1,
             callSign: "K6XYZ",
             completionTime: "24:35",
@@ -599,6 +608,7 @@ export class DatabaseStorage implements IStorage {
             prize: "Portable Antenna Kit",
           },
           {
+            conferenceId,
             rank: 2,
             callSign: "W6LMN",
             completionTime: "28:42",
@@ -606,6 +616,7 @@ export class DatabaseStorage implements IStorage {
             prize: "RF Attenuator Set",
           },
           {
+            conferenceId,
             rank: 3,
             callSign: "N6OPQ",
             completionTime: "31:15",
@@ -613,6 +624,7 @@ export class DatabaseStorage implements IStorage {
             prize: "Coax Cable Kit",
           },
           {
+            conferenceId,
             rank: 4,
             callSign: "KJ6RST",
             completionTime: "35:20",
@@ -622,6 +634,7 @@ export class DatabaseStorage implements IStorage {
 
         await db.insert(tHuntingSchedule).values([
           {
+            conferenceId,
             huntNumber: 1,
             startTime: "Saturday 2:00 PM",
             location: "Hotel Parking Lot - South End",
@@ -629,6 +642,7 @@ export class DatabaseStorage implements IStorage {
             registrationOpen: false,
           },
           {
+            conferenceId,
             huntNumber: 2,
             startTime: "Saturday 4:00 PM",
             location: "Hotel Grounds",
@@ -636,6 +650,7 @@ export class DatabaseStorage implements IStorage {
             registrationOpen: true,
           },
           {
+            conferenceId,
             huntNumber: 3,
             startTime: "Sunday 10:00 AM",
             location: "TBD",
