@@ -1,4 +1,5 @@
 import { 
+  conferences,
   users,
   sessions,
   bookmarks,
@@ -9,6 +10,7 @@ import {
   radioContacts,
   venueInfo,
   surveyResponses,
+  type Conference,
   type User, 
   type UpsertUser,
   type Session,
@@ -26,16 +28,21 @@ import { eq, and, desc, asc } from "drizzle-orm";
 import { withRetry, handleDatabaseError, DatabaseError } from "./dbUtils";
 
 export interface IStorage {
+  // Conference methods
+  getConferences(): Promise<Conference[]>;
+  getConferenceBySlug(slug: string): Promise<Conference | undefined>;
+  createConference(conference: Omit<Conference, 'id' | 'createdAt'>): Promise<Conference>;
+  
   getUser(id: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
   
-  getSessions(): Promise<Session[]>;
+  getSessions(conferenceId?: string): Promise<Session[]>;
   getSessionById(id: string): Promise<Session | undefined>;
   
-  getVendors(): Promise<Vendor[]>;
+  getVendors(conferenceId?: string): Promise<Vendor[]>;
   getVendorById(id: string): Promise<Vendor | undefined>;
   
-  getDoorPrizes(): Promise<DoorPrize[]>;
+  getDoorPrizes(conferenceId?: string): Promise<DoorPrize[]>;
   addDoorPrize(prize: Omit<DoorPrize, 'id'>): Promise<DoorPrize>;
   
   getTHuntingSchedule(): Promise<THuntingSchedule[]>;
@@ -45,9 +52,9 @@ export interface IStorage {
   getRadioContacts(): Promise<RadioContact[]>;
   getVenueInfo(): Promise<VenueInfo[]>;
   
-  getUserBookmarks(userId: string): Promise<string[]>;
-  addBookmark(userId: string, sessionId: string): Promise<void>;
-  removeBookmark(userId: string, sessionId: string): Promise<void>;
+  getUserBookmarks(userId: string, conferenceId?: string): Promise<string[]>;
+  addBookmark(userId: string, conferenceId: string, sessionId: string): Promise<void>;
+  removeBookmark(userId: string, conferenceId: string, sessionId: string): Promise<void>;
   
   getUserSurveyResponses(userId: string): Promise<SurveyResponse[]>;
   submitSurvey(response: Omit<SurveyResponse, 'id'>): Promise<SurveyResponse>;
@@ -59,6 +66,41 @@ export interface IStorage {
 }
 
 export class DatabaseStorage implements IStorage {
+  async getConferences(): Promise<Conference[]> {
+    try {
+      return await withRetry(async () => {
+        return await db.select().from(conferences).where(eq(conferences.isActive, true));
+      });
+    } catch (error) {
+      if (error instanceof DatabaseError) throw error;
+      handleDatabaseError(error, "getConferences");
+    }
+  }
+
+  async getConferenceBySlug(slug: string): Promise<Conference | undefined> {
+    try {
+      return await withRetry(async () => {
+        const [conference] = await db.select().from(conferences).where(eq(conferences.slug, slug));
+        return conference || undefined;
+      });
+    } catch (error) {
+      if (error instanceof DatabaseError) throw error;
+      handleDatabaseError(error, "getConferenceBySlug");
+    }
+  }
+
+  async createConference(conference: Omit<Conference, 'id' | 'createdAt'>): Promise<Conference> {
+    try {
+      return await withRetry(async () => {
+        const [newConference] = await db.insert(conferences).values(conference).returning();
+        return newConference;
+      });
+    } catch (error) {
+      if (error instanceof DatabaseError) throw error;
+      handleDatabaseError(error, "createConference");
+    }
+  }
+
   async getUser(id: string): Promise<User | undefined> {
     try {
       return await withRetry(async () => {
@@ -93,9 +135,12 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async getSessions(): Promise<Session[]> {
+  async getSessions(conferenceId?: string): Promise<Session[]> {
     try {
       return await withRetry(async () => {
+        if (conferenceId) {
+          return await db.select().from(sessions).where(eq(sessions.conferenceId, conferenceId));
+        }
         return await db.select().from(sessions);
       });
     } catch (error) {
@@ -116,9 +161,12 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async getVendors(): Promise<Vendor[]> {
+  async getVendors(conferenceId?: string): Promise<Vendor[]> {
     try {
       return await withRetry(async () => {
+        if (conferenceId) {
+          return await db.select().from(vendors).where(eq(vendors.conferenceId, conferenceId));
+        }
         return await db.select().from(vendors);
       });
     } catch (error) {
@@ -139,9 +187,12 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async getDoorPrizes(): Promise<DoorPrize[]> {
+  async getDoorPrizes(conferenceId?: string): Promise<DoorPrize[]> {
     try {
       return await withRetry(async () => {
+        if (conferenceId) {
+          return await db.select().from(doorPrizes).where(eq(doorPrizes.conferenceId, conferenceId)).orderBy(desc(doorPrizes.timestamp));
+        }
         return await db.select().from(doorPrizes).orderBy(desc(doorPrizes.timestamp));
       });
     } catch (error) {
@@ -218,10 +269,14 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async getUserBookmarks(userId: string): Promise<string[]> {
+  async getUserBookmarks(userId: string, conferenceId?: string): Promise<string[]> {
     try {
       return await withRetry(async () => {
-        const results = await db.select().from(bookmarks).where(eq(bookmarks.userId, userId));
+        const conditions = [eq(bookmarks.userId, userId)];
+        if (conferenceId) {
+          conditions.push(eq(bookmarks.conferenceId, conferenceId));
+        }
+        const results = await db.select().from(bookmarks).where(and(...conditions));
         return results.map(b => b.sessionId);
       });
     } catch (error) {
@@ -230,14 +285,14 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async addBookmark(userId: string, sessionId: string): Promise<void> {
+  async addBookmark(userId: string, conferenceId: string, sessionId: string): Promise<void> {
     try {
       await withRetry(async () => {
         const existing = await db.select().from(bookmarks).where(
-          and(eq(bookmarks.userId, userId), eq(bookmarks.sessionId, sessionId))
+          and(eq(bookmarks.userId, userId), eq(bookmarks.conferenceId, conferenceId), eq(bookmarks.sessionId, sessionId))
         );
         if (existing.length === 0) {
-          await db.insert(bookmarks).values({ userId, sessionId });
+          await db.insert(bookmarks).values({ userId, conferenceId, sessionId });
         }
       });
     } catch (error) {
@@ -246,11 +301,11 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async removeBookmark(userId: string, sessionId: string): Promise<void> {
+  async removeBookmark(userId: string, conferenceId: string, sessionId: string): Promise<void> {
     try {
       await withRetry(async () => {
         await db.delete(bookmarks).where(
-          and(eq(bookmarks.userId, userId), eq(bookmarks.sessionId, sessionId))
+          and(eq(bookmarks.userId, userId), eq(bookmarks.conferenceId, conferenceId), eq(bookmarks.sessionId, sessionId))
         );
       });
     } catch (error) {
@@ -332,8 +387,22 @@ export class DatabaseStorage implements IStorage {
           return;
         }
 
+        // Create default conference
+        const [conference] = await db.insert(conferences).values({
+          name: "Pacificon",
+          year: 2025,
+          location: "San Ramon, CA",
+          startDate: new Date("2025-10-10"),
+          endDate: new Date("2025-10-12"),
+          slug: "pacificon-2025",
+          isActive: true,
+        }).returning();
+
+        const conferenceId = conference.id;
+
         await db.insert(sessions).values([
           {
+            conferenceId,
             title: "Advanced Antenna Design for DX Communications",
             speaker: "John Smith, W6ABC",
             speakerBio: "John has been designing antennas for over 30 years and holds multiple patents.",
@@ -345,6 +414,7 @@ export class DatabaseStorage implements IStorage {
             category: "Antennas",
           },
           {
+            conferenceId,
             title: "Introduction to Digital Mode Operations",
             speaker: "Sarah Johnson, K6DEF",
             speakerBio: "Sarah specializes in digital communications and teaches classes at her local club.",
@@ -356,6 +426,7 @@ export class DatabaseStorage implements IStorage {
             category: "Digital Modes",
           },
           {
+            conferenceId,
             title: "ARRL Update and Legislative Matters",
             speaker: "Mike Davis, N6GHI",
             day: "friday",
@@ -365,6 +436,7 @@ export class DatabaseStorage implements IStorage {
             category: "ARRL",
           },
           {
+            conferenceId,
             title: "Building QRP Transceivers",
             speaker: "Tom Wilson, KJ6LMN",
             abstract: "Hands-on workshop building low-power radio equipment.",
@@ -375,6 +447,7 @@ export class DatabaseStorage implements IStorage {
             category: "QRP",
           },
           {
+            conferenceId,
             title: "Contest Operating Techniques",
             speaker: "Lisa Brown, W6OPQ",
             day: "saturday",
@@ -384,6 +457,7 @@ export class DatabaseStorage implements IStorage {
             category: "Contesting",
           },
           {
+            conferenceId,
             title: "Emergency Communications Fundamentals",
             speaker: "Robert Chen, WA6EMC",
             abstract: "Learn how amateur radio supports disaster relief and emergency services.",
@@ -397,6 +471,7 @@ export class DatabaseStorage implements IStorage {
 
         await db.insert(vendors).values([
           {
+            conferenceId,
             name: "Ham Radio Outlet",
             boothNumber: "12",
             category: "Equipment",
@@ -404,6 +479,7 @@ export class DatabaseStorage implements IStorage {
             website: "https://www.hamradio.com",
           },
           {
+            conferenceId,
             name: "DX Engineering",
             boothNumber: "15",
             category: "Antennas",
@@ -411,6 +487,7 @@ export class DatabaseStorage implements IStorage {
             website: "https://www.dxengineering.com",
           },
           {
+            conferenceId,
             name: "Elecraft",
             boothNumber: "8",
             category: "QRP Equipment",
@@ -474,6 +551,7 @@ export class DatabaseStorage implements IStorage {
 
         await db.insert(doorPrizes).values([
           {
+            conferenceId,
             badgeNumber: "147",
             callSign: "W6ABC",
             prizeName: "Handheld VHF/UHF Transceiver",
@@ -481,6 +559,7 @@ export class DatabaseStorage implements IStorage {
             claimed: false,
           },
           {
+            conferenceId,
             badgeNumber: "89",
             callSign: "K6DEF",
             prizeName: "Antenna Analyzer",
@@ -488,6 +567,7 @@ export class DatabaseStorage implements IStorage {
             claimed: true,
           },
           {
+            conferenceId,
             badgeNumber: "256",
             callSign: "N6GHI",
             prizeName: "Power Supply 25A",

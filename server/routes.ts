@@ -31,6 +31,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
     console.error("Failed to setup auth (non-fatal):", error);
   }
 
+  // Conferences
+  app.get("/api/conferences", async (_req, res) => {
+    try {
+      const conferences = await storage.getConferences();
+      res.json(conferences);
+    } catch (error) {
+      handleApiError(res, error, "Failed to fetch conferences");
+    }
+  });
+
+  app.get("/api/conferences/:slug", async (req, res) => {
+    try {
+      const conference = await storage.getConferenceBySlug(req.params.slug);
+      if (!conference) {
+        return res.status(404).json({ error: "Conference not found" });
+      }
+      res.json(conference);
+    } catch (error) {
+      handleApiError(res, error, "Failed to fetch conference");
+    }
+  });
+
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
     try {
       const claims = req.user.claims;
@@ -65,7 +87,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
   } catch (error) {
     console.error("Failed to seed database (non-fatal):", error);
   }
+  
   // Sessions
+  app.get("/api/conferences/:conferenceSlug/sessions", async (req, res) => {
+    try {
+      const conference = await storage.getConferenceBySlug(req.params.conferenceSlug);
+      if (!conference) {
+        return res.status(404).json({ error: "Conference not found" });
+      }
+      const sessions = await storage.getSessions(conference.id);
+      res.json(sessions);
+    } catch (error) {
+      handleApiError(res, error, "Failed to fetch sessions");
+    }
+  });
+
   app.get("/api/sessions", async (_req, res) => {
     try {
       const sessions = await storage.getSessions();
@@ -88,6 +124,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Vendors
+  app.get("/api/conferences/:conferenceSlug/vendors", async (req, res) => {
+    try {
+      const conference = await storage.getConferenceBySlug(req.params.conferenceSlug);
+      if (!conference) {
+        return res.status(404).json({ error: "Conference not found" });
+      }
+      const vendors = await storage.getVendors(conference.id);
+      res.json(vendors);
+    } catch (error) {
+      handleApiError(res, error, "Failed to fetch vendors");
+    }
+  });
+
   app.get("/api/vendors", async (_req, res) => {
     try {
       const vendors = await storage.getVendors();
@@ -110,6 +159,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Door Prizes
+  app.get("/api/conferences/:conferenceSlug/door-prizes", async (req, res) => {
+    try {
+      const conference = await storage.getConferenceBySlug(req.params.conferenceSlug);
+      if (!conference) {
+        return res.status(404).json({ error: "Conference not found" });
+      }
+      const prizes = await storage.getDoorPrizes(conference.id);
+      res.json(prizes);
+    } catch (error) {
+      handleApiError(res, error, "Failed to fetch door prizes");
+    }
+  });
+
   app.get("/api/door-prizes", async (_req, res) => {
     try {
       const prizes = await storage.getDoorPrizes();
@@ -162,7 +224,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/bookmarks", isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
-      const bookmarks = await storage.getUserBookmarks(userId);
+      const conferenceSlug = req.query.conference;
+      
+      let conferenceId: string | undefined;
+      if (conferenceSlug) {
+        const conference = await storage.getConferenceBySlug(conferenceSlug);
+        if (!conference) {
+          return res.status(404).json({ error: "Conference not found" });
+        }
+        conferenceId = conference.id;
+      }
+      
+      const bookmarks = await storage.getUserBookmarks(userId, conferenceId);
       res.json(bookmarks);
     } catch (error) {
       handleApiError(res, error, "Failed to fetch bookmarks");
@@ -172,7 +245,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/bookmarks/:sessionId", isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
-      await storage.addBookmark(userId, req.params.sessionId);
+      const conferenceSlug = req.body.conference;
+      
+      if (!conferenceSlug) {
+        return res.status(400).json({ error: "Conference slug is required" });
+      }
+      
+      const conference = await storage.getConferenceBySlug(conferenceSlug);
+      if (!conference) {
+        return res.status(404).json({ error: "Conference not found" });
+      }
+      
+      await storage.addBookmark(userId, conference.id, req.params.sessionId);
       res.json({ success: true });
     } catch (error) {
       handleApiError(res, error, "Failed to add bookmark");
@@ -182,7 +266,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.delete("/api/bookmarks/:sessionId", isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
-      await storage.removeBookmark(userId, req.params.sessionId);
+      const conferenceSlug = req.query.conference;
+      
+      if (!conferenceSlug) {
+        return res.status(400).json({ error: "Conference slug is required" });
+      }
+      
+      const conference = await storage.getConferenceBySlug(conferenceSlug);
+      if (!conference) {
+        return res.status(404).json({ error: "Conference not found" });
+      }
+      
+      await storage.removeBookmark(userId, conference.id, req.params.sessionId);
       res.json({ success: true });
     } catch (error) {
       handleApiError(res, error, "Failed to remove bookmark");

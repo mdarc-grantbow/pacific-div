@@ -3,9 +3,11 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { ConferenceContext, Conference } from "@/hooks/useConference";
 import BottomNav from "@/components/BottomNav";
+import ConferenceSelector from "@/components/ConferenceSelector";
 import SchedulePage from "@/pages/SchedulePage";
 import MapPage from "@/pages/MapPage";
 import InfoPage from "@/pages/InfoPage";
@@ -19,6 +21,19 @@ import { AuthContext } from "@/hooks/useAuth";
 function Router() {
   const { isAuthenticated, isLoading, user } = useAuth();
   const [location] = useLocation();
+  const [currentConference, setCurrentConference] = useState<Conference | null>(() => {
+    const saved = localStorage.getItem("currentConference");
+    return saved ? JSON.parse(saved) : null;
+  });
+
+  // Save conference to localStorage when it changes
+  useEffect(() => {
+    if (currentConference) {
+      localStorage.setItem("currentConference", JSON.stringify(currentConference));
+    } else {
+      localStorage.removeItem("currentConference");
+    }
+  }, [currentConference]);
 
   if (isLoading) {
     return (
@@ -28,31 +43,44 @@ function Router() {
     );
   }
 
+  // Show conference selector if no conference selected
+  if (!currentConference) {
+    return (
+      <ConferenceSelector
+        onSelect={(conference) => setCurrentConference(conference)}
+      />
+    );
+  }
+
   // Show landing/welcome page at root (no bottom nav)
   if (location === "/" || location === "/welcome") {
     return (
-      <AuthContext.Provider value={{ isAuthenticated, user, isLoading }}>
-        <LandingPage />
-      </AuthContext.Provider>
+      <ConferenceContext.Provider value={{ currentConference, setCurrentConference }}>
+        <AuthContext.Provider value={{ isAuthenticated, user, isLoading }}>
+          <LandingPage />
+        </AuthContext.Provider>
+      </ConferenceContext.Provider>
     );
   }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, isLoading }}>
-      <div className="h-screen flex flex-col bg-background">
-        <div className="flex-1 overflow-hidden">
-          <Switch>
-            <Route path="/schedule" component={SchedulePage} />
-            <Route path="/map" component={MapPage} />
-            <Route path="/info" component={InfoPage} />
-            <Route path="/prizes" component={PrizesPage} />
-            <Route path="/profile" component={ProfilePage} />
-            <Route component={NotFound} />
-          </Switch>
+    <ConferenceContext.Provider value={{ currentConference, setCurrentConference }}>
+      <AuthContext.Provider value={{ isAuthenticated, user, isLoading }}>
+        <div className="h-screen flex flex-col bg-background">
+          <div className="flex-1 overflow-hidden">
+            <Switch>
+              <Route path="/schedule" component={SchedulePage} />
+              <Route path="/map" component={MapPage} />
+              <Route path="/info" component={InfoPage} />
+              <Route path="/prizes" component={PrizesPage} />
+              <Route path="/profile" component={ProfilePage} />
+              <Route component={NotFound} />
+            </Switch>
+          </div>
+          <BottomNav />
         </div>
-        <BottomNav />
-      </div>
-    </AuthContext.Provider>
+      </AuthContext.Provider>
+    </ConferenceContext.Provider>
   );
 }
 

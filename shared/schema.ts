@@ -3,6 +3,22 @@ import { pgTable, text, varchar, timestamp, integer, boolean, json, jsonb, index
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+// Conferences table
+export const conferences = pgTable("conferences", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull(),
+  year: integer("year").notNull(),
+  location: text("location").notNull(),
+  startDate: timestamp("start_date").notNull(),
+  endDate: timestamp("end_date").notNull(),
+  slug: varchar("slug").unique().notNull(),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export type Conference = typeof conferences.$inferSelect;
+export type InsertConference = typeof conferences.$inferInsert;
+
 // Auth Sessions table for Replit Auth
 // (IMPORTANT) This table is mandatory for Replit Auth, don't drop it.
 export const authSessions = pgTable(
@@ -47,6 +63,7 @@ export type UserProfile = {
 // Sessions table
 export const sessions = pgTable("sessions", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  conferenceId: varchar("conference_id").notNull(),
   title: text("title").notNull(),
   speaker: text("speaker").notNull(),
   speakerBio: text("speaker_bio"),
@@ -66,6 +83,7 @@ export type Session = typeof sessions.$inferSelect & { isBookmarked?: boolean };
 export const bookmarks = pgTable("bookmarks", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   userId: varchar("user_id").notNull(),
+  conferenceId: varchar("conference_id").notNull(),
   sessionId: varchar("session_id").notNull(),
 });
 
@@ -76,6 +94,7 @@ export type Bookmark = typeof bookmarks.$inferSelect;
 // Vendors table
 export const vendors = pgTable("vendors", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  conferenceId: varchar("conference_id").notNull(),
   name: text("name").notNull(),
   boothNumber: text("booth_number").notNull(),
   category: text("category").notNull(),
@@ -90,6 +109,7 @@ export type Vendor = typeof vendors.$inferSelect;
 // Door Prizes table
 export const doorPrizes = pgTable("door_prizes", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  conferenceId: varchar("conference_id").notNull(),
   badgeNumber: text("badge_number").notNull(),
   callSign: text("call_sign").notNull(),
   prizeName: text("prize_name").notNull(),
