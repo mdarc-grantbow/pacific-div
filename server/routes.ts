@@ -102,6 +102,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Sessions (conference-scoped)
+  app.get("/api/conferences/:conferenceSlug/sessions", async (req, res) => {
+    try {
+      const conference = await storage.getConferenceBySlug(req.params.conferenceSlug);
+      if (!conference) {
+        return res.status(404).json({ error: "Conference not found" });
+      }
+      const sessions = await storage.getSessions(conference.id);
+      res.json(sessions);
+    } catch (error) {
+      handleApiError(res, error, "Failed to fetch sessions");
+    }
+  });
+
+  // Sessions (legacy)
   app.get("/api/sessions", async (_req, res) => {
     try {
       const sessions = await storage.getSessions();
@@ -181,7 +196,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // T-Hunting
+  // T-Hunting (conference-scoped)
+  app.get("/api/conferences/:conferenceSlug/thunting/winners", async (req, res) => {
+    try {
+      const conference = await storage.getConferenceBySlug(req.params.conferenceSlug);
+      if (!conference) {
+        return res.status(404).json({ error: "Conference not found" });
+      }
+      const winners = await storage.getTHuntingWinners(conference.id);
+      res.json(winners);
+    } catch (error) {
+      handleApiError(res, error, "Failed to fetch T-hunting winners");
+    }
+  });
+
+  app.get("/api/conferences/:conferenceSlug/thunting/schedule", async (req, res) => {
+    try {
+      const conference = await storage.getConferenceBySlug(req.params.conferenceSlug);
+      if (!conference) {
+        return res.status(404).json({ error: "Conference not found" });
+      }
+      const schedule = await storage.getTHuntingSchedule(conference.id);
+      res.json(schedule);
+    } catch (error) {
+      handleApiError(res, error, "Failed to fetch T-hunting schedule");
+    }
+  });
+
+  // T-Hunting (legacy endpoints for backwards compatibility)
   app.get("/api/thunting/winners", async (_req, res) => {
     try {
       const winners = await storage.getTHuntingWinners();
@@ -200,7 +242,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Radio Contacts
+  // Radio Contacts (conference-scoped)
+  app.get("/api/conferences/:conferenceSlug/radio-contacts", async (req, res) => {
+    try {
+      const conference = await storage.getConferenceBySlug(req.params.conferenceSlug);
+      if (!conference) {
+        return res.status(404).json({ error: "Conference not found" });
+      }
+      const contacts = await storage.getRadioContacts(conference.id);
+      res.json(contacts);
+    } catch (error) {
+      handleApiError(res, error, "Failed to fetch radio contacts");
+    }
+  });
+
+  // Radio Contacts (legacy)
   app.get("/api/radio-contacts", async (_req, res) => {
     try {
       const contacts = await storage.getRadioContacts();
@@ -210,7 +266,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Venue Info
+  // Venue Info (conference-scoped)
+  app.get("/api/conferences/:conferenceSlug/venue-info", async (req, res) => {
+    try {
+      const conference = await storage.getConferenceBySlug(req.params.conferenceSlug);
+      if (!conference) {
+        return res.status(404).json({ error: "Conference not found" });
+      }
+      const info = await storage.getVenueInfo(conference.id);
+      res.json(info);
+    } catch (error) {
+      handleApiError(res, error, "Failed to fetch venue info");
+    }
+  });
+
+  // Venue Info (legacy)
   app.get("/api/venue-info", async (_req, res) => {
     try {
       const info = await storage.getVenueInfo();
@@ -298,10 +368,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/surveys/:surveyType", isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
-      const { responses } = req.body;
+      const { responses, conference: conferenceSlug } = req.body;
+      
+      if (!conferenceSlug) {
+        return res.status(400).json({ error: "Conference slug is required" });
+      }
+      
+      const conference = await storage.getConferenceBySlug(conferenceSlug);
+      if (!conference) {
+        return res.status(404).json({ error: "Conference not found" });
+      }
       
       const surveyData = {
         userId,
+        conferenceId: conference.id,
         surveyType: req.params.surveyType,
         responses: responses || {},
         timestamp: new Date().toISOString(),
