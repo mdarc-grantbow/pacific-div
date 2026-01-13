@@ -53,6 +53,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Update conference branding/details (protected)
+  app.put("/api/conferences/:slug", isAuthenticated, async (req: any, res) => {
+    try {
+      const patch = req.body || {};
+      const updated = await storage.updateConferenceBySlug(req.params.slug, patch);
+      res.json(updated);
+    } catch (error) {
+      handleApiError(res, error, "Failed to update conference");
+    }
+  });
+
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
     try {
       const claims = req.user.claims;

@@ -12,7 +12,12 @@ export const conferences = pgTable("conferences", {
   startDate: timestamp("start_date").notNull(),
   endDate: timestamp("end_date").notNull(),
   slug: varchar("slug").unique().notNull(),
-  division: text("division"),
+  division: text("division").notNull(),
+  // Branding
+  logoUrl: varchar("logo_url"),
+  faviconUrl: varchar("favicon_url"),
+  primaryColor: varchar("primary_color"),
+  accentColor: varchar("accent_color"),
   isActive: boolean("is_active").default(true),
   createdAt: timestamp("created_at").defaultNow(),
 });

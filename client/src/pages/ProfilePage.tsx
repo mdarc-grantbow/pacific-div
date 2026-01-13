@@ -1,4 +1,6 @@
-import { User, Bell, Moon, Sun, Info, MessageSquare, CheckCircle2, ExternalLink, LogOut, LogIn, Radio } from "lucide-react";
+import React from "react";
+import { Bell, Moon, Sun, Info, MessageSquare, CheckCircle2, ExternalLink, LogOut, LogIn, Radio } from "lucide-react";
+import { useConference } from "@/hooks/useConference";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -91,10 +93,13 @@ export default function ProfilePage() {
     return (
       <div className="flex flex-col h-full">
         <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3">
-          <Link href="/welcome" className="hover:opacity-80 transition-opacity flex items-center gap-2" data-testid="link-welcome">
-            <Radio className="h-5 w-5 text-primary" />
-            <h1 className="text-xl font-medium text-foreground">Profile</h1>
-          </Link>
+          <div className="flex items-center justify-between">
+            <Link href="/welcome" className="hover:opacity-80 transition-opacity flex items-center gap-2" data-testid="link-welcome">
+              <Radio className="h-5 w-5 text-primary" />
+              <h1 className="text-xl font-medium text-foreground">Profile</h1>
+            </Link>
+            <Button size="sm" variant="ghost" onClick={() => conferenceName)}>Change Conference</Button>
+          </div>
         </header>
 
         <main className="flex-1 overflow-y-auto px-4 py-4 pb-20">
@@ -135,7 +140,7 @@ export default function ProfilePage() {
           <Card className="p-4 mt-4">
             <h3 className="font-medium text-foreground mb-3">About {conferenceName}</h3>
             <p className="text-sm text-muted-foreground mb-3">
-              {conferenceName} is the premier amateur radio event in the Western United States and the ARRL {conferenceDivision} Division's annual convention.
+              {conferenceName} is the premier amateur radio event in the ARRL {conferenceDivision} Division's annual convention.
             </p>
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-sm">
@@ -245,10 +250,18 @@ export default function ProfilePage() {
   return (
     <div className="flex flex-col h-full">
       <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3">
-        <Link href="/welcome" className="hover:opacity-80 transition-opacity flex items-center gap-2" data-testid="link-welcome">
-          <Radio className="h-5 w-5 text-primary" />
-          <h1 className="text-xl font-medium text-foreground">Profile</h1>
-        </Link>
+        <div className="flex items-center justify-between">
+          <Link href="/welcome" className="hover:opacity-80 transition-opacity flex items-center gap-2" data-testid="link-welcome">
+            <Radio className="h-5 w-5 text-primary" />
+            <h1 className="text-xl font-medium text-foreground">Profile</h1>
+          </Link>
+          <div className="flex items-center gap-2">
+            <Button size="sm" asChild variant="ghost">
+              <Link href="/admin/conference">Admin</Link>
+            </Button>
+            <Button size="sm" variant="ghost" onClick={() => conferenceName}>Change Conference</Button>
+          </div>
+        </div>
       </header>
 
       <main className="flex-1 overflow-y-auto px-4 py-4 pb-20">
@@ -433,7 +446,7 @@ export default function ProfilePage() {
         <Card className="p-4">
           <h3 className="font-medium text-foreground mb-3">About {conferenceName}</h3>
           <p className="text-sm text-muted-foreground mb-3">
-            {conferenceName} is the premier amateur radio event in the Western United States and the ARRL {conferenceDivision} Division's annual convention.
+            {conferenceName} is the premier amateur radio event in the ARRL {conferenceDivision} Division's annual convention.
           </p>
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-sm">
