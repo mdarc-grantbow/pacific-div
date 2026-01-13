@@ -13,9 +13,14 @@ export const conferences = pgTable("conferences", {
   endDate: timestamp("end_date").notNull(),
   slug: varchar("slug").unique().notNull(),
   division: text("division"),
-  gridSquare: text("grid_square"),
+  gridsquare: text("grid_square"),
   gps: text("gps"),
   locationAddress: text("location_address"),
+  // Branding
+  logoUrl: varchar("logo_url"),
+  faviconUrl: varchar("favicon_url"),
+  primaryColor: varchar("primary_color"),
+  accentColor: varchar("accent_color"),
   isActive: boolean("is_active").default(true),
   createdAt: timestamp("created_at").defaultNow(),
 });

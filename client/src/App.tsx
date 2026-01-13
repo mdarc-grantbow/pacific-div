@@ -1,3 +1,4 @@
+import React from "react";
 import { Switch, Route, useLocation } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -13,6 +14,7 @@ import MapPage from "@/pages/MapPage";
 import InfoPage from "@/pages/InfoPage";
 import PrizesPage from "@/pages/PrizesPage";
 import ProfilePage from "@/pages/ProfilePage";
+import AdminConference from "@/pages/AdminConference";
 import LandingPage from "@/pages/LandingPage";
 import NotFound from "@/pages/not-found";
 import { Loader2 } from "lucide-react";
@@ -32,6 +34,35 @@ function Router() {
       localStorage.setItem("currentConference", JSON.stringify(currentConference));
     } else {
       localStorage.removeItem("currentConference");
+    }
+  }, [currentConference]);
+
+  // Apply runtime branding (CSS variables + favicon)
+  useEffect(() => {
+    if (!currentConference) return;
+
+    const root = document.documentElement;
+    if (currentConference.primaryColor) {
+      root.style.setProperty("--conference-primary", currentConference.primaryColor);
+    } else {
+      root.style.removeProperty("--conference-primary");
+    }
+    if (currentConference.accentColor) {
+      root.style.setProperty("--conference-accent", currentConference.accentColor);
+    } else {
+      root.style.removeProperty("--conference-accent");
+    }
+
+    if (currentConference.faviconUrl) {
+      const link: HTMLLinkElement | null = document.querySelector("link[rel~='icon']");
+      if (link) {
+        link.href = currentConference.faviconUrl;
+      } else {
+        const newLink = document.createElement('link');
+        newLink.rel = 'icon';
+        newLink.href = currentConference.faviconUrl;
+        document.head.appendChild(newLink);
+      }
     }
   }, [currentConference]);
 
@@ -74,6 +105,7 @@ function Router() {
               <Route path="/info" component={InfoPage} />
               <Route path="/prizes" component={PrizesPage} />
               <Route path="/profile" component={ProfilePage} />
+              <Route path="/admin/conference" component={AdminConference} />
               <Route component={NotFound} />
             </Switch>
           </div>

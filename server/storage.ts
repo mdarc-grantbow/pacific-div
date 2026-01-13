@@ -32,6 +32,7 @@ export interface IStorage {
   getConferences(): Promise<Conference[]>;
   getConferenceBySlug(slug: string): Promise<Conference | undefined>;
   createConference(conference: Omit<Conference, 'id' | 'createdAt'>): Promise<Conference>;
+  updateConferenceBySlug(slug: string, patch: Partial<Conference>): Promise<Conference>;
   
   getUser(id: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
@@ -98,6 +99,18 @@ export class DatabaseStorage implements IStorage {
     } catch (error) {
       if (error instanceof DatabaseError) throw error;
       handleDatabaseError(error, "createConference");
+    }
+  }
+
+  async updateConferenceBySlug(slug: string, patch: Partial<Conference>): Promise<Conference> {
+    try {
+      return await withRetry(async () => {
+        const [updated] = await db.update(conferences).set(patch as any).where(eq(conferences.slug, slug)).returning();
+        return updated;
+      });
+    } catch (error) {
+      if (error instanceof DatabaseError) throw error;
+      handleDatabaseError(error, "updateConferenceBySlug");
     }
   }
 
@@ -408,6 +421,11 @@ export class DatabaseStorage implements IStorage {
             gridSquare: "CM87us",
             gps: "37.7631, -121.9736",
             locationAddress: "2600 Bishop Dr, San Ramon, CA 94583",
+            // branding
+            logoUrl: "https://raw.githubusercontent.com/pacificon/example-assets/main/pacificon-logo.png",
+            faviconUrl: "/favicon-pacificon.ico",
+            primaryColor: "#1e40af",
+            accentColor: "#f97316",
             isActive: true,
           });
           console.log("Seeded Pacificon 2025 conference");

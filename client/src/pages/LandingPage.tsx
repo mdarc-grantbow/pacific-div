@@ -1,6 +1,7 @@
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Radio, Calendar, Map, Info, Award, User } from "lucide-react";
+import { Radio, Calendar, Map, Info, Award } from "lucide-react";
 import { Link } from "wouter";
 import { useAuthContext } from "@/hooks/useAuth";
 import { useConference } from "@/hooks/useConference";
@@ -45,8 +46,17 @@ export default function LandingPage() {
       <header className="border-b bg-card">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Radio className="h-6 w-6 text-primary" />
-            <span className="font-bold text-lg">{conferenceName} {conferenceYear}</span>
+            {currentConference?.logoUrl ? (
+              <img src={currentConference.logoUrl} alt={currentConference.name} className="h-8" />
+            ) : (
+              <Radio className="h-6 w-6 text-primary" />
+            )}
+            <div className="flex items-center gap-3">
+              <span className="font-bold text-lg">{currentConference ? `${currentConference.name} ${currentConference.year}` : 'Conference'}</span>
+              <Button size="sm" variant="ghost" onClick={() => setCurrentConference(undefined)}>
+                Change
+              </Button>
+            </div>
           </div>
           {isAuthenticated ? (
             <Button asChild data-testid="button-profile">
@@ -63,11 +73,12 @@ export default function LandingPage() {
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto text-center mb-12">
           <h1 className="text-3xl font-bold mb-4" data-testid="text-hero-title">
-            Welcome to {conferenceName} {conferenceYear}
+            {currentConference ? `Welcome to ${currentConference.name} ${currentConference.year}` : 'Welcome'}
           </h1>
           <p className="text-muted-foreground text-lg mb-6" data-testid="text-hero-description">
-            Your companion app for the annual amateur radio conference.
-            October 10-12, 2025 at the San Ramon Marriott.
+            {currentConference
+              ? `${currentConference.location} • ${new Date(currentConference.startDate).toLocaleDateString()} - ${new Date(currentConference.endDate).toLocaleDateString()}`
+              : 'Your companion app for the conference.'}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button size="lg" asChild data-testid="button-get-started">
