@@ -12,6 +12,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuthContext } from "@/hooks/useAuth";
+import { useConference } from "@/hooks/useConference";
 import type { UserProfile } from "@shared/schema";
 
 type SurveyCategory = {
@@ -24,8 +25,35 @@ type SurveyCategory = {
 export default function ProfilePage() {
   const { toast } = useToast();
   const { isAuthenticated } = useAuthContext();
+  const { currentConference } = useConference();
   const [darkMode, setDarkMode] = useState(false);
   const [notifications, setNotifications] = useState(true);
+
+  const conferenceName = currentConference?.name ?? 'Pacificon';
+  const conferenceYear = currentConference?.year ?? 2025;
+  const conferenceDivision = currentConference?.division ?? 'Pacific';
+  const conferenceLocation = currentConference?.location ?? 'San Ramon Marriott, CA';
+  
+  const formatConferenceDates = () => {
+    if (currentConference?.startDate && currentConference?.endDate) {
+      const start = new Date(currentConference.startDate);
+      const end = new Date(currentConference.endDate);
+      const months = ['January', 'February', 'March', 'April', 'May', 'June', 
+                      'July', 'August', 'September', 'October', 'November', 'December'];
+      const startMonth = months[start.getUTCMonth()];
+      const startDay = start.getUTCDate();
+      const endMonth = months[end.getUTCMonth()];
+      const endDay = end.getUTCDate();
+      const endYear = end.getUTCFullYear();
+      
+      if (startMonth === endMonth) {
+        return `${startMonth} ${startDay}-${endDay}, ${endYear}`;
+      } else {
+        return `${startMonth} ${startDay} - ${endMonth} ${endDay}, ${endYear}`;
+      }
+    }
+    return 'October 10-12, 2025';
+  };
 
   useEffect(() => {
     const isDark = document.documentElement.classList.contains('dark');
@@ -105,18 +133,18 @@ export default function ProfilePage() {
           </Card>
 
           <Card className="p-4 mt-4">
-            <h3 className="font-medium text-foreground mb-3">About Pacificon</h3>
+            <h3 className="font-medium text-foreground mb-3">About {conferenceName}</h3>
             <p className="text-sm text-muted-foreground mb-3">
-              Pacificon is the premier amateur radio event in the Western United States and the ARRL Pacific Division's annual convention.
+              {conferenceName} is the premier amateur radio event in the Western United States and the ARRL {conferenceDivision} Division's annual convention.
             </p>
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-sm">
                 <Info className="w-4 h-4 text-muted-foreground" />
-                <span className="text-muted-foreground">October 10-12, 2025</span>
+                <span className="text-muted-foreground">{formatConferenceDates()}</span>
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <Info className="w-4 h-4 text-muted-foreground" />
-                <span className="text-muted-foreground">San Ramon Marriott, CA</span>
+                <span className="text-muted-foreground">{conferenceLocation}</span>
               </div>
             </div>
             <Separator className="my-3" />
@@ -403,18 +431,18 @@ export default function ProfilePage() {
         </Card>
 
         <Card className="p-4">
-          <h3 className="font-medium text-foreground mb-3">About Pacificon</h3>
+          <h3 className="font-medium text-foreground mb-3">About {conferenceName}</h3>
           <p className="text-sm text-muted-foreground mb-3">
-            Pacificon is the premier amateur radio event in the Western United States and the ARRL Pacific Division's annual convention.
+            {conferenceName} is the premier amateur radio event in the Western United States and the ARRL {conferenceDivision} Division's annual convention.
           </p>
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-sm">
               <Info className="w-4 h-4 text-muted-foreground" />
-              <span className="text-muted-foreground">October 10-12, 2025</span>
+              <span className="text-muted-foreground">{formatConferenceDates()}</span>
             </div>
             <div className="flex items-center gap-2 text-sm">
               <Info className="w-4 h-4 text-muted-foreground" />
-              <span className="text-muted-foreground">San Ramon Marriott, CA</span>
+              <span className="text-muted-foreground">{conferenceLocation}</span>
             </div>
           </div>
           <Separator className="my-3" />

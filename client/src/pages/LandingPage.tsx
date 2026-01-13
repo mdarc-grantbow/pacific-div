@@ -3,6 +3,7 @@ import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/ca
 import { Radio, Calendar, Map, Info, Award, User } from "lucide-react";
 import { Link } from "wouter";
 import { useAuthContext } from "@/hooks/useAuth";
+import { useConference } from "@/hooks/useConference";
 
 const featureCards = [
   {
@@ -33,6 +34,11 @@ const featureCards = [
 
 export default function LandingPage() {
   const { isAuthenticated } = useAuthContext();
+  const { currentConference } = useConference();
+
+  const conferenceName = currentConference?.name ?? 'Pacificon';
+  const conferenceYear = currentConference?.year ?? 2025;
+  const conferenceDivision = currentConference?.division ?? 'Pacific';
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -40,7 +46,7 @@ export default function LandingPage() {
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Radio className="h-6 w-6 text-primary" />
-            <span className="font-bold text-lg">Pacificon 2025</span>
+            <span className="font-bold text-lg">{conferenceName} {conferenceYear}</span>
           </div>
           {isAuthenticated ? (
             <Button asChild data-testid="button-profile">
@@ -57,7 +63,7 @@ export default function LandingPage() {
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto text-center mb-12">
           <h1 className="text-3xl font-bold mb-4" data-testid="text-hero-title">
-            Welcome to Pacificon 2025
+            Welcome to {conferenceName} {conferenceYear}
           </h1>
           <p className="text-muted-foreground text-lg mb-6" data-testid="text-hero-description">
             Your companion app for the annual amateur radio conference.
@@ -99,7 +105,7 @@ export default function LandingPage() {
 
       <footer className="border-t bg-card py-6">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          <p>Pacificon is sponsored by ARRL Pacific Division member clubs</p>
+          <p>{conferenceName} is sponsored by ARRL {conferenceDivision} Division member clubs</p>
         </div>
       </footer>
     </div>
