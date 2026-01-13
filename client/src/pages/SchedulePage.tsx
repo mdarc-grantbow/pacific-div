@@ -11,6 +11,7 @@ import SessionCard from "@/components/SessionCard";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useAuthContext } from "@/hooks/useAuth";
+import { useConference } from "@/hooks/useConference";
 import { useToast } from "@/hooks/use-toast";
 import type { Session } from "@shared/schema";
 
@@ -305,31 +306,43 @@ export default function SchedulePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState<'forums' | 'events'>('forums');
   const { isAuthenticated } = useAuthContext();
+  const { currentConference } = useConference();
   const { toast } = useToast();
 
   const { data: sessions = [], isLoading: sessionsLoading } = useQuery<Session[]>({
-    queryKey: ['/api/sessions'],
+    queryKey: ['/api/conferences', currentConference?.slug, 'sessions'],
+    queryFn: async () => {
+      const response = await fetch(`/api/conferences/${currentConference?.slug}/sessions`);
+      if (!response.ok) throw new Error('Failed to fetch sessions');
+      return response.json();
+    },
+    enabled: !!currentConference?.slug,
   });
 
   const { data: bookmarksData } = useQuery<string[]>({
-    queryKey: ['/api/bookmarks'],
-    enabled: isAuthenticated,
+    queryKey: ['/api/bookmarks', currentConference?.slug],
+    queryFn: async () => {
+      const response = await fetch(`/api/bookmarks?conference=${currentConference?.slug}`);
+      if (!response.ok) throw new Error('Failed to fetch bookmarks');
+      return response.json();
+    },
+    enabled: isAuthenticated && !!currentConference?.slug,
   });
   const bookmarks = bookmarksData ?? [];
 
   const addBookmarkMutation = useMutation({
     mutationFn: (sessionId: string) => 
-      apiRequest('POST', `/api/bookmarks/${sessionId}`),
+      apiRequest('POST', `/api/bookmarks/${sessionId}`, { conference: currentConference?.slug }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/bookmarks'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/bookmarks', currentConference?.slug] });
     },
   });
 
   const removeBookmarkMutation = useMutation({
     mutationFn: (sessionId: string) => 
-      apiRequest('DELETE', `/api/bookmarks/${sessionId}`),
+      apiRequest('DELETE', `/api/bookmarks/${sessionId}?conference=${currentConference?.slug}`),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/bookmarks'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/bookmarks', currentConference?.slug] });
     },
   });
 
@@ -375,7 +388,7 @@ export default function SchedulePage() {
         <div className="flex items-center justify-between mb-3">
           <Link href="/welcome" className="hover:opacity-80 transition-opacity flex items-center gap-2" data-testid="link-welcome">
             <Radio className="h-5 w-5 text-primary" />
-            <h1 className="text-xl font-medium text-foreground">Pacificon 2025</h1>
+            <h1 className="text-xl font-medium text-foreground">{currentConference?.name} {currentConference?.year}</h1>
           </Link>
           <Button size="icon" variant="ghost" data-testid="button-notifications">
             <Bell className="w-5 h-5" />

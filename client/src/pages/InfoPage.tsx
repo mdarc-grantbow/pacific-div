@@ -8,11 +8,13 @@ import VenueInfoCard from "@/components/VenueInfoCard";
 import VendorCard from "@/components/VendorCard";
 import { useQuery } from "@tanstack/react-query";
 import { useAuthContext } from "@/hooks/useAuth";
+import { useConference } from "@/hooks/useConference";
 import type { RadioContact, VenueInfo, Vendor, UserProfile } from "@shared/schema";
 import exhibitorsMapImage from "@assets/exhibitors_1764883755395.png";
 
 export default function InfoPage() {
   const { isAuthenticated } = useAuthContext();
+  const { currentConference } = useConference();
   
   const { data: userProfile } = useQuery<UserProfile>({
     queryKey: ['/api/profile'],
@@ -22,15 +24,33 @@ export default function InfoPage() {
   const isRegistered = isAuthenticated ? (userProfile?.isRegistered ?? false) : false;
 
   const { data: radioContacts = [], isLoading: contactsLoading } = useQuery<RadioContact[]>({
-    queryKey: ['/api/radio-contacts'],
+    queryKey: ['/api/conferences', currentConference?.slug, 'radio-contacts'],
+    queryFn: async () => {
+      const response = await fetch(`/api/conferences/${currentConference?.slug}/radio-contacts`);
+      if (!response.ok) throw new Error('Failed to fetch radio contacts');
+      return response.json();
+    },
+    enabled: !!currentConference?.slug,
   });
 
   const { data: venueInfo = [], isLoading: venueLoading } = useQuery<VenueInfo[]>({
-    queryKey: ['/api/venue-info'],
+    queryKey: ['/api/conferences', currentConference?.slug, 'venue-info'],
+    queryFn: async () => {
+      const response = await fetch(`/api/conferences/${currentConference?.slug}/venue-info`);
+      if (!response.ok) throw new Error('Failed to fetch venue info');
+      return response.json();
+    },
+    enabled: !!currentConference?.slug,
   });
 
   const { data: vendors = [], isLoading: vendorsLoading } = useQuery<Vendor[]>({
-    queryKey: ['/api/vendors'],
+    queryKey: ['/api/conferences', currentConference?.slug, 'vendors'],
+    queryFn: async () => {
+      const response = await fetch(`/api/conferences/${currentConference?.slug}/vendors`);
+      if (!response.ok) throw new Error('Failed to fetch vendors');
+      return response.json();
+    },
+    enabled: !!currentConference?.slug,
   });
 
   return (

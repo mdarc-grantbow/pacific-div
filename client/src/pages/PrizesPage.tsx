@@ -6,10 +6,12 @@ import PrizeCard from "@/components/PrizeCard";
 import THuntingCard from "@/components/THuntingCard";
 import { useQuery } from "@tanstack/react-query";
 import { useAuthContext } from "@/hooks/useAuth";
+import { useConference } from "@/hooks/useConference";
 import type { DoorPrize, THuntingWinner, UserProfile } from "@shared/schema";
 
 export default function PrizesPage() {
   const { isAuthenticated } = useAuthContext();
+  const { currentConference } = useConference();
   
   const { data: userProfile } = useQuery<UserProfile>({
     queryKey: ['/api/profile'],
@@ -19,11 +21,23 @@ export default function PrizesPage() {
   const userBadgeNumber = userProfile?.badgeNumber || "";
 
   const { data: doorPrizes = [], isLoading: prizesLoading } = useQuery<DoorPrize[]>({
-    queryKey: ['/api/door-prizes'],
+    queryKey: ['/api/conferences', currentConference?.slug, 'door-prizes'],
+    queryFn: async () => {
+      const response = await fetch(`/api/conferences/${currentConference?.slug}/door-prizes`);
+      if (!response.ok) throw new Error('Failed to fetch door prizes');
+      return response.json();
+    },
+    enabled: !!currentConference?.slug,
   });
 
   const { data: tHuntingWinners = [], isLoading: winnersLoading } = useQuery<THuntingWinner[]>({
-    queryKey: ['/api/thunting/winners'],
+    queryKey: ['/api/conferences', currentConference?.slug, 'thunting-winners'],
+    queryFn: async () => {
+      const response = await fetch(`/api/conferences/${currentConference?.slug}/thunting/winners`);
+      if (!response.ok) throw new Error('Failed to fetch T-hunting winners');
+      return response.json();
+    },
+    enabled: !!currentConference?.slug,
   });
 
   const userHasWon = isAuthenticated && doorPrizes.some(p => p.badgeNumber === userBadgeNumber);
