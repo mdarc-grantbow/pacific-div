@@ -15,6 +15,7 @@ export const conferences = pgTable("conferences", {
   division: text("division"),
   gridSquare: text("grid_square"),
   gps: text("gps"),
+  locationAddress: text("location_address"),
   isActive: boolean("is_active").default(true),
   createdAt: timestamp("created_at").defaultNow(),
 });

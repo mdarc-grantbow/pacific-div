@@ -407,6 +407,7 @@ export class DatabaseStorage implements IStorage {
             division: "Pacific",
             gridSquare: "CM87us",
             gps: "37.7631, -121.9736",
+            locationAddress: "2600 Bishop Dr, San Ramon, CA 94583",
             isActive: true,
           });
           console.log("Seeded Pacificon 2025 conference");
