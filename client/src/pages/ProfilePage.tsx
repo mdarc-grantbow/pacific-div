@@ -1,4 +1,4 @@
-import { User, Bell, Moon, Sun, Info, MessageSquare, CheckCircle2, ExternalLink, LogOut, LogIn, Radio, MapPin } from "lucide-react";
+import { User, Bell, Moon, Sun, Info, MessageSquare, CheckCircle2, ExternalLink, LogOut, LogIn, Radio, MapPin, ChevronDown } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -7,12 +7,13 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuthContext } from "@/hooks/useAuth";
-import { useConference } from "@/hooks/useConference";
+import { useConference, Conference } from "@/hooks/useConference";
 import type { UserProfile } from "@shared/schema";
 
 type SurveyCategory = {
@@ -25,9 +26,23 @@ type SurveyCategory = {
 export default function ProfilePage() {
   const { toast } = useToast();
   const { isAuthenticated } = useAuthContext();
-  const { currentConference } = useConference();
+  const { currentConference, setCurrentConference } = useConference();
   const [darkMode, setDarkMode] = useState(false);
   const [notifications, setNotifications] = useState(true);
+  const [conferenceDialogOpen, setConferenceDialogOpen] = useState(false);
+
+  const { data: conferences = [] } = useQuery<Conference[]>({
+    queryKey: ['/api/conferences'],
+  });
+
+  const handleConferenceChange = (conference: Conference) => {
+    setCurrentConference(conference);
+    setConferenceDialogOpen(false);
+    toast({
+      title: "Conference changed",
+      description: `Switched to ${conference.name} ${conference.year}`,
+    });
+  };
 
   const conferenceName = currentConference?.name ?? 'Pacificon';
   const conferenceYear = currentConference?.year ?? 2025;
@@ -88,14 +103,57 @@ export default function ProfilePage() {
 
   const isRegistered = userProfile?.isRegistered ?? false;
 
+  const ConferenceSelectorDialog = () => (
+    <Dialog open={conferenceDialogOpen} onOpenChange={setConferenceDialogOpen}>
+      <DialogTrigger asChild>
+        <Button variant="ghost" size="sm" className="gap-1" data-testid="button-change-conference">
+          {conferenceName} {conferenceYear}
+          <ChevronDown className="h-4 w-4" />
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle>Select Conference</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-2 mt-4">
+          {conferences.length === 0 ? (
+            <p className="text-sm text-muted-foreground text-center py-4">No conferences available</p>
+          ) : (
+            conferences.map((conf) => (
+              <Card
+                key={conf.id}
+                className={`p-3 cursor-pointer hover-elevate ${currentConference?.id === conf.id ? 'border-primary' : ''}`}
+                onClick={() => handleConferenceChange(conf)}
+                data-testid={`conference-option-${conf.slug}`}
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium text-foreground">{conf.name} {conf.year}</p>
+                    <p className="text-xs text-muted-foreground">{conf.location}</p>
+                  </div>
+                  {currentConference?.id === conf.id && (
+                    <Badge variant="secondary">Current</Badge>
+                  )}
+                </div>
+              </Card>
+            ))
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+
   if (!isAuthenticated) {
     return (
       <div className="flex flex-col h-full">
         <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3">
-          <Link href="/welcome" className="hover:opacity-80 transition-opacity flex items-center gap-2" data-testid="link-welcome">
-            <Radio className="h-5 w-5 text-primary" />
-            <h1 className="text-xl font-medium text-foreground">Profile</h1>
-          </Link>
+          <div className="flex items-center justify-between">
+            <Link href="/welcome" className="hover:opacity-80 transition-opacity flex items-center gap-2" data-testid="link-welcome">
+              <Radio className="h-5 w-5 text-primary" />
+              <h1 className="text-xl font-medium text-foreground">Profile</h1>
+            </Link>
+            <ConferenceSelectorDialog />
+          </div>
         </header>
 
         <main className="flex-1 overflow-y-auto px-4 py-4 pb-20">
@@ -258,7 +316,7 @@ export default function ProfilePage() {
             <Button size="sm" asChild variant="ghost">
               <Link href="/admin/conference">Admin</Link>
             </Button>
-            <Button size="sm" variant="ghost" onClick={() => conferenceName}>Change Conference</Button>
+            <ConferenceSelectorDialog />
           </div>
         </div>
       </header>
