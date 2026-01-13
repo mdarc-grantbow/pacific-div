@@ -418,6 +418,9 @@ export class DatabaseStorage implements IStorage {
             endDate: new Date("2025-10-12T23:59:59"),
             slug: "pacificon-2025",
             division: "Pacific",
+            gridSquiare: "CM87us",
+            gps: "37.7631, -121.9736",
+            locationAddress: "2600 Bishop Drive, San Ramon, CA 94583"
             // branding
             logoUrl: "https://raw.githubusercontent.com/pacificon/example-assets/main/pacificon-logo.png",
             faviconUrl: "/favicon-pacificon.ico",
