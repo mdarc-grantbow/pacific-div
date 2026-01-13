@@ -45,12 +45,12 @@ export interface IStorage {
   getDoorPrizes(conferenceId?: string): Promise<DoorPrize[]>;
   addDoorPrize(prize: Omit<DoorPrize, 'id'>): Promise<DoorPrize>;
   
-  getTHuntingSchedule(): Promise<THuntingSchedule[]>;
-  getTHuntingWinners(): Promise<THuntingWinner[]>;
+  getTHuntingSchedule(conferenceId?: string): Promise<THuntingSchedule[]>;
+  getTHuntingWinners(conferenceId?: string): Promise<THuntingWinner[]>;
   addTHuntingWinner(winner: Omit<THuntingWinner, 'id'>): Promise<THuntingWinner>;
   
-  getRadioContacts(): Promise<RadioContact[]>;
-  getVenueInfo(): Promise<VenueInfo[]>;
+  getRadioContacts(conferenceId?: string): Promise<RadioContact[]>;
+  getVenueInfo(conferenceId?: string): Promise<VenueInfo[]>;
   
   getUserBookmarks(userId: string, conferenceId?: string): Promise<string[]>;
   addBookmark(userId: string, conferenceId: string, sessionId: string): Promise<void>;
@@ -213,9 +213,12 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async getTHuntingSchedule(): Promise<THuntingSchedule[]> {
+  async getTHuntingSchedule(conferenceId?: string): Promise<THuntingSchedule[]> {
     try {
       return await withRetry(async () => {
+        if (conferenceId) {
+          return await db.select().from(tHuntingSchedule).where(eq(tHuntingSchedule.conferenceId, conferenceId));
+        }
         return await db.select().from(tHuntingSchedule);
       });
     } catch (error) {
@@ -224,9 +227,12 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async getTHuntingWinners(): Promise<THuntingWinner[]> {
+  async getTHuntingWinners(conferenceId?: string): Promise<THuntingWinner[]> {
     try {
       return await withRetry(async () => {
+        if (conferenceId) {
+          return await db.select().from(tHuntingWinners).where(eq(tHuntingWinners.conferenceId, conferenceId)).orderBy(asc(tHuntingWinners.rank));
+        }
         return await db.select().from(tHuntingWinners).orderBy(asc(tHuntingWinners.rank));
       });
     } catch (error) {
@@ -247,9 +253,12 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async getRadioContacts(): Promise<RadioContact[]> {
+  async getRadioContacts(conferenceId?: string): Promise<RadioContact[]> {
     try {
       return await withRetry(async () => {
+        if (conferenceId) {
+          return await db.select().from(radioContacts).where(eq(radioContacts.conferenceId, conferenceId));
+        }
         return await db.select().from(radioContacts);
       });
     } catch (error) {
@@ -258,9 +267,12 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async getVenueInfo(): Promise<VenueInfo[]> {
+  async getVenueInfo(conferenceId?: string): Promise<VenueInfo[]> {
     try {
       return await withRetry(async () => {
+        if (conferenceId) {
+          return await db.select().from(venueInfo).where(eq(venueInfo.conferenceId, conferenceId));
+        }
         return await db.select().from(venueInfo);
       });
     } catch (error) {
