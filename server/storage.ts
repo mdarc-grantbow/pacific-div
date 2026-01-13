@@ -405,6 +405,8 @@ export class DatabaseStorage implements IStorage {
             endDate: new Date("2025-10-12T23:59:59"),
             slug: "pacificon-2025",
             division: "Pacific",
+            gridSquare: "CM87us",
+            gps: "37.7631, -121.9736",
             isActive: true,
           });
           console.log("Seeded Pacificon 2025 conference");
