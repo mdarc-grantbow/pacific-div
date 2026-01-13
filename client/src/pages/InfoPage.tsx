@@ -147,9 +147,8 @@ export default function InfoPage() {
                 <div className="flex items-start gap-3">
                   <MapPin className="w-4 h-4 text-muted-foreground mt-0.5 flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-medium text-foreground">San Ramon Marriott</p>
-                    <p className="text-sm text-muted-foreground">2600 Bishop Drive</p>
-                    <p className="text-sm text-muted-foreground">San Ramon, CA 94583</p>
+                    <p className="text-sm font-medium text-foreground">{currentConference?.location ?? 'San Ramon Marriott'}</p>
+                    <p className="text-sm text-muted-foreground">{currentConference?.locationAddress ?? '2600 Bishop Dr, San Ramon, CA 94583'}</p>
                   </div>
                 </div>
                 
@@ -161,8 +160,8 @@ export default function InfoPage() {
                 </div>
                 
                 <div className="text-xs text-muted-foreground bg-muted/50 p-2 rounded">
-                  <p><span className="font-medium">GPS:</span> 37° 45.784' N, 121° 57.927' W</p>
-                  <p><span className="font-medium">Grid Square:</span> CM97as</p>
+                  <p><span className="font-medium">GPS:</span> {currentConference?.gps ?? '37.7631, -121.9736'}</p>
+                  <p><span className="font-medium">Grid Square:</span> {currentConference?.gridSquare ?? 'CM87us'}</p>
                 </div>
               </div>
 

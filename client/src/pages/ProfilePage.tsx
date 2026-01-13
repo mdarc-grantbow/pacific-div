@@ -1,4 +1,4 @@
-import { User, Bell, Moon, Sun, Info, MessageSquare, CheckCircle2, ExternalLink, LogOut, LogIn, Radio } from "lucide-react";
+import { User, Bell, Moon, Sun, Info, MessageSquare, CheckCircle2, ExternalLink, LogOut, LogIn, Radio, MapPin } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -32,7 +32,8 @@ export default function ProfilePage() {
   const conferenceName = currentConference?.name ?? 'Pacificon';
   const conferenceYear = currentConference?.year ?? 2025;
   const conferenceDivision = currentConference?.division ?? 'Pacific';
-  const conferenceLocation = currentConference?.location ?? 'San Ramon Marriott, CA';
+  const conferenceLocation = currentConference?.location ?? 'San Ramon Marriott';
+  const conferenceAddress = currentConference?.locationAddress ?? '2600 Bishop Dr, San Ramon, CA 94583';
   
   const formatConferenceDates = () => {
     if (currentConference?.startDate && currentConference?.endDate) {
@@ -142,9 +143,12 @@ export default function ProfilePage() {
                 <Info className="w-4 h-4 text-muted-foreground" />
                 <span className="text-muted-foreground">{formatConferenceDates()}</span>
               </div>
-              <div className="flex items-center gap-2 text-sm">
-                <Info className="w-4 h-4 text-muted-foreground" />
-                <span className="text-muted-foreground">{conferenceLocation}</span>
+              <div className="flex items-start gap-2 text-sm">
+                <MapPin className="w-4 h-4 text-muted-foreground mt-0.5" />
+                <div>
+                  <span className="text-muted-foreground">{conferenceLocation}</span>
+                  <p className="text-xs text-muted-foreground">{conferenceAddress}</p>
+                </div>
               </div>
             </div>
             <Separator className="my-3" />
@@ -440,9 +444,12 @@ export default function ProfilePage() {
               <Info className="w-4 h-4 text-muted-foreground" />
               <span className="text-muted-foreground">{formatConferenceDates()}</span>
             </div>
-            <div className="flex items-center gap-2 text-sm">
-              <Info className="w-4 h-4 text-muted-foreground" />
-              <span className="text-muted-foreground">{conferenceLocation}</span>
+            <div className="flex items-start gap-2 text-sm">
+              <MapPin className="w-4 h-4 text-muted-foreground mt-0.5" />
+              <div>
+                <span className="text-muted-foreground">{conferenceLocation}</span>
+                <p className="text-xs text-muted-foreground">{conferenceAddress}</p>
+              </div>
             </div>
           </div>
           <Separator className="my-3" />
@@ -453,7 +460,7 @@ export default function ProfilePage() {
             className="text-sm text-primary hover:underline"
             data-testid="link-website"
           >
-            Visit pacificon.org →
+            Visit pacificon.org
           </a>
         </Card>
       </main>

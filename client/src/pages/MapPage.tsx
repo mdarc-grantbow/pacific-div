@@ -2,6 +2,7 @@ import { MapPin, Radio, Store, Users } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
+import { useConference } from "@/hooks/useConference";
 import venueMapImage from "@assets/venue_1764883580906.jpg";
 import exhibitorsMapImage from "@assets/exhibitors_1764883755395.png";
 
@@ -14,6 +15,13 @@ const venueLocations = [
 ];
 
 export default function MapPage() {
+  const { currentConference } = useConference();
+  
+  const venueName = currentConference?.location ?? 'San Ramon Marriott';
+  const venueAddress = currentConference?.locationAddress ?? '2600 Bishop Dr, San Ramon, CA 94583';
+  const gridSquare = currentConference?.gridSquare ?? 'CM87us';
+  const gps = currentConference?.gps ?? '37.7631, -121.9736';
+
   return (
     <div className="flex flex-col h-full">
       <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3">
@@ -21,7 +29,7 @@ export default function MapPage() {
           <Radio className="h-5 w-5 text-primary" />
           <h1 className="text-xl font-medium text-foreground">Venue Map</h1>
         </Link>
-        <p className="text-sm text-muted-foreground">San Ramon Marriott</p>
+        <p className="text-sm text-muted-foreground">{venueName}</p>
       </header>
 
       <main className="flex-1 overflow-y-auto px-4 py-4 pb-20">
@@ -61,19 +69,20 @@ export default function MapPage() {
 
         <Card className="p-4 mb-4">
           <h3 className="font-medium text-foreground mb-2">Hotel Address</h3>
-          <p className="text-sm text-muted-foreground mb-2">
-            San Ramon Marriott<br />
-            2600 Bishop Drive<br />
-            San Ramon, CA 94583
-          </p>
+          <p className="text-sm text-muted-foreground mb-1">{venueName}</p>
+          <p className="text-sm text-muted-foreground mb-2">{venueAddress}</p>
+          <div className="text-xs text-muted-foreground bg-muted/50 p-2 rounded mb-3">
+            <p><span className="font-medium">GPS:</span> {gps}</p>
+            <p><span className="font-medium">Grid Square:</span> {gridSquare}</p>
+          </div>
           <a 
-            href="https://maps.google.com/?q=San+Ramon+Marriott" 
+            href={`https://maps.google.com/?q=${encodeURIComponent(venueAddress)}`}
             target="_blank" 
             rel="noopener noreferrer"
             className="text-sm text-primary hover:underline"
             data-testid="link-maps"
           >
-            Open in Maps →
+            Open in Maps
           </a>
         </Card>
 
