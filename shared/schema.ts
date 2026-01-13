@@ -12,6 +12,7 @@ export const conferences = pgTable("conferences", {
   startDate: timestamp("start_date").notNull(),
   endDate: timestamp("end_date").notNull(),
   slug: varchar("slug").unique().notNull(),
+  division: text("division"),
   isActive: boolean("is_active").default(true),
   createdAt: timestamp("created_at").defaultNow(),
 });
