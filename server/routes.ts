@@ -99,28 +99,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     console.error("Failed to seed database (non-fatal):", error);
   }
   
-  // Sessions
+  // Sessions (conference-scoped with optional category and day filters)
   app.get("/api/conferences/:conferenceSlug/sessions", async (req, res) => {
     try {
       const conference = await storage.getConferenceBySlug(req.params.conferenceSlug);
       if (!conference) {
         return res.status(404).json({ error: "Conference not found" });
       }
-      const sessions = await storage.getSessions(conference.id);
-      res.json(sessions);
-    } catch (error) {
-      handleApiError(res, error, "Failed to fetch sessions");
-    }
-  });
-
-  // Sessions (conference-scoped)
-  app.get("/api/conferences/:conferenceSlug/sessions", async (req, res) => {
-    try {
-      const conference = await storage.getConferenceBySlug(req.params.conferenceSlug);
-      if (!conference) {
-        return res.status(404).json({ error: "Conference not found" });
+      const filters: { category?: string; day?: string } = {};
+      if (req.query.category) {
+        filters.category = req.query.category as string;
       }
-      const sessions = await storage.getSessions(conference.id);
+      if (req.query.day) {
+        filters.day = req.query.day as string;
+      }
+      const sessions = await storage.getSessions(conference.id, Object.keys(filters).length > 0 ? filters : undefined);
       res.json(sessions);
     } catch (error) {
       handleApiError(res, error, "Failed to fetch sessions");

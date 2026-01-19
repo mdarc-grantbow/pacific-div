@@ -26,6 +26,7 @@ import {
 import { db } from "./db";
 import { eq, and, desc, asc } from "drizzle-orm";
 import { withRetry, handleDatabaseError, DatabaseError } from "./dbUtils";
+import { seedScheduleData } from "./seedScheduleData";
 
 export interface IStorage {
   // Conference methods
@@ -37,7 +38,7 @@ export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
   
-  getSessions(conferenceId?: string): Promise<Session[]>;
+  getSessions(conferenceId?: string, filters?: { category?: string; day?: string }): Promise<Session[]>;
   getSessionById(id: string): Promise<Session | undefined>;
   
   getVendors(conferenceId?: string): Promise<Vendor[]>;
@@ -148,11 +149,21 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async getSessions(conferenceId?: string): Promise<Session[]> {
+  async getSessions(conferenceId?: string, filters?: { category?: string; day?: string }): Promise<Session[]> {
     try {
       return await withRetry(async () => {
+        const conditions = [];
         if (conferenceId) {
-          return await db.select().from(sessions).where(eq(sessions.conferenceId, conferenceId));
+          conditions.push(eq(sessions.conferenceId, conferenceId));
+        }
+        if (filters?.category) {
+          conditions.push(eq(sessions.category, filters.category));
+        }
+        if (filters?.day) {
+          conditions.push(eq(sessions.day, filters.day));
+        }
+        if (conditions.length > 0) {
+          return await db.select().from(sessions).where(and(...conditions));
         }
         return await db.select().from(sessions);
       });
@@ -418,7 +429,7 @@ export class DatabaseStorage implements IStorage {
             endDate: new Date("2025-10-12T23:59:59"),
             slug: "pacificon-2025",
             division: "Pacific",
-            gridSquare: "CM87us",
+            gridsquare: "CM87us",
             gps: "37.7631, -121.9736",
             locationAddress: "2600 Bishop Dr, San Ramon, CA 94583",
             // branding
@@ -693,6 +704,8 @@ export class DatabaseStorage implements IStorage {
           },
         ]);
       });
+
+      await seedScheduleData();
     } catch (error) {
       console.error("Failed to seed database (non-fatal):", error);
     }
