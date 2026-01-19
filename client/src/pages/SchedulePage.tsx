@@ -1,3 +1,4 @@
+import React from "react";
 import { useState } from "react";
 import { Search, Bell, Clock, MapPin, User, Radio, Bookmark } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -7,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Link } from "wouter";
 import DaySelector from "@/components/DaySelector";
-import SessionCard from "@/components/SessionCard";
+//import SessionCard from "@/components/SessionCard";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useAuthContext } from "@/hooks/useAuth";
@@ -228,15 +229,15 @@ function ForumCard({ session, bookmarks, onBookmark }: ForumCardProps) {
             <div key={s.id} className="border-l-2 border-primary pl-3 py-1">
               <div className="flex items-center justify-between gap-2 mb-1">
                 <Badge variant="secondary" className="text-xs">{s.room}</Badge>
-                <Button 
-                  size="icon" 
-                  variant="ghost" 
+                <Button
+                  size="icon"
+                  variant="ghost"
                   className="h-7 w-7"
                   onClick={() => onBookmark(s.id)}
                   data-testid={`button-bookmark-${s.id}`}
                 >
-                  <Bookmark 
-                    className={`w-4 h-4 ${isBookmarked ? 'fill-primary text-primary' : 'text-muted-foreground'}`} 
+                  <Bookmark
+                    className={`w-4 h-4 ${isBookmarked ? 'fill-primary text-primary' : 'text-muted-foreground'}`}
                   />
                 </Button>
               </div>
@@ -263,7 +264,7 @@ interface EventCardProps {
 
 function EventCard({ event, bookmarks, onBookmark }: EventCardProps) {
   const isBookmarked = bookmarks.includes(event.id);
-  
+
   return (
     <Card className="p-3 mb-2">
       <div className="flex items-start gap-3">
@@ -276,15 +277,15 @@ function EventCard({ event, bookmarks, onBookmark }: EventCardProps) {
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2">
             <p className="font-medium text-sm text-foreground">{event.title}</p>
-            <Button 
-              size="icon" 
-              variant="ghost" 
+            <Button
+              size="icon"
+              variant="ghost"
               className="h-7 w-7 flex-shrink-0"
               onClick={() => onBookmark(event.id)}
               data-testid={`button-bookmark-${event.id}`}
             >
-              <Bookmark 
-                className={`w-4 h-4 ${isBookmarked ? 'fill-primary text-primary' : 'text-muted-foreground'}`} 
+              <Bookmark
+                className={`w-4 h-4 ${isBookmarked ? 'fill-primary text-primary' : 'text-muted-foreground'}`}
               />
             </Button>
           </div>
@@ -302,9 +303,9 @@ function EventCard({ event, bookmarks, onBookmark }: EventCardProps) {
 }
 
 export default function SchedulePage() {
-  const [selectedDay, setSelectedDay] = useState<'friday' | 'saturday' | 'sunday'>('friday');
+  const [selectedDay, setSelectedDay] = useState<'all' | 'friday' | 'saturday' | 'sunday'>('all');
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState<'forums' | 'events'>('forums');
+  const [activeTab, setActiveTab] = useState<'all' | 'forums' | 'events'>('all');
   const { isAuthenticated } = useAuthContext();
   const { currentConference } = useConference();
   const { toast } = useToast();
@@ -331,7 +332,7 @@ export default function SchedulePage() {
   const bookmarks = bookmarksData ?? [];
 
   const addBookmarkMutation = useMutation({
-    mutationFn: (sessionId: string) => 
+    mutationFn: (sessionId: string) =>
       apiRequest('POST', `/api/bookmarks/${sessionId}`, { conference: currentConference?.slug }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/bookmarks', currentConference?.slug] });
@@ -339,7 +340,7 @@ export default function SchedulePage() {
   });
 
   const removeBookmarkMutation = useMutation({
-    mutationFn: (sessionId: string) => 
+    mutationFn: (sessionId: string) =>
       apiRequest('DELETE', `/api/bookmarks/${sessionId}?conference=${currentConference?.slug}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/bookmarks', currentConference?.slug] });
@@ -363,23 +364,33 @@ export default function SchedulePage() {
     }
   };
 
+  const currentAll = forumsData[selectedDay] || [];
   const currentForums = forumsData[selectedDay] || [];
   const currentEvents = eventsData[selectedDay] || [];
 
-  const filteredForums = searchQuery
-    ? currentForums.filter(f => 
-        f.sessions.some(s => 
-          s.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          (s.speaker && s.speaker.toLowerCase().includes(searchQuery.toLowerCase()))
-        )
+  const filteredAll = searchQuery
+    ? currentAll.filter(f =>
+      f.sessions.some(s =>
+        s.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (s.speaker && s.speaker.toLowerCase().includes(searchQuery.toLowerCase()))
       )
+    )
+    : currentAll;
+
+  const filteredForums = searchQuery
+    ? currentForums.filter(f =>
+      f.sessions.some(s =>
+        s.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (s.speaker && s.speaker.toLowerCase().includes(searchQuery.toLowerCase()))
+      )
+    )
     : currentForums;
 
   const filteredEvents = searchQuery
-    ? currentEvents.filter(e => 
-        e.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        e.location.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+    ? currentEvents.filter(e =>
+      e.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      e.location.toLowerCase().includes(searchQuery.toLowerCase())
+    )
     : currentEvents;
 
   return (
@@ -388,13 +399,13 @@ export default function SchedulePage() {
         <div className="flex items-center justify-between mb-3">
           <Link href="/welcome" className="hover:opacity-80 transition-opacity flex items-center gap-2" data-testid="link-welcome">
             <Radio className="h-5 w-5 text-primary" />
-            <h1 className="text-xl font-medium text-foreground">{currentConference?.name ?? 'Pacificon'} {currentConference?.year ?? '2025'}</h1>
+            <h1 className="text-xl font-medium text-foreground">Schedule</h1>
           </Link>
           <Button size="icon" variant="ghost" data-testid="button-notifications">
             <Bell className="w-5 h-5" />
           </Button>
         </div>
-        
+
         <div className="relative mb-3">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
@@ -406,22 +417,29 @@ export default function SchedulePage() {
             data-testid="input-search"
           />
         </div>
-        
+
         <DaySelector selectedDay={selectedDay} onSelectDay={setSelectedDay} />
       </header>
 
-      <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'forums' | 'events')} className="flex-1 flex flex-col">
+      <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'all' | 'forums' | 'events')} className="flex-1 flex flex-col">
         <div className="sticky top-[140px] z-30 bg-background border-b border-border">
           <TabsList className="w-full justify-start rounded-none h-10 bg-transparent p-0">
-            <TabsTrigger 
-              value="forums" 
+            <TabsTrigger
+              value="all"
+              className="flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
+              data-testid="tab-all"
+            >
+              All
+            </TabsTrigger>
+            <TabsTrigger
+              value="forums"
               className="flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
               data-testid="tab-forums"
             >
               Forums
             </TabsTrigger>
-            <TabsTrigger 
-              value="events" 
+            <TabsTrigger
+              value="events"
               className="flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
               data-testid="tab-events"
             >
@@ -429,6 +447,25 @@ export default function SchedulePage() {
             </TabsTrigger>
           </TabsList>
         </div>
+
+        <TabsContent value="all" className="flex-1 overflow-y-auto px-4 py-4 pb-20 mt-0">
+          {filteredAll.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">No sessions scheduled for this day</p>
+            </div>
+          ) : (
+            <div>
+              {filteredAll.map((forum, idx) => (
+                <ForumCard
+                  key={idx}
+                  session={forum}
+                  bookmarks={bookmarks}
+                  onBookmark={handleBookmark}
+                />
+              ))}
+            </div>
+          )}
+        </TabsContent>
 
         <TabsContent value="forums" className="flex-1 overflow-y-auto px-4 py-4 pb-20 mt-0">
           {filteredForums.length === 0 ? (
@@ -438,9 +475,9 @@ export default function SchedulePage() {
           ) : (
             <div>
               {filteredForums.map((forum, idx) => (
-                <ForumCard 
-                  key={idx} 
-                  session={forum} 
+                <ForumCard
+                  key={idx}
+                  session={forum}
                   bookmarks={bookmarks}
                   onBookmark={handleBookmark}
                 />
@@ -457,8 +494,8 @@ export default function SchedulePage() {
           ) : (
             <div>
               {filteredEvents.map((event, idx) => (
-                <EventCard 
-                  key={idx} 
+                <EventCard
+                  key={idx}
                   event={event}
                   bookmarks={bookmarks}
                   onBookmark={handleBookmark}

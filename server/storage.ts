@@ -1,4 +1,4 @@
-import { 
+import {
   conferences,
   users,
   sessions,
@@ -11,7 +11,7 @@ import {
   venueInfo,
   surveyResponses,
   type Conference,
-  type User, 
+  type User,
   type UpsertUser,
   type Session,
   type Vendor,
@@ -33,36 +33,36 @@ export interface IStorage {
   getConferenceBySlug(slug: string): Promise<Conference | undefined>;
   createConference(conference: Omit<Conference, 'id' | 'createdAt'>): Promise<Conference>;
   updateConferenceBySlug(slug: string, patch: Partial<Conference>): Promise<Conference>;
-  
+
   getUser(id: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
-  
+
   getSessions(conferenceId?: string): Promise<Session[]>;
   getSessionById(id: string): Promise<Session | undefined>;
-  
+
   getVendors(conferenceId?: string): Promise<Vendor[]>;
   getVendorById(id: string): Promise<Vendor | undefined>;
-  
+
   getDoorPrizes(conferenceId?: string): Promise<DoorPrize[]>;
   addDoorPrize(prize: Omit<DoorPrize, 'id'>): Promise<DoorPrize>;
-  
+
   getTHuntingSchedule(conferenceId?: string): Promise<THuntingSchedule[]>;
   getTHuntingWinners(conferenceId?: string): Promise<THuntingWinner[]>;
   addTHuntingWinner(winner: Omit<THuntingWinner, 'id'>): Promise<THuntingWinner>;
-  
+
   getRadioContacts(conferenceId?: string): Promise<RadioContact[]>;
   getVenueInfo(conferenceId?: string): Promise<VenueInfo[]>;
-  
+
   getUserBookmarks(userId: string, conferenceId?: string): Promise<string[]>;
   addBookmark(userId: string, conferenceId: string, sessionId: string): Promise<void>;
   removeBookmark(userId: string, conferenceId: string, sessionId: string): Promise<void>;
-  
+
   getUserSurveyResponses(userId: string): Promise<SurveyResponse[]>;
   submitSurvey(response: Omit<SurveyResponse, 'id'>): Promise<SurveyResponse>;
   getSurveyResponse(userId: string, surveyType: string): Promise<SurveyResponse | undefined>;
-  
+
   getUserProfile(userId: string): Promise<UserProfile>;
-  
+
   seedDatabase(): Promise<void>;
 }
 

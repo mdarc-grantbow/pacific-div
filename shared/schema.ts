@@ -124,6 +124,7 @@ export const doorPrizes = pgTable("door_prizes", {
   prizeName: text("prize_name").notNull(),
   timestamp: text("timestamp").notNull(),
   claimed: boolean("claimed").default(false),
+  typePrize: varchar("type_prize").notNull(),
 });
 
 export const insertDoorPrizeSchema = createInsertSchema(doorPrizes).omit({ id: true });
