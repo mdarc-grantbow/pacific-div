@@ -1,0 +1,407 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`MapPage > matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="flex flex-col h-full"
+  >
+    <header
+      class="sticky top-0 z-40 bg-background border-b border-border px-4 py-3"
+    >
+      <div
+        class="flex items-center justify-between"
+      >
+        <a
+          href="/welcome"
+        >
+          <svg
+            class="lucide lucide-radio h-5 w-5 text-primary"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"
+            />
+            <path
+              d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"
+            />
+            <circle
+              cx="12"
+              cy="12"
+              r="2"
+            />
+            <path
+              d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"
+            />
+            <path
+              d="M19.1 4.9C23 8.8 23 15.1 19.1 19"
+            />
+          </svg>
+          <h1
+            class="text-xl font-medium text-foreground"
+          >
+            Map
+          </h1>
+        </a>
+        <p
+          class="text-sm text-muted-foreground"
+        >
+          Test Marriott
+        </p>
+        <button
+          class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover-elevate active-elevate-2 border border-transparent h-9 w-9"
+          data-testid="button-notifications"
+        >
+          <svg
+            class="lucide lucide-bell w-5 h-5"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"
+            />
+            <path
+              d="M10.3 21a1.94 1.94 0 0 0 3.4 0"
+            />
+          </svg>
+        </button>
+        <div
+          class="flex items-center gap-2"
+        >
+          <div
+            data-testid="conference-selector"
+          >
+            Conference Selector
+          </div>
+        </div>
+      </div>
+    </header>
+    <main
+      class="flex-1 overflow-y-auto px-4 py-4 pb-20"
+    >
+      <div
+        class="shadcn-card rounded-xl border border-card-border text-card-foreground shadow-sm p-2 mb-4 bg-muted/50"
+      >
+        <img
+          alt="Pacificon Hotel Layout Map"
+          class="w-full rounded-md"
+          data-testid="img-venue-map"
+          src="mocked-venue-map.jpg"
+        />
+        <p
+          class="text-xs text-muted-foreground text-center mt-2"
+        >
+          Pacificon Hotel Layout
+        </p>
+      </div>
+      <div
+        class="mb-4"
+      >
+        <h2
+          class="text-base font-medium text-foreground mb-3"
+        >
+          Key Locations
+        </h2>
+        <div
+          class="grid grid-cols-2 gap-3"
+        >
+          <div
+            class="shadcn-card rounded-xl border bg-card border-card-border text-card-foreground shadow-sm p-4 hover-elevate cursor-pointer"
+            data-testid="location-1"
+          >
+            <div
+              class="flex flex-col items-center text-center gap-2"
+            >
+              <div
+                class="p-2 rounded-lg bg-blue-500 bg-opacity-10"
+              >
+                <svg
+                  class="lucide lucide-users w-5 h-5 text-blue-500"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"
+                  />
+                  <circle
+                    cx="9"
+                    cy="7"
+                    r="4"
+                  />
+                  <path
+                    d="M22 21v-2a4 4 0 0 0-3-3.87"
+                  />
+                  <path
+                    d="M16 3.13a4 4 0 0 1 0 7.75"
+                  />
+                </svg>
+              </div>
+              <p
+                class="text-sm font-medium text-foreground"
+              >
+                Registration Desk
+              </p>
+            </div>
+          </div>
+          <div
+            class="shadcn-card rounded-xl border bg-card border-card-border text-card-foreground shadow-sm p-4 hover-elevate cursor-pointer"
+            data-testid="location-2"
+          >
+            <div
+              class="flex flex-col items-center text-center gap-2"
+            >
+              <div
+                class="p-2 rounded-lg bg-green-500 bg-opacity-10"
+              >
+                <svg
+                  class="lucide lucide-map-pin w-5 h-5 text-green-500"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"
+                  />
+                  <circle
+                    cx="12"
+                    cy="10"
+                    r="3"
+                  />
+                </svg>
+              </div>
+              <p
+                class="text-sm font-medium text-foreground"
+              >
+                Contra Costa
+              </p>
+            </div>
+          </div>
+          <div
+            class="shadcn-card rounded-xl border bg-card border-card-border text-card-foreground shadow-sm p-4 hover-elevate cursor-pointer"
+            data-testid="location-3"
+          >
+            <div
+              class="flex flex-col items-center text-center gap-2"
+            >
+              <div
+                class="p-2 rounded-lg bg-purple-500 bg-opacity-10"
+              >
+                <svg
+                  class="lucide lucide-store w-5 h-5 text-purple-500"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"
+                  />
+                  <path
+                    d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"
+                  />
+                  <path
+                    d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"
+                  />
+                  <path
+                    d="M2 7h20"
+                  />
+                  <path
+                    d="M22 7v3a2 2 0 0 1-2 2a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12a2 2 0 0 1-2-2V7"
+                  />
+                </svg>
+              </div>
+              <p
+                class="text-sm font-medium text-foreground"
+              >
+                Bishop Ranch
+              </p>
+            </div>
+          </div>
+          <div
+            class="shadcn-card rounded-xl border bg-card border-card-border text-card-foreground shadow-sm p-4 hover-elevate cursor-pointer"
+            data-testid="location-4"
+          >
+            <div
+              class="flex flex-col items-center text-center gap-2"
+            >
+              <div
+                class="p-2 rounded-lg bg-red-500 bg-opacity-10"
+              >
+                <svg
+                  class="lucide lucide-radio w-5 h-5 text-red-500"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"
+                  />
+                  <path
+                    d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"
+                  />
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="2"
+                  />
+                  <path
+                    d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"
+                  />
+                  <path
+                    d="M19.1 4.9C23 8.8 23 15.1 19.1 19"
+                  />
+                </svg>
+              </div>
+              <p
+                class="text-sm font-medium text-foreground"
+              >
+                W1AW/6 Station
+              </p>
+            </div>
+          </div>
+          <div
+            class="shadcn-card rounded-xl border bg-card border-card-border text-card-foreground shadow-sm p-4 hover-elevate cursor-pointer"
+            data-testid="location-5"
+          >
+            <div
+              class="flex flex-col items-center text-center gap-2"
+            >
+              <div
+                class="p-2 rounded-lg bg-green-500 bg-opacity-10"
+              >
+                <svg
+                  class="lucide lucide-map-pin w-5 h-5 text-green-500"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"
+                  />
+                  <circle
+                    cx="12"
+                    cy="10"
+                    r="3"
+                  />
+                </svg>
+              </div>
+              <p
+                class="text-sm font-medium text-foreground"
+              >
+                Conference Rooms
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="shadcn-card rounded-xl border bg-card border-card-border text-card-foreground shadow-sm p-4 mb-4"
+      >
+        <h3
+          class="font-medium text-foreground mb-2"
+        >
+          Hotel Address
+        </h3>
+        <p
+          class="text-sm text-muted-foreground mb-1"
+        >
+          Test Marriott
+        </p>
+        <p
+          class="text-sm text-muted-foreground mb-2"
+        >
+          123 Test Street, Test City, CA 12345
+        </p>
+        <div
+          class="text-xs text-muted-foreground bg-muted/50 p-2 rounded mb-3"
+        >
+          <p>
+            <span
+              class="font-medium"
+            >
+              GPS:
+            </span>
+             37.7629351,-121.9674592
+          </p>
+          <p>
+            <span
+              class="font-medium"
+            >
+              Grid Square:
+            </span>
+             CM87us
+          </p>
+        </div>
+        <a
+          class="text-sm text-primary hover:underline"
+          data-testid="link-maps"
+          href="https://maps.google.com/?q=123%20Test%20Street%2C%20Test%20City%2C%20CA%2012345"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Open in Maps
+        </a>
+      </div>
+      <div
+        class="shadcn-card rounded-xl border border-card-border text-card-foreground shadow-sm p-2 bg-muted/50"
+      >
+        <img
+          alt="Pacificon Exhibit Space Layout"
+          class="w-full rounded-md"
+          data-testid="img-exhibitors-map"
+          src="mocked-exhibitors-map.png"
+        />
+        <p
+          class="text-xs text-muted-foreground text-center mt-2"
+        >
+          Exhibit Space Layout
+        </p>
+      </div>
+    </main>
+  </div>
+</DocumentFragment>
+`;
