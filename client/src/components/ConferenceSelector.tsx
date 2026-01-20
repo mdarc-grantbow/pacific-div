@@ -3,9 +3,8 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar } from "lucide-react";
-import { useConference, Conference } from "@/hooks/useConference";
+import { useConference, useConferencesList, Conference } from "@/hooks/useConference";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import { Bell, Moon, Sun, Info, MessageSquare, CheckCircle2, ExternalLink, LogOut, LogIn, Radio, MapPin, ChevronDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -15,7 +14,8 @@ interface ConferenceSelectorProps {
 }
 
 const { toast } = useToast();
-const { currentConference, conferences, setCurrentConference, setConferences } = useConference();
+const { currentConference, setCurrentConference } = useConference();
+const { conferencesList, setConferencesList } = useConferencesList();
 const [conferenceDialogOpen, setConferenceDialogOpen] = useState(false);
 
 const conferenceName = currentConference?.name ?? 'Pacificon';
@@ -38,10 +38,10 @@ export const ConferenceSelectorDialog = () => (
         <DialogTitle>Select Conference</DialogTitle>
       </DialogHeader>
       <div className="space-y-2 mt-4">
-        {conferences.length === 0 ? (
+        {conferencesList && conferencesList.length === 0 ? (
           <p className="text-sm text-muted-foreground text-center py-4">No conferences available</p>
         ) : (
-          conferences.map((conf) => (
+          conferencesList && conferencesList.map((conf) => (
             <Card
               key={conf.id}
               className={`p-3 cursor-pointer hover-elevate ${currentConference?.id === conf.id ? 'border-primary' : ''}`}
