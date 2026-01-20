@@ -6,7 +6,7 @@ exports[`LandingPage > matches snapshot 1`] = `
     class="min-h-screen flex flex-col bg-background"
   >
     <header
-      class="border-b bg-card"
+      class="border-b bg-background"
     >
       <div
         class="container mx-auto px-4 py-4 flex items-center justify-between"
@@ -14,8 +14,27 @@ exports[`LandingPage > matches snapshot 1`] = `
         <div
           class="flex items-center gap-2"
         >
+          <img
+            alt="Test Conference"
+            class="h-8"
+            src="https://example.com/logo.png"
+          />
+          <div
+            class="flex items-center gap-3"
+          >
+            <span
+              class="font-bold text-lg"
+            >
+              Test Conference 2025
+            </span>
+          </div>
+        </div>
+        <button
+          class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover-elevate active-elevate-2 border border-transparent h-9 w-9"
+          data-testid="button-notifications"
+        >
           <svg
-            class="lucide lucide-radio h-6 w-6 text-primary"
+            class="lucide lucide-bell w-5 h-5"
             fill="none"
             height="24"
             stroke="currentColor"
@@ -27,40 +46,22 @@ exports[`LandingPage > matches snapshot 1`] = `
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"
+              d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"
             />
             <path
-              d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"
-            />
-            <circle
-              cx="12"
-              cy="12"
-              r="2"
-            />
-            <path
-              d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"
-            />
-            <path
-              d="M19.1 4.9C23 8.8 23 15.1 19.1 19"
+              d="M10.3 21a1.94 1.94 0 0 0 3.4 0"
             />
           </svg>
+        </button>
+        <div
+          class="flex items-center gap-2"
+        >
           <div
-            class="flex items-center gap-3"
+            data-testid="conference-selector"
           >
-            <span
-              class="font-bold text-lg"
-            >
-              Conference
-            </span>
+            Conference Selector
           </div>
         </div>
-        <a
-          class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover-elevate active-elevate-2 bg-primary text-primary-foreground border border-primary-border min-h-9 px-4 py-2"
-          data-testid="button-login"
-          href="/api/login"
-        >
-          Log In
-        </a>
       </div>
     </header>
     <main
@@ -73,32 +74,14 @@ exports[`LandingPage > matches snapshot 1`] = `
           class="text-3xl font-bold mb-4"
           data-testid="text-hero-title"
         >
-          Welcome
+          Welcome to Test Conference 2025
         </h1>
         <p
           class="text-muted-foreground text-lg mb-6"
           data-testid="text-hero-description"
         >
-          Your companion app for the conference.
+          Test City, CA • 10/9/2025 - 10/11/2025
         </p>
-        <div
-          class="flex flex-col sm:flex-row gap-3 justify-center"
-        >
-          <a
-            class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover-elevate active-elevate-2 bg-primary text-primary-foreground border border-primary-border min-h-10 rounded-md px-8"
-            data-testid="button-get-started"
-            href="/schedule"
-          >
-            Browse Schedule
-          </a>
-          <a
-            class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover-elevate active-elevate-2 border [border-color:var(--button-outline)] shadow-xs active:shadow-none min-h-10 rounded-md px-8"
-            data-testid="button-login-hero"
-            href="/api/login"
-          >
-            Log In
-          </a>
-        </div>
       </div>
       <div
         class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto"
@@ -300,7 +283,7 @@ exports[`LandingPage > matches snapshot 1`] = `
         class="container mx-auto px-4 text-center text-sm text-muted-foreground"
       >
         <p>
-          Pacificon is sponsored by ARRL Pacific Division member clubs
+          Test Conference is sponsored by ARRL Test Division Division member clubs
         </p>
       </div>
     </footer>

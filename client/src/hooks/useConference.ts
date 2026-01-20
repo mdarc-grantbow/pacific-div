@@ -56,14 +56,6 @@ const DEFAULT_CONFERENCE: Conference = {
   accentColor: "#f97316",
 };
 
-export function useConferencesList() {
-  const context = useContext(ConferencesListContext);
-  if (!context) {
-    throw new Error('useConferencesList must be used within ConferenceProvider');
-  }
-  return context;
-}
-
 export function useConference() {
   const context = useContext(ConferenceContext);
   if (!context) {
@@ -96,6 +88,14 @@ export function useConference() {
     //  primaryColor: '',
     //  accentColor: '',
     //};
+  }
+  return context;
+}
+
+export function useConferencesList() {
+  const context = useContext(ConferencesListContext);
+  if (!context) {
+    throw new Error('useConferencesList must be used within ConferenceProvider');
   }
   return context;
 }

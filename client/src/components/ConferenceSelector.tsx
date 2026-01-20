@@ -1,12 +1,11 @@
-import React from "react";
 import { useEffect, useState } from "react";
+import { Calendar, ChevronDown } from "lucide-react";
+//import { Bell, Moon, Sun, Info, MessageSquare, CheckCircle2, ExternalLink, LogOut, LogIn, Radio, MapPin, ChevronDown } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar } from "lucide-react";
-import { useConference, useConferencesList, Conference } from "@/hooks/useConference";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
-import { Bell, Moon, Sun, Info, MessageSquare, CheckCircle2, ExternalLink, LogOut, LogIn, Radio, MapPin, ChevronDown } from "lucide-react";
+import { useConference, useConferencesList, Conference } from "@/hooks/useConference";
 import { useToast } from "@/hooks/use-toast";
 
 interface ConferenceSelectorProps {

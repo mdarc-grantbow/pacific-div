@@ -9,7 +9,7 @@ import VenueInfoCard from "@/components/VenueInfoCard";
 import VendorCard from "@/components/VendorCard";
 import { useQuery } from "@tanstack/react-query";
 import { useAuthContext } from "@/hooks/useAuth";
-import { useConference, useConferences } from "@/hooks/useConference";
+import { useConference, useConferencesList, Conference } from "@/hooks/useConference";
 import type { RadioContact, VenueInfo, Vendor, UserProfile } from "@shared/schema";
 import exhibitorsMapImage from "@assets/exhibitors_1764883755395.png";
 import { ConferenceSelectorDialog } from "@/components/ConferenceSelector";
@@ -18,12 +18,7 @@ import { Button } from "@/components/ui/button";
 export default function InfoPage() {
   const { isAuthenticated } = useAuthContext();
   const { currentConference } = useConference();
-  const { conferences } = useConferences();
-
-  const conferenceName = currentConference?.name ?? 'Pacificon';
-  const conferenceYear = currentConference?.year ?? 2025;
-  const conferenceDivision = currentConference?.division ?? 'Pacific';
-  const conferenceLocation = currentConference?.location ?? 'San Ramon Marriott';
+  //const { conferencesList } = useConferencesList();
 
   const { data: userProfile } = useQuery<UserProfile>({
     queryKey: ['/api/profile'],
