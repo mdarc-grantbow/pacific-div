@@ -19,6 +19,14 @@ export function useAuth() {
     queryKey: ["/api/auth/user"],
     retry: false,
   });
+  if (!user) {
+    throw new Error('useAuth must be used');
+    //return {
+    //  user: undefined,
+    //  isLoading: false,
+    //  isAuthenticated: false,
+    //};
+  }
 
   return {
     user,

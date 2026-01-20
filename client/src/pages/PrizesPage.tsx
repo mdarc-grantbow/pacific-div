@@ -1,18 +1,27 @@
+import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Sparkles, Radio } from "lucide-react";
+import { Bell, Sparkles, Radio } from "lucide-react";
 import { Link } from "wouter";
+//import AllCard from "@/components/AllCard";
 import PrizeCard from "@/components/PrizeCard";
 import THuntingCard from "@/components/THuntingCard";
 import { useQuery } from "@tanstack/react-query";
 import { useAuthContext } from "@/hooks/useAuth";
 import { useConference } from "@/hooks/useConference";
 import type { DoorPrize, THuntingWinner, UserProfile } from "@shared/schema";
+import { ConferenceSelectorDialog } from "@/components/ConferenceSelector";
+import { Button } from "@/components/ui/button";
 
 export default function PrizesPage() {
   const { isAuthenticated } = useAuthContext();
   const { currentConference } = useConference();
-  
+
+  const conferenceName = currentConference?.name ?? 'Pacificon';
+  const conferenceYear = currentConference?.year ?? 2025;
+  const conferenceDivision = currentConference?.division ?? 'Pacific';
+  const conferenceLocation = currentConference?.location ?? 'San Ramon Marriott';
+
   const { data: userProfile } = useQuery<UserProfile>({
     queryKey: ['/api/profile'],
     enabled: isAuthenticated,
@@ -45,17 +54,25 @@ export default function PrizesPage() {
   return (
     <div className="flex flex-col h-full">
       <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3">
-        <Link href="/welcome" className="hover:opacity-80 transition-opacity flex items-center gap-2" data-testid="link-welcome">
-          <Radio className="h-5 w-5 text-primary" />
-          <h1 className="text-xl font-medium text-foreground">{currentConference?.name ?? 'Pacificon'} {currentConference?.year ?? '2025'}</h1>
-        </Link>
+        <div className="flex items-center justify-between">
+          <Link href="/welcome" className="hover:opacity-80 transition-opacity flex items-center gap-2" data-testid="link-welcome">
+            <Radio className="h-5 w-5 text-primary" />
+            <h1 className="text-xl font-medium text-foreground">Prizes</h1>
+          </Link>
+          <Button size="icon" variant="ghost" data-testid="button-notifications">
+            <Bell className="w-5 h-5" />
+          </Button>
+          <div className="flex items-center gap-2">
+            <ConferenceSelectorDialog />
+          </div>
+        </div>
       </header>
 
       {userHasWon && (
         <Alert className="mx-4 mt-4 bg-primary/10 border-primary">
           <Sparkles className="h-4 w-4 text-primary" />
           <AlertDescription className="text-foreground font-medium">
-            Congratulations! You've won a prize! Visit the registration desk to claim it.
+            Congratulations! You&apos;ve won a prize! Visit the registration desk to claim it.
           </AlertDescription>
         </Alert>
       )}
@@ -64,15 +81,22 @@ export default function PrizesPage() {
         <Tabs defaultValue="door" className="w-full">
           <div className="sticky top-0 z-30 bg-background border-b border-border">
             <TabsList className="w-full justify-start rounded-none h-12 bg-transparent p-0">
-              <TabsTrigger 
-                value="door" 
+              <TabsTrigger
+                value="all"
+                className="flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
+                data-testid="tab-all-prizes"
+              >
+                All Prizes
+              </TabsTrigger>
+              <TabsTrigger
+                value="door"
                 className="flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
                 data-testid="tab-door-prizes"
               >
                 Door Prizes
               </TabsTrigger>
-              <TabsTrigger 
-                value="thunting" 
+              <TabsTrigger
+                value="thunting"
                 className="flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
                 data-testid="tab-thunting"
               >
@@ -95,8 +119,8 @@ export default function PrizesPage() {
             ) : (
               <div className="space-y-3">
                 {doorPrizes.map((prize) => (
-                  <PrizeCard 
-                    key={prize.id} 
+                  <PrizeCard
+                    key={prize.id}
                     prize={prize}
                     isWinner={prize.badgeNumber === userBadgeNumber}
                   />
@@ -110,7 +134,7 @@ export default function PrizesPage() {
               <h2 className="text-base font-medium text-foreground mb-1">Hunt #1 Results</h2>
               <p className="text-sm text-muted-foreground">Saturday, 2:00 PM</p>
             </div>
-            
+
             {winnersLoading ? (
               <div className="space-y-3">
                 {[1, 2, 3, 4].map((i) => (

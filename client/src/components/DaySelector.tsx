@@ -1,11 +1,12 @@
 import { Button } from "@/components/ui/button";
 
 interface DaySelectorProps {
-  selectedDay: 'friday' | 'saturday' | 'sunday';
-  onSelectDay: (day: 'friday' | 'saturday' | 'sunday') => void;
+  selectedDay: 'all' | 'friday' | 'saturday' | 'sunday';
+  onSelectDay: (day: 'all' | 'friday' | 'saturday' | 'sunday') => void;
 }
 
 const days = [
+  { value: 'all' as const, label: 'All' },
   { value: 'friday' as const, label: 'Fri, Oct 10' },
   { value: 'saturday' as const, label: 'Sat, Oct 11' },
   { value: 'sunday' as const, label: 'Sun, Oct 12' },

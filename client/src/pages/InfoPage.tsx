@@ -1,21 +1,30 @@
+import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card } from "@/components/ui/card";
-import { ExternalLink, MapPin, Navigation, Phone, Radio } from "lucide-react";
+import { Bell, ExternalLink, MapPin, Navigation, Phone, Radio } from "lucide-react";
 import { Link } from "wouter";
 import RadioContactCard from "@/components/RadioContactCard";
 import VenueInfoCard from "@/components/VenueInfoCard";
 import VendorCard from "@/components/VendorCard";
 import { useQuery } from "@tanstack/react-query";
 import { useAuthContext } from "@/hooks/useAuth";
-import { useConference } from "@/hooks/useConference";
+import { useConference, useConferences } from "@/hooks/useConference";
 import type { RadioContact, VenueInfo, Vendor, UserProfile } from "@shared/schema";
 import exhibitorsMapImage from "@assets/exhibitors_1764883755395.png";
+import { ConferenceSelectorDialog } from "@/components/ConferenceSelector";
+import { Button } from "@/components/ui/button";
 
 export default function InfoPage() {
   const { isAuthenticated } = useAuthContext();
   const { currentConference } = useConference();
-  
+  const { conferences } = useConferences();
+
+  const conferenceName = currentConference?.name ?? 'Pacificon';
+  const conferenceYear = currentConference?.year ?? 2025;
+  const conferenceDivision = currentConference?.division ?? 'Pacific';
+  const conferenceLocation = currentConference?.location ?? 'San Ramon Marriott';
+
   const { data: userProfile } = useQuery<UserProfile>({
     queryKey: ['/api/profile'],
     enabled: isAuthenticated,
@@ -56,40 +65,40 @@ export default function InfoPage() {
   return (
     <div className="flex flex-col h-full">
       <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3">
-        <Link href="/welcome" className="hover:opacity-80 transition-opacity flex items-center gap-2" data-testid="link-welcome">
-          <Radio className="h-5 w-5 text-primary" />
-          <h1 className="text-xl font-medium text-foreground">{currentConference?.name ?? 'Pacificon'} {currentConference?.year ?? '2025'}</h1>
-        </Link>
+        <div className="flex items-center justify-between">
+          <Link href="/welcome" className="hover:opacity-80 transition-opacity flex items-center gap-2" data-testid="link-welcome">
+            <Radio className="h-5 w-5 text-primary" />
+            <h1 className="text-xl font-medium text-foreground">Info</h1>
+          </Link>
+          <Button size="icon" variant="ghost" data-testid="button-notifications">
+            <Bell className="w-5 h-5" />
+          </Button>
+          <div className="flex items-center gap-2">
+            <ConferenceSelectorDialog />
+          </div>
+        </div>
       </header>
-
-      {!isRegistered && (
-        <Alert className="mx-4 mt-4 bg-primary/10 border-primary">
-          <AlertDescription className="text-sm text-foreground">
-            Haven't registered yet? Visit the registration pages to secure your spot!
-          </AlertDescription>
-        </Alert>
-      )}
 
       <main className="flex-1 overflow-y-auto pb-20">
         <Tabs defaultValue="venue" className="w-full">
           <div className="sticky top-0 z-30 bg-background border-b border-border">
             <TabsList className="w-full justify-start rounded-none h-12 bg-transparent p-0">
-              <TabsTrigger 
-                value="venue" 
+              <TabsTrigger
+                value="venue"
                 className="flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
                 data-testid="tab-venue"
               >
                 Venue
               </TabsTrigger>
-              <TabsTrigger 
-                value="vendors" 
+              <TabsTrigger
+                value="vendors"
                 className="flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
                 data-testid="tab-vendors"
               >
                 Vendors
               </TabsTrigger>
-              <TabsTrigger 
-                value="radio" 
+              <TabsTrigger
+                value="radio"
                 className="flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
                 data-testid="tab-radio"
               >
@@ -142,7 +151,7 @@ export default function InfoPage() {
                 <Navigation className="w-5 h-5 text-primary" />
                 Directions & Map
               </h3>
-              
+
               <div className="space-y-3 mb-4">
                 <div className="flex items-start gap-3">
                   <MapPin className="w-4 h-4 text-muted-foreground mt-0.5 flex-shrink-0" />
@@ -151,14 +160,14 @@ export default function InfoPage() {
                     <p className="text-sm text-muted-foreground">{currentConference?.locationAddress ?? '2600 Bishop Dr, San Ramon, CA 94583'}</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center gap-3">
                   <Phone className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                   <a href="tel:925-867-9200" className="text-sm text-primary hover:underline">
                     925-867-9200
                   </a>
                 </div>
-                
+
                 <div className="text-xs text-muted-foreground bg-muted/50 p-2 rounded">
                   <p><span className="font-medium">GPS:</span> {currentConference?.gps ?? '37.7631, -121.9736'}</p>
                   <p><span className="font-medium">Grid Square:</span> {currentConference?.gridSquare ?? 'CM87us'}</p>
@@ -181,7 +190,6 @@ export default function InfoPage() {
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3156.8!2d-121.965!3d37.763!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808ff2e66c2b0f0d%3A0x2e1c4f0c9b7c8c8d!2sSan%20Ramon%20Marriott!5e0!3m2!1sen!2sus!4v1"
                   width="100%"
                   height="200"
-                  style={{ border: 0 }}
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
@@ -217,7 +225,7 @@ export default function InfoPage() {
             {!isRegistered && (
               <Card className="p-4 mt-4 bg-muted/50">
                 <h3 className="font-medium text-foreground mb-3">Conference Registration</h3>
-                
+
                 <div className="space-y-3 mb-3">
                   <div>
                     <h4 className="text-sm font-medium text-foreground mb-1">
@@ -237,7 +245,7 @@ export default function InfoPage() {
                       <ExternalLink className="w-3 h-3" />
                     </a>
                   </div>
-                  
+
                   <div>
                     <h4 className="text-sm font-medium text-foreground mb-1">
                       Volunteers & Speakers
@@ -263,7 +271,7 @@ export default function InfoPage() {
 
           <TabsContent value="vendors" className="px-4 py-4 mt-0">
             <Card className="p-2 mb-4 bg-muted/50">
-              <img 
+              <img
                 src={exhibitorsMapImage}
                 alt="Pacificon Exhibit Space Layout"
                 className="w-full rounded-md"

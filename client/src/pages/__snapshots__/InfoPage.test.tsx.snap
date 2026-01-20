@@ -1,0 +1,500 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`InfoPage > matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="flex flex-col h-full"
+  >
+    <header
+      class="sticky top-0 z-40 bg-background border-b border-border px-4 py-3"
+    >
+      <a
+        class="hover:opacity-80 transition-opacity flex items-center gap-2"
+        data-testid="link-welcome"
+        href="/welcome"
+      >
+        <svg
+          class="lucide lucide-radio h-5 w-5 text-primary"
+          fill="none"
+          height="24"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"
+          />
+          <path
+            d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"
+          />
+          <circle
+            cx="12"
+            cy="12"
+            r="2"
+          />
+          <path
+            d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"
+          />
+          <path
+            d="M19.1 4.9C23 8.8 23 15.1 19.1 19"
+          />
+        </svg>
+        <h1
+          class="text-xl font-medium text-foreground"
+        >
+          Pacificon 2025
+        </h1>
+      </a>
+    </header>
+    <div
+      class="relative w-full rounded-lg border p-4 [&>svg~*]:pl-7 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground text-foreground mx-4 mt-4 bg-primary/10 border-primary"
+      role="alert"
+    >
+      <div
+        class="[&_p]:leading-relaxed text-sm text-foreground"
+      >
+        Haven't registered yet? Visit the registration pages to secure your spot!
+      </div>
+    </div>
+    <main
+      class="flex-1 overflow-y-auto pb-20"
+    >
+      <div
+        class="w-full"
+        data-orientation="horizontal"
+        dir="ltr"
+      >
+        <div
+          class="sticky top-0 z-30 bg-background border-b border-border"
+        >
+          <div
+            aria-orientation="horizontal"
+            class="inline-flex items-center text-muted-foreground w-full justify-start rounded-none h-12 bg-transparent p-0"
+            data-orientation="horizontal"
+            role="tablist"
+            style="outline: none;"
+            tabindex="0"
+          >
+            <button
+              aria-controls="radix-:r4:-content-venue"
+              aria-selected="true"
+              class="inline-flex items-center justify-center whitespace-nowrap px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
+              data-orientation="horizontal"
+              data-radix-collection-item=""
+              data-state="active"
+              data-testid="tab-venue"
+              id="radix-:r4:-trigger-venue"
+              role="tab"
+              tabindex="-1"
+              type="button"
+            >
+              Venue
+            </button>
+            <button
+              aria-controls="radix-:r4:-content-vendors"
+              aria-selected="false"
+              class="inline-flex items-center justify-center whitespace-nowrap px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
+              data-orientation="horizontal"
+              data-radix-collection-item=""
+              data-state="inactive"
+              data-testid="tab-vendors"
+              id="radix-:r4:-trigger-vendors"
+              role="tab"
+              tabindex="-1"
+              type="button"
+            >
+              Vendors
+            </button>
+            <button
+              aria-controls="radix-:r4:-content-radio"
+              aria-selected="false"
+              class="inline-flex items-center justify-center whitespace-nowrap px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
+              data-orientation="horizontal"
+              data-radix-collection-item=""
+              data-state="inactive"
+              data-testid="tab-radio"
+              id="radix-:r4:-trigger-radio"
+              role="tab"
+              tabindex="-1"
+              type="button"
+            >
+              Radio
+            </button>
+          </div>
+        </div>
+        <div
+          aria-labelledby="radix-:r4:-trigger-radio"
+          class="ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 px-4 py-4 mt-0"
+          data-orientation="horizontal"
+          data-state="inactive"
+          hidden=""
+          id="radix-:r4:-content-radio"
+          role="tabpanel"
+          tabindex="0"
+        />
+        <div
+          aria-labelledby="radix-:r4:-trigger-venue"
+          class="ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 px-4 py-4 mt-0"
+          data-orientation="horizontal"
+          data-state="active"
+          id="radix-:r4:-content-venue"
+          role="tabpanel"
+          style="animation-duration: 0s;"
+          tabindex="0"
+        >
+          <div
+            class="space-y-3"
+          >
+            <div
+              class="h-24 bg-muted animate-pulse rounded"
+            />
+            <div
+              class="h-24 bg-muted animate-pulse rounded"
+            />
+            <div
+              class="h-24 bg-muted animate-pulse rounded"
+            />
+            <div
+              class="h-24 bg-muted animate-pulse rounded"
+            />
+          </div>
+          <div
+            class="shadcn-card rounded-xl border bg-card border-card-border text-card-foreground shadow-sm p-4 mt-4"
+            data-testid="card-directions"
+          >
+            <h3
+              class="font-medium text-foreground mb-3 flex items-center gap-2"
+            >
+              <svg
+                class="lucide lucide-navigation w-5 h-5 text-primary"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polygon
+                  points="3 11 22 2 13 21 11 13 3 11"
+                />
+              </svg>
+              Directions & Map
+            </h3>
+            <div
+              class="space-y-3 mb-4"
+            >
+              <div
+                class="flex items-start gap-3"
+              >
+                <svg
+                  class="lucide lucide-map-pin w-4 h-4 text-muted-foreground mt-0.5 flex-shrink-0"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"
+                  />
+                  <circle
+                    cx="12"
+                    cy="10"
+                    r="3"
+                  />
+                </svg>
+                <div>
+                  <p
+                    class="text-sm font-medium text-foreground"
+                  >
+                    San Ramon Marriott
+                  </p>
+                  <p
+                    class="text-sm text-muted-foreground"
+                  >
+                    2600 Bishop Dr, San Ramon, CA 94583
+                  </p>
+                </div>
+              </div>
+              <div
+                class="flex items-center gap-3"
+              >
+                <svg
+                  class="lucide lucide-phone w-4 h-4 text-muted-foreground flex-shrink-0"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
+                  />
+                </svg>
+                <a
+                  class="text-sm text-primary hover:underline"
+                  href="tel:925-867-9200"
+                >
+                  925-867-9200
+                </a>
+              </div>
+              <div
+                class="text-xs text-muted-foreground bg-muted/50 p-2 rounded"
+              >
+                <p>
+                  <span
+                    class="font-medium"
+                  >
+                    GPS:
+                  </span>
+                   37.7631, -121.9736
+                </p>
+                <p>
+                  <span
+                    class="font-medium"
+                  >
+                    Grid Square:
+                  </span>
+                   CM87us
+                </p>
+              </div>
+            </div>
+            <div
+              class="mb-4"
+            >
+              <h4
+                class="text-sm font-medium text-foreground mb-2"
+              >
+                From I-680:
+              </h4>
+              <ol
+                class="text-sm text-muted-foreground space-y-1 list-decimal list-inside"
+              >
+                <li>
+                  Exit at Bollinger Canyon Road
+                </li>
+                <li>
+                  Turn east (right if northbound, left if southbound)
+                </li>
+                <li>
+                  Turn left at first light (Sunset Dr/Chevron Dr)
+                </li>
+                <li>
+                  Pass shopping center, turn left at Bishop Drive
+                </li>
+                <li>
+                  Hotel entrance is 0.1 miles on the left
+                </li>
+              </ol>
+            </div>
+            <div
+              class="rounded-md overflow-hidden border border-border mb-3"
+            >
+              <iframe
+                allowfullscreen=""
+                data-testid="map-iframe"
+                height="200"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3156.8!2d-121.965!3d37.763!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808ff2e66c2b0f0d%3A0x2e1c4f0c9b7c8c8d!2sSan%20Ramon%20Marriott!5e0!3m2!1sen!2sus!4v1"
+                title="San Ramon Marriott Map"
+                width="100%"
+              />
+            </div>
+            <div
+              class="flex flex-col gap-2"
+            >
+              <a
+                class="inline-flex items-center gap-1 text-sm text-primary hover:underline"
+                data-testid="link-parking"
+                href="https://www.pacificon.org/resources/parking"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Parking Information
+                <svg
+                  class="lucide lucide-external-link w-3 h-3"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M15 3h6v6"
+                  />
+                  <path
+                    d="M10 14 21 3"
+                  />
+                  <path
+                    d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                  />
+                </svg>
+              </a>
+              <a
+                class="inline-flex items-center gap-1 text-sm text-primary hover:underline"
+                data-testid="link-hotel-website"
+                href="https://www.marriott.com/en-us/hotels/oaksr-san-ramon-marriott/overview/"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Hotel Website
+                <svg
+                  class="lucide lucide-external-link w-3 h-3"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M15 3h6v6"
+                  />
+                  <path
+                    d="M10 14 21 3"
+                  />
+                  <path
+                    d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+          <div
+            class="shadcn-card rounded-xl border border-card-border text-card-foreground shadow-sm p-4 mt-4 bg-muted/50"
+          >
+            <h3
+              class="font-medium text-foreground mb-3"
+            >
+              Conference Registration
+            </h3>
+            <div
+              class="space-y-3 mb-3"
+            >
+              <div>
+                <h4
+                  class="text-sm font-medium text-foreground mb-1"
+                >
+                  Attendees & Exhibitors
+                </h4>
+                <p
+                  class="text-xs text-muted-foreground mb-2"
+                >
+                  For attendees, vendors, and non-profit exhibitors
+                </p>
+                <a
+                  class="inline-flex items-center gap-1 text-sm text-primary hover:underline"
+                  data-testid="link-attendee-registration"
+                  href="https://www.pacificon.org/registration/attendees"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Register via Constant Contact
+                  <svg
+                    class="lucide lucide-external-link w-3 h-3"
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M15 3h6v6"
+                    />
+                    <path
+                      d="M10 14 21 3"
+                    />
+                    <path
+                      d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                    />
+                  </svg>
+                </a>
+              </div>
+              <div>
+                <h4
+                  class="text-sm font-medium text-foreground mb-1"
+                >
+                  Volunteers & Speakers
+                </h4>
+                <p
+                  class="text-xs text-muted-foreground mb-2"
+                >
+                  For volunteers and conference presenters
+                </p>
+                <a
+                  class="inline-flex items-center gap-1 text-sm text-primary hover:underline"
+                  data-testid="link-volunteer-registration"
+                  href="https://www.pacificon.org/registration/volunteers"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Register via Google Forms
+                  <svg
+                    class="lucide lucide-external-link w-3 h-3"
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M15 3h6v6"
+                    />
+                    <path
+                      d="M10 14 21 3"
+                    />
+                    <path
+                      d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                    />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          aria-labelledby="radix-:r4:-trigger-vendors"
+          class="ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 px-4 py-4 mt-0"
+          data-orientation="horizontal"
+          data-state="inactive"
+          hidden=""
+          id="radix-:r4:-content-vendors"
+          role="tabpanel"
+          tabindex="0"
+        />
+      </div>
+    </main>
+  </div>
+</DocumentFragment>
+`;

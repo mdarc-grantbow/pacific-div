@@ -6,9 +6,9 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { ConferenceContext, Conference } from "@/hooks/useConference";
+import { ConferenceContext, ConferencesListContext, Conference } from "@/hooks/useConference";
 import BottomNav from "@/components/BottomNav";
-import ConferenceSelector from "@/components/ConferenceSelector";
+//import ConferenceSelector from "@/components/ConferenceSelector";
 import SchedulePage from "@/pages/SchedulePage";
 import MapPage from "@/pages/MapPage";
 import InfoPage from "@/pages/InfoPage";
@@ -27,8 +27,12 @@ function Router() {
     const saved = localStorage.getItem("currentConference");
     return saved ? JSON.parse(saved) : null;
   });
+  const [conferencesList, setConferencesList] = useState<Conference[] | null>(() => {
+    const saved = localStorage.getItem("conferencesList");
+    return saved ? JSON.parse(saved) : null;
+  });
 
-  // Save conference to localStorage when it changes
+  // Save currentConference to localStorage when it changes
   useEffect(() => {
     if (currentConference) {
       localStorage.setItem("currentConference", JSON.stringify(currentConference));
@@ -36,6 +40,15 @@ function Router() {
       localStorage.removeItem("currentConference");
     }
   }, [currentConference]);
+
+  // Save conferencesList to localStorage when it changes
+  useEffect(() => {
+    if (conferencesList) {
+      localStorage.setItem("conferencesList", JSON.stringify(conferencesList));
+    } else {
+      localStorage.removeItem("conferencesList");
+    }
+  }, [conferencesList]);
 
   // Apply runtime branding (CSS variables + favicon)
   useEffect(() => {
@@ -74,44 +87,44 @@ function Router() {
     );
   }
 
-  // Show conference selector if no conference selected
-  if (!currentConference) {
-    return (
-      <ConferenceSelector
-        onSelect={(conference) => setCurrentConference(conference)}
-      />
-    );
-  }
-
-  // Show landing/welcome page at root (no bottom nav)
+  // Show landing/welcome page at root
   if (location === "/" || location === "/welcome") {
     return (
       <ConferenceContext.Provider value={{ currentConference, setCurrentConference }}>
-        <AuthContext.Provider value={{ isAuthenticated, user, isLoading }}>
-          <LandingPage />
-        </AuthContext.Provider>
+        <ConferencesListContext.Provider value={{ conferencesList, setConferencesList }}>
+          <AuthContext.Provider value={{ isAuthenticated, user, isLoading }}>
+            <div className="h-screen flex flex-col bg-background">
+              <div className="flex-1 overflow-hidden">
+                <LandingPage />
+              </div>
+              <BottomNav />
+            </div>
+          </AuthContext.Provider>
+        </ConferencesListContext.Provider>
       </ConferenceContext.Provider>
     );
   }
 
   return (
-    <ConferenceContext.Provider value={{ currentConference, setCurrentConference }}>
-      <AuthContext.Provider value={{ isAuthenticated, user, isLoading }}>
-        <div className="h-screen flex flex-col bg-background">
-          <div className="flex-1 overflow-hidden">
-            <Switch>
-              <Route path="/schedule" component={SchedulePage} />
-              <Route path="/map" component={MapPage} />
-              <Route path="/info" component={InfoPage} />
-              <Route path="/prizes" component={PrizesPage} />
-              <Route path="/profile" component={ProfilePage} />
-              <Route path="/admin/conference" component={AdminConference} />
-              <Route component={NotFound} />
-            </Switch>
+    <ConferenceContext.Provider value={{ currentConference, setCurrentConference, }}>
+      <ConferencesListContext.Provider value={{ conferencesList, setConferencesList }}>
+        <AuthContext.Provider value={{ isAuthenticated, user, isLoading }}>
+          <div className="h-screen flex flex-col bg-background">
+            <div className="flex-1 overflow-hidden">
+              <Switch>
+                <Route path="/schedule" component={SchedulePage} />
+                <Route path="/map" component={MapPage} />
+                <Route path="/info" component={InfoPage} />
+                <Route path="/prizes" component={PrizesPage} />
+                <Route path="/profile" component={ProfilePage} />
+                <Route path="/admin/conference" component={AdminConference} />
+                <Route component={NotFound} />
+              </Switch>
+            </div>
+            <BottomNav />
           </div>
-          <BottomNav />
-        </div>
-      </AuthContext.Provider>
+        </AuthContext.Provider>
+      </ConferencesListContext.Provider>
     </ConferenceContext.Provider>
   );
 }

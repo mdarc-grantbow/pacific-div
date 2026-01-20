@@ -3,11 +3,97 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar } from "lucide-react";
-import { Conference } from "@/hooks/useConference";
+import { useConference, Conference } from "@/hooks/useConference";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { useQuery } from "@tanstack/react-query";
+import { Badge } from "@/components/ui/badge";
+import { Bell, Moon, Sun, Info, MessageSquare, CheckCircle2, ExternalLink, LogOut, LogIn, Radio, MapPin, ChevronDown } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface ConferenceSelectorProps {
   onSelect: (conference: Conference) => void;
 }
+
+const { toast } = useToast();
+const { currentConference, conferences, setCurrentConference, setConferences } = useConference();
+const [conferenceDialogOpen, setConferenceDialogOpen] = useState(false);
+
+const conferenceName = currentConference?.name ?? 'Pacificon';
+const conferenceYear = currentConference?.year ?? 2025;
+const conferenceDivision = currentConference?.division ?? 'Pacific';
+const conferenceLocation = currentConference?.location ?? 'San Ramon Marriott';
+const conferenceAddress = currentConference?.locationAddress ?? '2600 Bishop Dr, San Ramon, CA 94583';
+
+
+export const ConferenceSelectorDialog = () => (
+  <Dialog open={conferenceDialogOpen} onOpenChange={setConferenceDialogOpen}>
+    <DialogTrigger asChild>
+      <Button variant="ghost" size="sm" className="gap-1" data-testid="button-change-conference">
+        {conferenceName} {conferenceYear}
+        <ChevronDown className="h-4 w-4" />
+      </Button>
+    </DialogTrigger>
+    <DialogContent className="max-w-md">
+      <DialogHeader>
+        <DialogTitle>Select Conference</DialogTitle>
+      </DialogHeader>
+      <div className="space-y-2 mt-4">
+        {conferences.length === 0 ? (
+          <p className="text-sm text-muted-foreground text-center py-4">No conferences available</p>
+        ) : (
+          conferences.map((conf) => (
+            <Card
+              key={conf.id}
+              className={`p-3 cursor-pointer hover-elevate ${currentConference?.id === conf.id ? 'border-primary' : ''}`}
+              onClick={() => handleConferenceChange(conf)}
+              data-testid={`conference-option-${conf.slug}`}
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium text-foreground">{conf.name} {conf.year}</p>
+                  <p className="text-xs text-muted-foreground">{conf.location}</p>
+                </div>
+                {currentConference?.id === conf.id && (
+                  <Badge variant="secondary">Current</Badge>
+                )}
+              </div>
+            </Card>
+          ))
+        )}
+      </div>
+    </DialogContent>
+  </Dialog>
+);
+
+export const handleConferenceChange = (conference: Conference) => {
+  setCurrentConference(conference);
+  setConferenceDialogOpen(false);
+  toast({
+    title: "Conference changed",
+    description: `Switched to ${conference.name} ${conference.year}`,
+  });
+};
+
+export const formatConferenceDates = () => {
+  if (currentConference?.startDate && currentConference?.endDate) {
+    const start = new Date(currentConference.startDate);
+    const end = new Date(currentConference.endDate);
+    const months = ['January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'];
+    const startMonth = months[start.getUTCMonth()];
+    const startDay = start.getUTCDate();
+    const endMonth = months[end.getUTCMonth()];
+    const endDay = end.getUTCDate();
+    const endYear = end.getUTCFullYear();
+
+    if (startMonth === endMonth) {
+      return `${startMonth} ${startDay}-${endDay}, ${endYear}`;
+    } else {
+      return `${startMonth} ${startDay} - ${endMonth} ${endDay}, ${endYear}`;
+    }
+  }
+  return 'October 10-12, 2025';
+};
 
 export default function ConferenceSelector({ onSelect }: ConferenceSelectorProps) {
   const [conferences, setConferences] = useState<Conference[]>([]);

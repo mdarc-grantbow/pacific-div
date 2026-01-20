@@ -1,10 +1,11 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Radio, Calendar, Map, Info, Award } from "lucide-react";
+import { Bell, Radio, Calendar, Map, Info, Award } from "lucide-react";
 import { Link } from "wouter";
 import { useAuthContext } from "@/hooks/useAuth";
 import { useConference } from "@/hooks/useConference";
+import { ConferenceSelectorDialog } from "@/components/ConferenceSelector";
 
 const featureCards = [
   {
@@ -43,7 +44,7 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <header className="border-b bg-card">
+      <header className="border-b bg-background">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             {currentConference?.logoUrl ? (
@@ -53,20 +54,14 @@ export default function LandingPage() {
             )}
             <div className="flex items-center gap-3">
               <span className="font-bold text-lg">{currentConference ? `${currentConference.name} ${currentConference.year}` : 'Conference'}</span>
-              <Button size="sm" variant="ghost" onClick={() => setCurrentConference(undefined)}>
-                Change
-              </Button>
             </div>
           </div>
-          {isAuthenticated ? (
-            <Button asChild data-testid="button-profile">
-              <Link href="/profile">Profile</Link>
-            </Button>
-          ) : (
-            <Button asChild data-testid="button-login">
-              <a href="/api/login">Log In</a>
-            </Button>
-          )}
+          <Button size="icon" variant="ghost" data-testid="button-notifications">
+            <Bell className="w-5 h-5" />
+          </Button>
+          <div className="flex items-center gap-2">
+            <ConferenceSelectorDialog />
+          </div>
         </div>
       </header>
 
@@ -80,20 +75,6 @@ export default function LandingPage() {
               ? `${currentConference.location} • ${new Date(currentConference.startDate).toLocaleDateString()} - ${new Date(currentConference.endDate).toLocaleDateString()}`
               : 'Your companion app for the conference.'}
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Button size="lg" asChild data-testid="button-get-started">
-              <Link href="/schedule">Browse Schedule</Link>
-            </Button>
-            {isAuthenticated ? (
-              <Button size="lg" variant="outline" asChild data-testid="button-profile-hero">
-                <Link href="/profile">View Profile</Link>
-              </Button>
-            ) : (
-              <Button size="lg" variant="outline" asChild data-testid="button-login-hero">
-                <a href="/api/login">Log In</a>
-              </Button>
-            )}
-          </div>
         </div>
 
         <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
