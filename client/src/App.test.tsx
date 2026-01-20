@@ -5,6 +5,14 @@ import { test, describe, it, expect } from 'vitest';
 
 act(() => {
     describe('App', () => {
+        vi.mock('@/hooks/use-toast', () => ({
+            useToast: () => ({
+                toasts: [],
+                toast: vi.fn(),
+                dismiss: vi.fn(),
+            }),
+        }));
+
         it('renders correctly', () => {
             const { container } = render(<App />);
             // Assert that the app component is in the document
