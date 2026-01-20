@@ -26,6 +26,7 @@ import {
 import { db } from "./db";
 import { eq, and, desc, asc } from "drizzle-orm";
 import { withRetry, handleDatabaseError, DatabaseError } from "./dbUtils";
+import { seedScheduleData } from "./seedScheduleData";
 
 export interface IStorage {
   // Conference methods
@@ -37,7 +38,7 @@ export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
 
-  getSessions(conferenceId?: string): Promise<Session[]>;
+  getSessions(conferenceId?: string, filters?: { category?: string; day?: string }): Promise<Session[]>;
   getSessionById(id: string): Promise<Session | undefined>;
 
   getVendors(conferenceId?: string): Promise<Vendor[]>;
@@ -148,11 +149,21 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async getSessions(conferenceId?: string): Promise<Session[]> {
+  async getSessions(conferenceId?: string, filters?: { category?: string; day?: string }): Promise<Session[]> {
     try {
       return await withRetry(async () => {
+        const conditions = [];
         if (conferenceId) {
-          return await db.select().from(sessions).where(eq(sessions.conferenceId, conferenceId));
+          conditions.push(eq(sessions.conferenceId, conferenceId));
+        }
+        if (filters?.category) {
+          conditions.push(eq(sessions.category, filters.category));
+        }
+        if (filters?.day) {
+          conditions.push(eq(sessions.day, filters.day));
+        }
+        if (conditions.length > 0) {
+          return await db.select().from(sessions).where(and(...conditions));
         }
         return await db.select().from(sessions);
       });
@@ -613,6 +624,7 @@ export class DatabaseStorage implements IStorage {
             prizeName: "Handheld VHF/UHF Transceiver",
             timestamp: new Date(Date.now() - 3600000).toISOString(),
             claimed: false,
+            typePrize: "doorPrize"
           },
           {
             conferenceId,
@@ -621,6 +633,7 @@ export class DatabaseStorage implements IStorage {
             prizeName: "Antenna Analyzer",
             timestamp: new Date(Date.now() - 7200000).toISOString(),
             claimed: true,
+            typePrize: "doorPrize"
           },
           {
             conferenceId,
@@ -629,6 +642,7 @@ export class DatabaseStorage implements IStorage {
             prizeName: "Power Supply 25A",
             timestamp: new Date(Date.now() - 10800000).toISOString(),
             claimed: false,
+            typePrize: "doorPrize"
           },
         ]);
 
@@ -693,6 +707,8 @@ export class DatabaseStorage implements IStorage {
           },
         ]);
       });
+
+      await seedScheduleData();
     } catch (error) {
       console.error("Failed to seed database (non-fatal):", error);
     }
