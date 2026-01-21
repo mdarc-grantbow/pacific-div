@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Calendar, ChevronDown } from "lucide-react";
-//import { Bell, Moon, Sun, Info, MessageSquare, CheckCircle2, ExternalLink, LogOut, LogIn, Radio, MapPin, ChevronDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,68 +11,66 @@ interface ConferenceSelectorProps {
   onSelect: (conference: Conference) => void;
 }
 
-const { toast } = useToast();
-const { currentConference, setCurrentConference } = useConference();
-const { conferencesList, setConferencesList } = useConferencesList();
-const [conferenceDialogOpen, setConferenceDialogOpen] = useState(false);
+export const ConferenceSelectorDialog = () => {
+  const { toast } = useToast();
+  const { currentConference, setCurrentConference } = useConference();
+  const { conferencesList } = useConferencesList();
+  const [conferenceDialogOpen, setConferenceDialogOpen] = useState(false);
 
-const conferenceName = currentConference?.name ?? 'Pacificon';
-const conferenceYear = currentConference?.year ?? 2025;
-const conferenceDivision = currentConference?.division ?? 'Pacific';
-const conferenceLocation = currentConference?.location ?? 'San Ramon Marriott';
-const conferenceAddress = currentConference?.locationAddress ?? '2600 Bishop Dr, San Ramon, CA 94583';
+  const conferenceName = currentConference?.name ?? 'Pacificon';
+  const conferenceYear = currentConference?.year ?? 2025;
 
+  const handleConferenceChange = (conference: Conference) => {
+    setCurrentConference(conference);
+    setConferenceDialogOpen(false);
+    toast({
+      title: "Conference changed",
+      description: `Switched to ${conference.name} ${conference.year}`,
+    });
+  };
 
-export const ConferenceSelectorDialog = () => (
-  <Dialog open={conferenceDialogOpen} onOpenChange={setConferenceDialogOpen}>
-    <DialogTrigger asChild>
-      <Button variant="ghost" size="sm" className="gap-1" data-testid="button-change-conference">
-        {conferenceName} {conferenceYear}
-        <ChevronDown className="h-4 w-4" />
-      </Button>
-    </DialogTrigger>
-    <DialogContent className="max-w-md">
-      <DialogHeader>
-        <DialogTitle>Select Conference</DialogTitle>
-      </DialogHeader>
-      <div className="space-y-2 mt-4">
-        {conferencesList && conferencesList.length === 0 ? (
-          <p className="text-sm text-muted-foreground text-center py-4">No conferences available</p>
-        ) : (
-          conferencesList && conferencesList.map((conf) => (
-            <Card
-              key={conf.id}
-              className={`p-3 cursor-pointer hover-elevate ${currentConference?.id === conf.id ? 'border-primary' : ''}`}
-              onClick={() => handleConferenceChange(conf)}
-              data-testid={`conference-option-${conf.slug}`}
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-medium text-foreground">{conf.name} {conf.year}</p>
-                  <p className="text-xs text-muted-foreground">{conf.location}</p>
+  return (
+    <Dialog open={conferenceDialogOpen} onOpenChange={setConferenceDialogOpen}>
+      <DialogTrigger asChild>
+        <Button variant="ghost" size="sm" className="gap-1" data-testid="button-change-conference">
+          {conferenceName} {conferenceYear}
+          <ChevronDown className="h-4 w-4" />
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle>Select Conference</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-2 mt-4">
+          {conferencesList && conferencesList.length === 0 ? (
+            <p className="text-sm text-muted-foreground text-center py-4">No conferences available</p>
+          ) : (
+            conferencesList && conferencesList.map((conf) => (
+              <Card
+                key={conf.id}
+                className={`p-3 cursor-pointer hover-elevate ${currentConference?.id === conf.id ? 'border-primary' : ''}`}
+                onClick={() => handleConferenceChange(conf)}
+                data-testid={`conference-option-${conf.slug}`}
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium text-foreground">{conf.name} {conf.year}</p>
+                    <p className="text-xs text-muted-foreground">{conf.location}</p>
+                  </div>
+                  {currentConference?.id === conf.id && (
+                    <Badge variant="secondary">Current</Badge>
+                  )}
                 </div>
-                {currentConference?.id === conf.id && (
-                  <Badge variant="secondary">Current</Badge>
-                )}
-              </div>
-            </Card>
-          ))
-        )}
-      </div>
-    </DialogContent>
-  </Dialog>
-);
-
-export const handleConferenceChange = (conference: Conference) => {
-  setCurrentConference(conference);
-  setConferenceDialogOpen(false);
-  toast({
-    title: "Conference changed",
-    description: `Switched to ${conference.name} ${conference.year}`,
-  });
+              </Card>
+            ))
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
 };
 
-export const formatConferenceDates = () => {
+export const formatConferenceDates = (currentConference: Conference | null) => {
   if (currentConference?.startDate && currentConference?.endDate) {
     const start = new Date(currentConference.startDate);
     const end = new Date(currentConference.endDate);
@@ -187,7 +184,7 @@ export default function ConferenceSelector({ onSelect }: ConferenceSelectorProps
                         {new Date(conference.endDate).toLocaleDateString()}
                       </CardDescription>
                       <CardDescription className="mt-2">
-                        📍 {conference.location}
+                        {conference.location}
                       </CardDescription>
                     </div>
                     <Button size="sm" onClick={(e) => {
