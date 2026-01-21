@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Bell, Radio, Calendar, Map, Info, Award } from "lucide-react";
+import { Bell, Radio, Calendar, Map, Building2, Award } from "lucide-react";
 import { Link } from "wouter";
 import { useAuthContext } from "@/hooks/useAuth";
 import { useConference } from "@/hooks/useConference";
@@ -21,9 +21,9 @@ const featureCards = [
     description: "Navigate the hotel with floor plans and room locations"
   },
   {
-    path: "/info",
-    icon: Info,
-    title: "Info",
+    path: "/venue",
+    icon: Building2,
+    title: "Venue",
     description: "Explore vendors, radio frequencies, and venue information"
   },
   {

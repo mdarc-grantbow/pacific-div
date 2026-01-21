@@ -114,7 +114,7 @@ describe('LandingPage', () => {
     // Check that all 4 feature cards are present
     expect(screen.getByTestId('card-schedule')).toBeInTheDocument();
     expect(screen.getByTestId('card-map')).toBeInTheDocument();
-    expect(screen.getByTestId('card-info')).toBeInTheDocument();
+    expect(screen.getByTestId('card-venue')).toBeInTheDocument();
     expect(screen.getByTestId('card-prizes')).toBeInTheDocument();
   });
 
