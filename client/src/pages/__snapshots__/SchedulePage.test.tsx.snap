@@ -74,6 +74,15 @@ exports[`SchedulePage > matches snapshot 1`] = `
             />
           </svg>
         </button>
+        <div
+          class="flex items-center gap-2"
+        >
+          <div
+            data-testid="conference-selector"
+          >
+            Conference Selector
+          </div>
+        </div>
       </div>
       <div
         class="relative mb-3"
@@ -174,6 +183,243 @@ exports[`SchedulePage > matches snapshot 1`] = `
           >
             Events
           </button>
+        </div>
+      </div>
+      <div
+        aria-labelledby="radix-:ro:-trigger-all"
+        class="ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 flex-1 overflow-y-auto px-4 py-4 pb-20 mt-0"
+        data-orientation="horizontal"
+        data-state="active"
+        id="radix-:ro:-content-all"
+        role="tabpanel"
+        style="animation-duration: 0s;"
+        tabindex="0"
+      >
+        <div>
+          <div
+            class="mb-4"
+          >
+            <h3
+              class="text-sm font-medium text-muted-foreground mb-2"
+            >
+              Forums
+            </h3>
+            <div
+              class="shadcn-card rounded-xl border bg-card border-card-border text-card-foreground shadow-sm p-3 mb-3"
+            >
+              <div
+                class="flex items-center gap-2 mb-2 text-sm text-muted-foreground"
+              >
+                <svg
+                  class="lucide lucide-clock w-4 h-4"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="10"
+                  />
+                  <polyline
+                    points="12 6 12 12 16 14"
+                  />
+                </svg>
+                <span
+                  class="font-medium"
+                >
+                  9:00 am - 10:00 am
+                </span>
+              </div>
+              <div
+                class="space-y-2"
+              >
+                <div
+                  class="border-l-2 border-primary pl-3 py-1"
+                >
+                  <div
+                    class="flex items-center justify-between gap-2 mb-1"
+                  >
+                    <div
+                      class="whitespace-nowrap inline-flex items-center rounded-md border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 hover-elevate border-transparent bg-secondary text-secondary-foreground text-xs"
+                    >
+                      Room A
+                    </div>
+                    <button
+                      class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover-elevate active-elevate-2 border border-transparent h-7 w-7"
+                      data-testid="button-bookmark-session-1"
+                    >
+                      <svg
+                        class="lucide lucide-bookmark w-4 h-4 text-muted-foreground"
+                        fill="none"
+                        height="24"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                  <p
+                    class="font-medium text-sm text-foreground"
+                  >
+                    Test Forum Session
+                  </p>
+                  <p
+                    class="text-xs text-muted-foreground flex items-center gap-1 mt-1"
+                  >
+                    <svg
+                      class="lucide lucide-user w-3 h-3"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"
+                      />
+                      <circle
+                        cx="12"
+                        cy="7"
+                        r="4"
+                      />
+                    </svg>
+                    John Doe
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3
+              class="text-sm font-medium text-muted-foreground mb-2"
+            >
+              Events
+            </h3>
+            <div
+              class="shadcn-card rounded-xl border bg-card border-card-border text-card-foreground shadow-sm p-3 mb-2"
+            >
+              <div
+                class="flex items-start gap-3"
+              >
+                <div
+                  class="flex-shrink-0 text-xs text-muted-foreground w-28"
+                >
+                  <div
+                    class="flex items-center gap-1"
+                  >
+                    <svg
+                      class="lucide lucide-clock w-3 h-3"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="10"
+                      />
+                      <polyline
+                        points="12 6 12 12 16 14"
+                      />
+                    </svg>
+                    <span>
+                      10:00 am - 11:00 am
+                    </span>
+                  </div>
+                </div>
+                <div
+                  class="flex-1 min-w-0"
+                >
+                  <div
+                    class="flex items-start justify-between gap-2"
+                  >
+                    <p
+                      class="font-medium text-sm text-foreground"
+                    >
+                      Test Event Session
+                    </p>
+                    <button
+                      class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover-elevate active-elevate-2 border border-transparent h-7 w-7 flex-shrink-0"
+                      data-testid="button-bookmark-session-2"
+                    >
+                      <svg
+                        class="lucide lucide-bookmark w-4 h-4 text-muted-foreground"
+                        fill="none"
+                        height="24"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                  <p
+                    class="text-xs text-muted-foreground flex items-center gap-1 mt-1"
+                  >
+                    <svg
+                      class="lucide lucide-map-pin w-3 h-3"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"
+                      />
+                      <circle
+                        cx="12"
+                        cy="10"
+                        r="3"
+                      />
+                    </svg>
+                    Room B
+                  </p>
+                  <p
+                    class="text-xs text-primary mt-1"
+                  >
+                    Another topic
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div

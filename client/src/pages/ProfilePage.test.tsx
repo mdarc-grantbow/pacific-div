@@ -29,17 +29,11 @@ const { mockConference, mockUserProfile, mockUseQuery } = vi.hoisted(() => {
       accentColor: '#f97316',
     },
     mockUserProfile: {
-      id: '1',
-      firstName: 'test',
-      lastName: 'user',
-      email: 'test@example.com',
       callSign: 'W1ABC',
+      name: 'Test User',
       badgeNumber: '123',
       licenseClass: 'Extra',
       isRegistered: false,
-      profileImageUrl: null,
-      createdAt: null,
-      updatedAt: null,
     },
     mockUseQuery: vi.fn(() => ({
       isLoading: false,
@@ -256,8 +250,7 @@ describe('ProfilePage - Authenticated', () => {
   });
 
   it('hides registration link when user is registered', () => {
-    const { useQuery } = require('@tanstack/react-query');
-    vi.mocked(useQuery).mockImplementation(({ queryKey }: any) => {
+    mockUseQuery.mockImplementation(({ queryKey }: any) => {
       if (queryKey[0] === '/api/profile') {
         return {
           data: { ...mockUserProfile, isRegistered: true },

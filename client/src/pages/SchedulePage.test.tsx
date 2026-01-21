@@ -6,8 +6,37 @@ import { useAuthContext } from '@/hooks/useAuth';
 import { useConference, useConferencesList } from '@/hooks/useConference';
 
 // Use vi.hoisted to define mock data and mock functions
-const { mockConference, mockUserProfile, mockUseQuery } = vi.hoisted(() => {
+const { mockConference, mockUserProfile, mockSessions, mockUseQuery } = vi.hoisted(() => {
+  const mockForumSession = {
+    id: 'session-1',
+    conferenceId: 'test-conference-2025',
+    title: 'Test Forum Session',
+    speaker: 'John Doe',
+    speakerBio: 'A great speaker',
+    abstract: 'An interesting topic',
+    room: 'Room A',
+    day: 'Saturday',
+    startTime: '9:00 am',
+    endTime: '10:00 am',
+    category: 'forum',
+    imageUrl: null,
+  };
+  const mockEventSession = {
+    id: 'session-2',
+    conferenceId: 'test-conference-2025',
+    title: 'Test Event Session',
+    speaker: 'Jane Smith',
+    speakerBio: 'Another speaker',
+    abstract: 'Another topic',
+    room: 'Room B',
+    day: 'Saturday',
+    startTime: '10:00 am',
+    endTime: '11:00 am',
+    category: 'event',
+    imageUrl: null,
+  };
   return {
+    mockSessions: { forums: [mockForumSession], events: [mockEventSession] },
     mockConference: {
       id: 'test-conference-2025',
       name: 'Test Conference',
@@ -27,17 +56,11 @@ const { mockConference, mockUserProfile, mockUseQuery } = vi.hoisted(() => {
       accentColor: '#f97316',
     },
     mockUserProfile: {
-      id: '1',
-      firstName: 'test',
-      lastName: 'user',
-      email: 'test@example.com',
       callSign: 'W1ABC',
+      name: 'Test User',
       badgeNumber: '123',
       licenseClass: 'Extra',
       isRegistered: false,
-      profileImageUrl: null,
-      createdAt: null,
-      updatedAt: null,
     },
     mockUseQuery: vi.fn(() => ({
       isLoading: false,
@@ -114,6 +137,24 @@ mockUseQuery.mockImplementation(({ queryKey }: any) => {
       error: null,
     };
   }
+  // Handle session queries: ['/api/conferences', slug, 'sessions', category, day]
+  if (queryKey[0] === '/api/conferences' && queryKey[2] === 'sessions') {
+    const category = queryKey[3];
+    if (category === 'forum') {
+      return {
+        data: mockSessions.forums,
+        isLoading: false,
+        error: null,
+      };
+    }
+    if (category === 'event') {
+      return {
+        data: mockSessions.events,
+        isLoading: false,
+        error: null,
+      };
+    }
+  }
   if (queryKey[0] === '/api/conferences') {
     return {
       data: [mockConference],
@@ -128,6 +169,7 @@ mockUseQuery.mockImplementation(({ queryKey }: any) => {
       error: null,
     };
   }
+  // Default: return empty bookmarks for /api/bookmarks query
   return {
     data: [],
     isLoading: false,
@@ -181,9 +223,9 @@ describe('SchedulePage', () => {
   it('displays tab labels correctly', () => {
     render(<SchedulePage />);
 
-    expect(screen.getByText('All')).toBeInTheDocument();
-    expect(screen.getByText('Forums')).toBeInTheDocument();
-    expect(screen.getByText('Events')).toBeInTheDocument();
+    expect(screen.getByTestId('tab-all')).toHaveTextContent('All');
+    expect(screen.getByTestId('tab-forums')).toHaveTextContent('Forums');
+    expect(screen.getByTestId('tab-events')).toHaveTextContent('Events');
   });
 
   it('handles missing conference gracefully', () => {

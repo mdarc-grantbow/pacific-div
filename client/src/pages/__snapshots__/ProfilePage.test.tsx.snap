@@ -175,7 +175,9 @@ exports[`ProfilePage - Authenticated > matches snapshot for authenticated users 
             <p
               class="text-sm text-muted-foreground"
               data-testid="text-name"
-            />
+            >
+              Test User
+            </p>
             <div
               class="flex items-center gap-2 mt-1"
             >
