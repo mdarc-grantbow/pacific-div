@@ -105,6 +105,47 @@ export default function PrizesPage() {
             </TabsList>
           </div>
 
+          <TabsContent value="all" className="px-4 py-4 mt-0">
+            {(prizesLoading || winnersLoading) ? (
+              <div className="space-y-3">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="h-24 bg-muted animate-pulse rounded" />
+                ))}
+              </div>
+            ) : (doorPrizes.length === 0 && tHuntingWinners.length === 0) ? (
+              <div className="text-center py-8">
+                <p className="text-muted-foreground">No prizes announced yet</p>
+              </div>
+            ) : (
+              <div>
+                {doorPrizes.length > 0 && (
+                  <div className="mb-6">
+                    <h3 className="text-sm font-medium text-muted-foreground mb-3">Door Prizes</h3>
+                    <div className="space-y-3">
+                      {doorPrizes.map((prize) => (
+                        <PrizeCard
+                          key={prize.id}
+                          prize={prize}
+                          isWinner={prize.badgeNumber === userBadgeNumber}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {tHuntingWinners.length > 0 && (
+                  <div>
+                    <h3 className="text-sm font-medium text-muted-foreground mb-3">T-Hunting Winners</h3>
+                    <div className="space-y-3">
+                      {tHuntingWinners.map((winner) => (
+                        <THuntingCard key={winner.id} winner={winner} />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </TabsContent>
+
           <TabsContent value="door" className="px-4 py-4 mt-0">
             {prizesLoading ? (
               <div className="space-y-3">
