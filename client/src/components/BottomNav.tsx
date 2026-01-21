@@ -1,11 +1,11 @@
-import { Calendar, Map, Info, Award, User, LogIn } from "lucide-react";
+import { Calendar, Map, Building2, Award, User, LogIn } from "lucide-react";
 import { useLocation } from "wouter";
 import { useAuthContext } from "@/hooks/useAuth";
 
 const navItems = [
   { path: "/schedule", icon: Calendar, label: "Schedule" },
   { path: "/map", icon: Map, label: "Map" },
-  { path: "/info", icon: Info, label: "Info" },
+  { path: "/info", icon: Building2, label: "Venue" },
   { path: "/prizes", icon: Award, label: "Prizes" },
 ];
 
