@@ -50,6 +50,22 @@ function Router() {
     }
   }, [conferencesList]);
 
+  // Fetch conferences list from API on mount
+  useEffect(() => {
+    const fetchConferences = async () => {
+      try {
+        const response = await fetch("/api/conferences");
+        if (response.ok) {
+          const data = await response.json();
+          setConferencesList(data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch conferences:", err);
+      }
+    };
+    fetchConferences();
+  }, []);
+
   // Apply runtime branding (CSS variables + favicon)
   useEffect(() => {
     if (!currentConference) return;
