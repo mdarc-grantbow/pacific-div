@@ -36,12 +36,6 @@ export default function ProfilePage() {
     queryKey: ['/api/conferences'],
   });
 
-  const conferenceName = currentConference?.name ?? 'Pacificon';
-  const conferenceYear = currentConference?.year ?? 2025;
-  const conferenceDivision = currentConference?.division ?? 'Pacific';
-  const conferenceLocation = currentConference?.location ?? 'San Ramon Marriott';
-  const conferenceAddress = currentConference?.locationAddress ?? '2600 Bishop Dr, San Ramon, CA 94583';
-
   useEffect(() => {
     const isDark = document.documentElement.classList.contains('dark');
     setDarkMode(isDark);
@@ -218,6 +212,9 @@ export default function ProfilePage() {
             <Radio className="h-5 w-5 text-primary" />
             <h1 className="text-xl font-medium text-foreground">Profile</h1>
           </Link>
+          <Button size="icon" variant="ghost" data-testid="button-notifications">
+            <Bell className="w-5 h-5" />
+          </Button>
           <div className="flex items-center gap-2">
             <ConferenceSelectorDialog />
           </div>

@@ -1,0 +1,439 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ProfilePage > matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="flex flex-col h-full"
+  >
+    <header
+      class="sticky top-0 z-40 bg-background border-b border-border px-4 py-3"
+    >
+      <div
+        class="flex items-center justify-between"
+      >
+        <a
+          href="/welcome"
+        >
+          <svg
+            class="lucide lucide-radio h-5 w-5 text-primary"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"
+            />
+            <path
+              d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"
+            />
+            <circle
+              cx="12"
+              cy="12"
+              r="2"
+            />
+            <path
+              d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"
+            />
+            <path
+              d="M19.1 4.9C23 8.8 23 15.1 19.1 19"
+            />
+          </svg>
+          <h1
+            class="text-xl font-medium text-foreground"
+          >
+            Profile
+          </h1>
+        </a>
+        <button
+          class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover-elevate active-elevate-2 border border-transparent h-9 w-9"
+          data-testid="button-notifications"
+        >
+          <svg
+            class="lucide lucide-bell w-5 h-5"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"
+            />
+            <path
+              d="M10.3 21a1.94 1.94 0 0 0 3.4 0"
+            />
+          </svg>
+        </button>
+        <div
+          class="flex items-center gap-2"
+        >
+          <div
+            data-testid="conference-selector"
+          >
+            Conference Selector
+          </div>
+        </div>
+      </div>
+    </header>
+    <main
+      class="flex-1 overflow-y-auto px-4 py-4 pb-20"
+    >
+      <div
+        class="shadcn-card rounded-xl border bg-card border-card-border text-card-foreground shadow-sm p-6 text-center"
+      >
+        <svg
+          class="lucide lucide-log-in w-12 h-12 text-primary mx-auto mb-4"
+          fill="none"
+          height="24"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"
+          />
+          <polyline
+            points="10 17 15 12 10 7"
+          />
+          <line
+            x1="15"
+            x2="3"
+            y1="12"
+            y2="12"
+          />
+        </svg>
+        <h2
+          class="text-lg font-medium text-foreground mb-2"
+        >
+          Sign in to access your profile
+        </h2>
+        <p
+          class="text-sm text-muted-foreground mb-4"
+        >
+          Log in to save your bookmarks, track your badge number, and complete feedback surveys.
+        </p>
+        <a
+          class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover-elevate active-elevate-2 bg-primary text-primary-foreground border border-primary-border min-h-9 px-4 py-2"
+          data-testid="button-login-profile"
+          href="/api/login"
+        >
+          Log In
+        </a>
+      </div>
+      <div
+        class="shadcn-card rounded-xl border bg-card border-card-border text-card-foreground shadow-sm p-4 mt-4"
+      >
+        <h3
+          class="font-medium text-foreground mb-4"
+        >
+          Settings
+        </h3>
+        <div
+          class="flex items-center justify-between"
+        >
+          <div
+            class="flex items-center gap-3"
+          >
+            <svg
+              class="lucide lucide-sun w-5 h-5 text-muted-foreground"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="4"
+              />
+              <path
+                d="M12 2v2"
+              />
+              <path
+                d="M12 20v2"
+              />
+              <path
+                d="m4.93 4.93 1.41 1.41"
+              />
+              <path
+                d="m17.66 17.66 1.41 1.41"
+              />
+              <path
+                d="M2 12h2"
+              />
+              <path
+                d="M20 12h2"
+              />
+              <path
+                d="m6.34 17.66-1.41 1.41"
+              />
+              <path
+                d="m19.07 4.93-1.41 1.41"
+              />
+            </svg>
+            <label
+              class="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-sm font-normal cursor-pointer"
+              for="dark-mode-guest"
+            >
+              Dark Mode
+            </label>
+          </div>
+          <button
+            aria-checked="false"
+            class="peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input"
+            data-state="unchecked"
+            data-testid="switch-dark-mode"
+            id="dark-mode-guest"
+            role="switch"
+            type="button"
+            value="on"
+          >
+            <span
+              class="pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0"
+              data-state="unchecked"
+            />
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`ProfilePage - Unauthenticated > matches snapshot for unauthenticated users 1`] = `
+<DocumentFragment>
+  <div
+    class="flex flex-col h-full"
+  >
+    <header
+      class="sticky top-0 z-40 bg-background border-b border-border px-4 py-3"
+    >
+      <div
+        class="flex items-center justify-between"
+      >
+        <a
+          href="/welcome"
+        >
+          <svg
+            class="lucide lucide-radio h-5 w-5 text-primary"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"
+            />
+            <path
+              d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"
+            />
+            <circle
+              cx="12"
+              cy="12"
+              r="2"
+            />
+            <path
+              d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"
+            />
+            <path
+              d="M19.1 4.9C23 8.8 23 15.1 19.1 19"
+            />
+          </svg>
+          <h1
+            class="text-xl font-medium text-foreground"
+          >
+            Profile
+          </h1>
+        </a>
+        <button
+          class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover-elevate active-elevate-2 border border-transparent h-9 w-9"
+          data-testid="button-notifications"
+        >
+          <svg
+            class="lucide lucide-bell w-5 h-5"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"
+            />
+            <path
+              d="M10.3 21a1.94 1.94 0 0 0 3.4 0"
+            />
+          </svg>
+        </button>
+        <div
+          class="flex items-center gap-2"
+        >
+          <div
+            data-testid="conference-selector"
+          >
+            Conference Selector
+          </div>
+        </div>
+      </div>
+    </header>
+    <main
+      class="flex-1 overflow-y-auto px-4 py-4 pb-20"
+    >
+      <div
+        class="shadcn-card rounded-xl border bg-card border-card-border text-card-foreground shadow-sm p-6 text-center"
+      >
+        <svg
+          class="lucide lucide-log-in w-12 h-12 text-primary mx-auto mb-4"
+          fill="none"
+          height="24"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"
+          />
+          <polyline
+            points="10 17 15 12 10 7"
+          />
+          <line
+            x1="15"
+            x2="3"
+            y1="12"
+            y2="12"
+          />
+        </svg>
+        <h2
+          class="text-lg font-medium text-foreground mb-2"
+        >
+          Sign in to access your profile
+        </h2>
+        <p
+          class="text-sm text-muted-foreground mb-4"
+        >
+          Log in to save your bookmarks, track your badge number, and complete feedback surveys.
+        </p>
+        <a
+          class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover-elevate active-elevate-2 bg-primary text-primary-foreground border border-primary-border min-h-9 px-4 py-2"
+          data-testid="button-login-profile"
+          href="/api/login"
+        >
+          Log In
+        </a>
+      </div>
+      <div
+        class="shadcn-card rounded-xl border bg-card border-card-border text-card-foreground shadow-sm p-4 mt-4"
+      >
+        <h3
+          class="font-medium text-foreground mb-4"
+        >
+          Settings
+        </h3>
+        <div
+          class="flex items-center justify-between"
+        >
+          <div
+            class="flex items-center gap-3"
+          >
+            <svg
+              class="lucide lucide-sun w-5 h-5 text-muted-foreground"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="4"
+              />
+              <path
+                d="M12 2v2"
+              />
+              <path
+                d="M12 20v2"
+              />
+              <path
+                d="m4.93 4.93 1.41 1.41"
+              />
+              <path
+                d="m17.66 17.66 1.41 1.41"
+              />
+              <path
+                d="M2 12h2"
+              />
+              <path
+                d="M20 12h2"
+              />
+              <path
+                d="m6.34 17.66-1.41 1.41"
+              />
+              <path
+                d="m19.07 4.93-1.41 1.41"
+              />
+            </svg>
+            <label
+              class="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-sm font-normal cursor-pointer"
+              for="dark-mode-guest"
+            >
+              Dark Mode
+            </label>
+          </div>
+          <button
+            aria-checked="false"
+            class="peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input"
+            data-state="unchecked"
+            data-testid="switch-dark-mode"
+            id="dark-mode-guest"
+            role="switch"
+            type="button"
+            value="on"
+          >
+            <span
+              class="pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0"
+              data-state="unchecked"
+            />
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+</DocumentFragment>
+`;

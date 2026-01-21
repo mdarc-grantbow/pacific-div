@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Search, Bell, Clock, MapPin, User, Radio, Bookmark } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,7 @@ import { useConference } from "@/hooks/useConference";
 import { useToast } from "@/hooks/use-toast";
 import type { Session } from "@shared/schema";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ConferenceSelectorDialog } from "@/components/ConferenceSelector";
 
 interface GroupedForum {
   time: string;
@@ -177,6 +178,8 @@ export default function SchedulePage() {
   const [activeTab, setActiveTab] = useState<'all' | 'forums' | 'events'>('all');
   const { isAuthenticated } = useAuthContext();
   const { currentConference } = useConference();
+  const [darkMode, setDarkMode] = useState(false);
+  const [notifications, setNotifications] = useState(true);
   const { toast } = useToast();
 
   const { data: forums = [], isLoading: forumsLoading } = useQuery<Session[]>({
@@ -266,6 +269,11 @@ export default function SchedulePage() {
     );
   }, [events, searchQuery]);
 
+  useEffect(() => {
+    const isDark = document.documentElement.classList.contains('dark');
+    setDarkMode(isDark);
+  }, []);
+
   return (
     <div className="flex flex-col h-full">
       <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3">
@@ -277,6 +285,9 @@ export default function SchedulePage() {
           <Button size="icon" variant="ghost" data-testid="button-notifications">
             <Bell className="w-5 h-5" />
           </Button>
+          <div className="flex items-center gap-2">
+            <ConferenceSelectorDialog />
+          </div>
         </div>
 
         <div className="relative mb-3">

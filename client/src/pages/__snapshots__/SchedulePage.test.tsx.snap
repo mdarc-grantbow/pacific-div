@@ -1,0 +1,202 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`SchedulePage > matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="flex flex-col h-full"
+  >
+    <header
+      class="sticky top-0 z-40 bg-background border-b border-border px-4 py-3"
+    >
+      <div
+        class="flex items-center justify-between mb-3"
+      >
+        <a
+          href="/welcome"
+        >
+          <svg
+            class="lucide lucide-radio h-5 w-5 text-primary"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"
+            />
+            <path
+              d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"
+            />
+            <circle
+              cx="12"
+              cy="12"
+              r="2"
+            />
+            <path
+              d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"
+            />
+            <path
+              d="M19.1 4.9C23 8.8 23 15.1 19.1 19"
+            />
+          </svg>
+          <h1
+            class="text-xl font-medium text-foreground"
+          >
+            Schedule
+          </h1>
+        </a>
+        <button
+          class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover-elevate active-elevate-2 border border-transparent h-9 w-9"
+          data-testid="button-notifications"
+        >
+          <svg
+            class="lucide lucide-bell w-5 h-5"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"
+            />
+            <path
+              d="M10.3 21a1.94 1.94 0 0 0 3.4 0"
+            />
+          </svg>
+        </button>
+      </div>
+      <div
+        class="relative mb-3"
+      >
+        <svg
+          class="lucide lucide-search absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground"
+          fill="none"
+          height="24"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle
+            cx="11"
+            cy="11"
+            r="8"
+          />
+          <path
+            d="m21 21-4.3-4.3"
+          />
+        </svg>
+        <input
+          class="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm pl-9"
+          data-testid="input-search"
+          placeholder="Search forums, events..."
+          type="search"
+          value=""
+        />
+      </div>
+      <div
+        data-testid="day-selector"
+      >
+        Day Selector: all
+      </div>
+    </header>
+    <div
+      class="flex-1 flex flex-col"
+      data-orientation="horizontal"
+      dir="ltr"
+    >
+      <div
+        class="sticky top-[140px] z-30 bg-background border-b border-border"
+      >
+        <div
+          aria-orientation="horizontal"
+          class="inline-flex items-center text-muted-foreground w-full justify-start rounded-none h-10 bg-transparent p-0"
+          data-orientation="horizontal"
+          role="tablist"
+          style="outline: none;"
+          tabindex="0"
+        >
+          <button
+            aria-controls="radix-:ro:-content-all"
+            aria-selected="true"
+            class="inline-flex items-center justify-center whitespace-nowrap px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
+            data-orientation="horizontal"
+            data-radix-collection-item=""
+            data-state="active"
+            data-testid="tab-all"
+            id="radix-:ro:-trigger-all"
+            role="tab"
+            tabindex="-1"
+            type="button"
+          >
+            All
+          </button>
+          <button
+            aria-controls="radix-:ro:-content-forums"
+            aria-selected="false"
+            class="inline-flex items-center justify-center whitespace-nowrap px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
+            data-orientation="horizontal"
+            data-radix-collection-item=""
+            data-state="inactive"
+            data-testid="tab-forums"
+            id="radix-:ro:-trigger-forums"
+            role="tab"
+            tabindex="-1"
+            type="button"
+          >
+            Forums
+          </button>
+          <button
+            aria-controls="radix-:ro:-content-events"
+            aria-selected="false"
+            class="inline-flex items-center justify-center whitespace-nowrap px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
+            data-orientation="horizontal"
+            data-radix-collection-item=""
+            data-state="inactive"
+            data-testid="tab-events"
+            id="radix-:ro:-trigger-events"
+            role="tab"
+            tabindex="-1"
+            type="button"
+          >
+            Events
+          </button>
+        </div>
+      </div>
+      <div
+        aria-labelledby="radix-:ro:-trigger-forums"
+        class="ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 flex-1 overflow-y-auto px-4 py-4 pb-20 mt-0"
+        data-orientation="horizontal"
+        data-state="inactive"
+        hidden=""
+        id="radix-:ro:-content-forums"
+        role="tabpanel"
+        tabindex="0"
+      />
+      <div
+        aria-labelledby="radix-:ro:-trigger-events"
+        class="ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 flex-1 overflow-y-auto px-4 py-4 pb-20 mt-0"
+        data-orientation="horizontal"
+        data-state="inactive"
+        hidden=""
+        id="radix-:ro:-content-events"
+        role="tabpanel"
+        tabindex="0"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;

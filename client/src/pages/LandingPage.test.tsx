@@ -27,8 +27,17 @@ const { mockConference, mockUser } = vi.hoisted(() => {
     },
     mockUser: {
       id: '1',
-      username: 'testuser',
+      firstName: 'test',
+      lastName: 'user',
       email: 'test@example.com',
+      callSign: 'W1ABC',
+      name: 'Test User',
+      badgeNumber: '123',
+      licenseClass: 'Extra',
+      isRegistered: false,
+      profileImageUrl: null,
+      createdAt: null,
+      updatedAt: null,
     }
   };
 });

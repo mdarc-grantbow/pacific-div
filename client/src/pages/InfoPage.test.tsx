@@ -88,9 +88,16 @@ const { mockConference, mockRadioContacts, mockVenueInfo, mockVendors, mockUserP
     ],
     mockUserProfile: {
       id: '1',
-      username: 'testuser',
+      firstName: 'test',
+      lastName: 'user',
       email: 'test@example.com',
+      callSign: 'W1ABC',
+      badgeNumber: '123',
+      licenseClass: 'Extra',
       isRegistered: false,
+      profileImageUrl: null,
+      createdAt: null,
+      updatedAt: null,
     },
   };
 });
@@ -229,7 +236,7 @@ describe('InfoPage with authenticated user', () => {
     vi.mocked(useAuthContext).mockReturnValue({
       isAuthenticated: true,
       isLoading: false,
-      user: { id: '1', username: 'testuser', email: 'test@example.com' },
+      user: mockUserProfile,
     });
   });
 
