@@ -63,7 +63,7 @@ export default function InfoPage() {
         <div className="flex items-center justify-between">
           <Link href="/welcome" className="hover:opacity-80 transition-opacity flex items-center gap-2" data-testid="link-welcome">
             <Radio className="h-5 w-5 text-primary" />
-            <h1 className="text-xl font-medium text-foreground">Info</h1>
+            <h1 className="text-xl font-medium text-foreground">Venue</h1>
           </Link>
           <Button size="icon" variant="ghost" data-testid="button-notifications">
             <Bell className="w-5 h-5" />
@@ -169,16 +169,13 @@ export default function InfoPage() {
                 </div>
               </div>
 
-              <div className="mb-4">
-                <h4 className="text-sm font-medium text-foreground mb-2">From I-680:</h4>
-                <ol className="text-sm text-muted-foreground space-y-1 list-decimal list-inside">
-                  <li>Exit at Bollinger Canyon Road</li>
-                  <li>Turn east (right if northbound, left if southbound)</li>
-                  <li>Turn left at first light (Sunset Dr/Chevron Dr)</li>
-                  <li>Pass shopping center, turn left at Bishop Drive</li>
-                  <li>Hotel entrance is 0.1 miles on the left</li>
-                </ol>
-              </div>
+              {currentConference?.directionsHtml && (
+                <div 
+                  className="mb-4 prose prose-sm dark:prose-invert max-w-none [&_h4]:text-sm [&_h4]:font-medium [&_h4]:text-foreground [&_h4]:mb-2 [&_ol]:text-sm [&_ol]:text-muted-foreground [&_ol]:space-y-1 [&_ol]:list-decimal [&_ol]:list-inside [&_li]:text-sm"
+                  dangerouslySetInnerHTML={{ __html: currentConference.directionsHtml }}
+                  data-testid="directions-html"
+                />
+              )}
 
               <div className="rounded-md overflow-hidden border border-border mb-3">
                 <iframe

@@ -12,7 +12,7 @@ export interface Conference {
   gridSquare: string;
   gps: string;
   locationAddress: string;
-  //locationDirections: string;
+  directionsHtml?: string;
   isActive: boolean;
   // Branding (optional)
   logoUrl?: string;
