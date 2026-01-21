@@ -185,7 +185,8 @@ export default function SchedulePage() {
   const { data: forums = [], isLoading: forumsLoading } = useQuery<Session[]>({
     queryKey: ['/api/conferences', currentConference?.slug, 'sessions', 'forum', selectedDay],
     queryFn: async () => {
-      const response = await fetch(`/api/conferences/${currentConference?.slug}/sessions?category=forum&day=${selectedDay}`);
+      const dayParam = selectedDay === 'all' ? '' : `&day=${selectedDay}`;
+      const response = await fetch(`/api/conferences/${currentConference?.slug}/sessions?category=forum${dayParam}`);
       if (!response.ok) throw new Error('Failed to fetch forums');
       return response.json();
     },
@@ -195,7 +196,8 @@ export default function SchedulePage() {
   const { data: events = [], isLoading: eventsLoading } = useQuery<Session[]>({
     queryKey: ['/api/conferences', currentConference?.slug, 'sessions', 'event', selectedDay],
     queryFn: async () => {
-      const response = await fetch(`/api/conferences/${currentConference?.slug}/sessions?category=event&day=${selectedDay}`);
+      const dayParam = selectedDay === 'all' ? '' : `&day=${selectedDay}`;
+      const response = await fetch(`/api/conferences/${currentConference?.slug}/sessions?category=event${dayParam}`);
       if (!response.ok) throw new Error('Failed to fetch events');
       return response.json();
     },
@@ -331,6 +333,45 @@ export default function SchedulePage() {
             </TabsTrigger>
           </TabsList>
         </div>
+
+        <TabsContent value="all" className="flex-1 overflow-y-auto px-4 py-4 pb-20 mt-0">
+          {(forumsLoading || eventsLoading) ? (
+            <LoadingSkeleton />
+          ) : (filteredForums.length === 0 && filteredEvents.length === 0) ? (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">No sessions scheduled for this day</p>
+            </div>
+          ) : (
+            <div>
+              {filteredForums.length > 0 && (
+                <div className="mb-4">
+                  <h3 className="text-sm font-medium text-muted-foreground mb-2">Forums</h3>
+                  {filteredForums.map((groupedForum, idx) => (
+                    <ForumCard
+                      key={idx}
+                      groupedForum={groupedForum}
+                      bookmarks={bookmarks}
+                      onBookmark={handleBookmark}
+                    />
+                  ))}
+                </div>
+              )}
+              {filteredEvents.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-medium text-muted-foreground mb-2">Events</h3>
+                  {filteredEvents.map((event) => (
+                    <EventCard
+                      key={event.id}
+                      event={event}
+                      bookmarks={bookmarks}
+                      onBookmark={handleBookmark}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </TabsContent>
 
         <TabsContent value="forums" className="flex-1 overflow-y-auto px-4 py-4 pb-20 mt-0">
           {forumsLoading ? (
