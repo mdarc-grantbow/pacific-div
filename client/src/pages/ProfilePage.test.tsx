@@ -7,8 +7,8 @@ import { useConference } from '@/hooks/useConference';
 //import { User } from '../../../shared/schema';
 //import { useQuery, useMutation } from '@tanstack/react-query';
 
-// Use vi.hoisted to define mock data
-const { mockConference, mockUserProfile } = vi.hoisted(() => {
+// Use vi.hoisted to define mock data and mock functions
+const { mockConference, mockUserProfile, mockUseQuery } = vi.hoisted(() => {
   return {
     mockConference: {
       id: 'test-conference-2025',
@@ -41,6 +41,11 @@ const { mockConference, mockUserProfile } = vi.hoisted(() => {
       createdAt: null,
       updatedAt: null,
     },
+    mockUseQuery: vi.fn(() => ({
+      isLoading: false,
+      data: [],
+      error: null,
+    })),
   };
 });
 
@@ -83,14 +88,10 @@ vi.mock('@/components/ConferenceSelector', () => ({
 
 // Mock TanStack Query
 vi.mock('@tanstack/react-query', async (importOriginal) => {
-  const actual = await importOriginal();
+  const actual = await importOriginal() as Record<string, unknown>;
   return {
     ...actual,
-    useQuery: vi.fn(() => ({
-      isLoading: false,
-      data: [],
-      error: null,
-    })),
+    useQuery: mockUseQuery,
     useMutation: vi.fn(() => ({
       mutate: vi.fn(),
       isLoading: false,
@@ -163,8 +164,7 @@ describe('ProfilePage - Authenticated', () => {
       user: mockUserProfile,
     });
 
-    const { useQuery } = require('@tanstack/react-query');
-    vi.mocked(useQuery).mockImplementation(({ queryKey }: any) => {
+    mockUseQuery.mockImplementation(({ queryKey }: any) => {
       if (queryKey[0] === '/api/profile') {
         return {
           data: mockUserProfile,

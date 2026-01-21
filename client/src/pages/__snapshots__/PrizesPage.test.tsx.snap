@@ -152,6 +152,16 @@ exports[`PrizesPage > matches snapshot 1`] = `
           </div>
         </div>
         <div
+          aria-labelledby="radix-:rg:-trigger-all"
+          class="ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 px-4 py-4 mt-0"
+          data-orientation="horizontal"
+          data-state="inactive"
+          hidden=""
+          id="radix-:rg:-content-all"
+          role="tabpanel"
+          tabindex="0"
+        />
+        <div
           aria-labelledby="radix-:rg:-trigger-door"
           class="ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 px-4 py-4 mt-0"
           data-orientation="horizontal"

@@ -185,7 +185,7 @@ describe('VenuePage', () => {
   it('renders the venue page correctly', () => {
     render(<VenuePage />);
 
-    expect(screen.getByText('Venue')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Venue' })).toBeInTheDocument();
     expect(screen.getByTestId('button-notifications')).toBeInTheDocument();
     expect(screen.getByTestId('conference-selector')).toBeInTheDocument();
   });
@@ -243,6 +243,6 @@ describe('VenuePage with authenticated user', () => {
   it('renders correctly when authenticated', () => {
     render(<VenuePage />);
 
-    expect(screen.getByText('Venue')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Venue' })).toBeInTheDocument();
   });
 });
