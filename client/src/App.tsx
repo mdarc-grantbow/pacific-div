@@ -11,7 +11,7 @@ import BottomNav from "@/components/BottomNav";
 //import ConferenceSelector from "@/components/ConferenceSelector";
 import SchedulePage from "@/pages/SchedulePage";
 import MapPage from "@/pages/MapPage";
-import InfoPage from "@/pages/InfoPage";
+import VenuePage from "@/pages/VenuePage";
 import PrizesPage from "@/pages/PrizesPage";
 import ProfilePage from "@/pages/ProfilePage";
 import AdminConference from "@/pages/AdminConference";
@@ -114,7 +114,7 @@ function Router() {
               <Switch>
                 <Route path="/schedule" component={SchedulePage} />
                 <Route path="/map" component={MapPage} />
-                <Route path="/info" component={InfoPage} />
+                <Route path="/venue" component={VenuePage} />
                 <Route path="/prizes" component={PrizesPage} />
                 <Route path="/profile" component={ProfilePage} />
                 <Route path="/admin/conference" component={AdminConference} />

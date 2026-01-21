@@ -15,7 +15,7 @@ import exhibitorsMapImage from "@assets/exhibitors_1764883755395.png";
 import { ConferenceSelectorDialog } from "@/components/ConferenceSelector";
 import { Button } from "@/components/ui/button";
 
-export default function InfoPage() {
+export default function VenuePage() {
   const { isAuthenticated } = useAuthContext();
   const { currentConference } = useConference();
   //const { conferencesList } = useConferencesList();
