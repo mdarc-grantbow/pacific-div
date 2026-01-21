@@ -166,7 +166,7 @@ vi.mock('@assets/exhibitors_1764883755395.png', () => ({
 
 // Mock TanStack Query
 vi.mock('@tanstack/react-query', async (importOriginal) => {
-  const actual = await importOriginal();
+  const actual = await importOriginal() as Record<string, unknown>;
   return {
     ...actual,
     useQuery: vi.fn(() => ({
