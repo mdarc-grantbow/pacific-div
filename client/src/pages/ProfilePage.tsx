@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/useToast";
 import { useAuthContext } from "@/hooks/useAuth";
 import { useConference, Conference } from "@/hooks/useConference";
 import { ConferenceSelectorDialog } from "@/components/ConferenceSelector";

@@ -4,7 +4,7 @@ import { useAuthContext } from "@/hooks/useAuth";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/useToast";
 
 export default function AdminConference() {
   const { currentConference, setCurrentConference } = useConference();

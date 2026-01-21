@@ -4,7 +4,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import PrizesPage from './PrizesPage';
 
 // Mock the toast hook
-vi.mock('@/hooks/use-toast', () => ({
+vi.mock('@/hooks/useToast', () => ({
   useToast: () => ({
     toasts: [],
     toast: vi.fn(),

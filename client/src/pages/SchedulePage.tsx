@@ -12,7 +12,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useAuthContext } from "@/hooks/useAuth";
 import { useConference } from "@/hooks/useConference";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/useToast";
 import type { Session } from "@shared/schema";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ConferenceSelectorDialog } from "@/components/ConferenceSelector";
