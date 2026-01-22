@@ -1,7 +1,7 @@
 import React from "react";
 import { Switch, Route, useLocation } from "wouter";
 import { queryClient } from "./lib/queryClient";
-import { QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider, useQuery } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useEffect, useState } from "react";
@@ -50,21 +50,26 @@ function Router() {
     }
   }, [conferencesList]);
 
-  // Fetch conferences list from API on mount
+  // Fetch conferences list from API using React Query
+  const { data: conferencesData, error: conferencesError } = useQuery<Conference[]>({
+    queryKey: ['/api/conferences'],
+    staleTime: 5 * 60 * 1000,
+    retry: 2,
+  });
+
+  // Update conferencesList state when query data changes
   useEffect(() => {
-    const fetchConferences = async () => {
-      try {
-        const response = await fetch("/api/conferences");
-        if (response.ok) {
-          const data = await response.json();
-          setConferencesList(data);
-        }
-      } catch (err) {
-        console.error("Failed to fetch conferences:", err);
-      }
-    };
-    fetchConferences();
-  }, []);
+    if (conferencesData && conferencesData.length > 0) {
+      setConferencesList(conferencesData);
+    }
+  }, [conferencesData]);
+
+  // Log errors for debugging (without overwriting existing data)
+  useEffect(() => {
+    if (conferencesError) {
+      console.error("Failed to fetch conferences:", conferencesError);
+    }
+  }, [conferencesError]);
 
   // Apply runtime branding (CSS variables + favicon)
   useEffect(() => {
