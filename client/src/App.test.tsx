@@ -119,6 +119,19 @@ vi.mock('@/components/BottomNav', () => ({
   default: () => <div data-testid="bottom-nav">Bottom Nav</div>,
 }));
 
+// Mock TanStack Query to prevent actual API calls during tests
+vi.mock('@tanstack/react-query', async (importOriginal) => {
+  const actual = await importOriginal() as Record<string, unknown>;
+  return {
+    ...actual,
+    useQuery: vi.fn(() => ({
+      isLoading: false,
+      data: undefined,
+      error: null,
+    })),
+  };
+});
+
 // Setup localStorage mock
 const localStorageMock = (() => {
   let store: Record<string, string> = {};

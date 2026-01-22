@@ -56,6 +56,19 @@ vi.mock('@assets/exhibitors_1764883755395.png', () => ({
   default: 'mocked-exhibitors-map.png',
 }));
 
+// Mock TanStack Query to prevent actual API calls during tests
+vi.mock('@tanstack/react-query', async (importOriginal) => {
+  const actual = await importOriginal() as Record<string, unknown>;
+  return {
+    ...actual,
+    useQuery: vi.fn(() => ({
+      isLoading: false,
+      data: undefined,
+      error: null,
+    })),
+  };
+});
+
 describe('MapPage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
