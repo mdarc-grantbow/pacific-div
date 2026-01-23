@@ -7,6 +7,7 @@ export interface Conference {
   location: string;
   startDate: string;
   endDate: string;
+  timezone: string;
   slug: string;
   division: string;
   gridSquare: string;
@@ -43,6 +44,7 @@ const DEFAULT_CONFERENCE: Conference = {
   location: 'San Ramon, CA',
   startDate: '2025-10-10',
   endDate: '2025-10-12',
+  timezone: 'America/Los_Angeles',
   slug: 'pacificon-2025',
   division: 'Pacific',
   isActive: true,

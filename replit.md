@@ -57,6 +57,13 @@ Preferred communication style: Simple, everyday language.
 **Data Models**:
 - User profiles with amateur radio call signs and license information
 - Conference sessions with scheduling, speaker, and category data
+- Each conference has its own timezone field - all dates and times throughout the app are displayed in the conference's local timezone (not the user's timezone)
+
+**Timezone Handling**:
+- Conference dates/times are stored in UTC in the database
+- The `timezone` field on each conference (e.g., 'America/Los_Angeles') determines how dates are displayed
+- Use `formatDateInTimezone()` and `formatDateRangeInTimezone()` utilities from `client/src/lib/dateUtils.ts` for consistent date formatting
+- This ensures attendees see correct local times regardless of their device's timezone setting
 - Vendor booth information
 - Prize tracking and claiming
 - Radio contact frequencies and technical specifications

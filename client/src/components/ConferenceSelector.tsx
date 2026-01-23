@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Calendar, ChevronDown } from "lucide-react";
+import { formatDateInTimezone } from "@/lib/dateUtils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -180,8 +181,8 @@ export default function ConferenceSelector({ onSelect }: ConferenceSelectorProps
                       </CardTitle>
                       <CardDescription className="flex items-center gap-2">
                         <Calendar className="h-4 w-4" />
-                        {new Date(conference.startDate).toLocaleDateString()} -{" "}
-                        {new Date(conference.endDate).toLocaleDateString()}
+                        {formatDateInTimezone(conference.startDate, conference.timezone)} -{" "}
+                        {formatDateInTimezone(conference.endDate, conference.timezone)}
                       </CardDescription>
                       <CardDescription className="mt-2">
                         {conference.location}
