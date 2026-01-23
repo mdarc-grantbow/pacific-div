@@ -20,6 +20,8 @@ export default function MapPage() {
   const { currentConference } = useConference();
 
   const venueName = currentConference?.location ?? 'San Ramon Marriott';
+  const venueAddress = currentConference?.locationAddress ?? '2600 Bishop Dr, San Ramon, CA 94583';
+  const googleMapsUrl = `https://www.google.com/maps?q=${encodeURIComponent(venueAddress)}&output=embed`;
 
   return (
     <div className="flex flex-col h-full">
@@ -82,6 +84,22 @@ export default function MapPage() {
             data-testid="img-exhibitors-map"
           />
           <p className="text-xs text-muted-foreground text-center mt-2">Exhibit Space Layout</p>
+        </Card>
+
+        <Card className="p-2 mt-4 bg-muted/50">
+          <iframe
+            src={googleMapsUrl}
+            width="100%"
+            height="300"
+            style={{ border: 0 }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            className="rounded-md"
+            title="Venue Location"
+            data-testid="iframe-google-map"
+          />
+          <p className="text-xs text-muted-foreground text-center mt-2">{venueAddress}</p>
         </Card>
       </main>
     </div>
