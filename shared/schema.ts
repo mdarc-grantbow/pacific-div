@@ -16,6 +16,7 @@ export const conferences = pgTable("conferences", {
   gridSquare: text("grid_square"),
   gps: text("gps"),
   locationAddress: text("location_address"),
+  timezone: text("timezone").default("America/Los_Angeles"),
   directionsHtml: text("directions_html"),
   // Branding
   logoUrl: varchar("logo_url"),

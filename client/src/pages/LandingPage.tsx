@@ -6,6 +6,7 @@ import { Link } from "wouter";
 import { useAuthContext } from "@/hooks/useAuth";
 import { useConference } from "@/hooks/useConference";
 import { ConferenceSelectorDialog } from "@/components/ConferenceSelector";
+import { formatDateRangeInTimezone } from "@/lib/dateUtils";
 
 const featureCards = [
   {
@@ -72,7 +73,7 @@ export default function LandingPage() {
           </h1>
           <p className="text-muted-foreground text-lg mb-6" data-testid="text-hero-description">
             {currentConference
-              ? `${currentConference.location} • ${new Date(currentConference.startDate).toLocaleDateString()} - ${new Date(currentConference.endDate).toLocaleDateString()}`
+              ? `${currentConference.location} • ${formatDateRangeInTimezone(currentConference.startDate, currentConference.endDate, currentConference.timezone ?? 'America/Los_Angeles')}`
               : 'Your companion app for the conference.'}
           </p>
         </div>

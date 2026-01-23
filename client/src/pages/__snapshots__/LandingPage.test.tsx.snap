@@ -80,7 +80,7 @@ exports[`LandingPage > matches snapshot 1`] = `
           class="text-muted-foreground text-lg mb-6"
           data-testid="text-hero-description"
         >
-          Test City, CA • 10/10/2025 - 10/12/2025
+          Test City, CA • 10/9/2025 - 10/11/2025
         </p>
       </div>
       <div

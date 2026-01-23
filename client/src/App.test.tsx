@@ -19,6 +19,7 @@ const { mockConference } = vi.hoisted(() => {
       gridSquare: 'CM87us',
       gps: '37.7629351,-121.9674592',
       locationAddress: '123 Test Street, Test City, CA 12345',
+      timezone: 'America/Los_Angeles',
       logoUrl: 'https://example.com/logo.png',
       faviconUrl: '/favicon.ico',
       primaryColor: '#1e40af',
