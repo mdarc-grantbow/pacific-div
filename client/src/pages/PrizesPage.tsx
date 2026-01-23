@@ -78,7 +78,7 @@ export default function PrizesPage() {
       )}
 
       <main className="flex-1 overflow-y-auto pb-20">
-        <Tabs defaultValue="door" className="w-full">
+        <Tabs defaultValue="all" className="w-full">
           <div className="sticky top-0 z-30 bg-background border-b border-border">
             <TabsList className="w-full justify-start rounded-none h-12 bg-transparent p-0">
               <TabsTrigger
@@ -171,11 +171,6 @@ export default function PrizesPage() {
           </TabsContent>
 
           <TabsContent value="thunting" className="px-4 py-4 mt-0">
-            <div className="mb-4">
-              <h2 className="text-base font-medium text-foreground mb-1">Hunt #1 Results</h2>
-              <p className="text-sm text-muted-foreground">Saturday, 2:00 PM</p>
-            </div>
-
             {winnersLoading ? (
               <div className="space-y-3">
                 {[1, 2, 3, 4].map((i) => (

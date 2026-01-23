@@ -19,6 +19,9 @@ export default function VenuePage() {
   const { isAuthenticated } = useAuthContext();
   const { currentConference } = useConference();
   //const { conferencesList } = useConferencesList();
+  const venueName = currentConference?.location ?? 'San Ramon Marriott';
+  const venueAddress = currentConference?.locationAddress ?? '2600 Bishop Dr, San Ramon, CA 94583';
+  const googleMapsUrl = `https://www.google.com/maps?q=${encodeURIComponent(venueAddress)}&output=embed`;
 
   const { data: userProfile } = useQuery<UserProfile>({
     queryKey: ['/api/profile'],
@@ -129,10 +132,6 @@ export default function VenuePage() {
                   <div key={i} className="h-24 bg-muted animate-pulse rounded" />
                 ))}
               </div>
-            ) : venueInfo.length === 0 ? (
-              <div className="text-center py-8">
-                <p className="text-muted-foreground">No venue information available</p>
-              </div>
             ) : (
               <div className="space-y-3">
                 {venueInfo.map((info) => (
@@ -170,7 +169,7 @@ export default function VenuePage() {
               </div>
 
               {currentConference?.directionsHtml && (
-                <div 
+                <div
                   className="mb-4 prose prose-sm dark:prose-invert max-w-none [&_h4]:text-sm [&_h4]:font-medium [&_h4]:text-foreground [&_h4]:mb-2 [&_ol]:text-sm [&_ol]:text-muted-foreground [&_ol]:space-y-1 [&_ol]:list-decimal [&_ol]:list-inside [&_li]:text-sm"
                   dangerouslySetInnerHTML={{ __html: currentConference.directionsHtml }}
                   data-testid="directions-html"
@@ -179,13 +178,14 @@ export default function VenuePage() {
 
               <div className="rounded-md overflow-hidden border border-border mb-3">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3156.8!2d-121.965!3d37.763!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808ff2e66c2b0f0d%3A0x2e1c4f0c9b7c8c8d!2sSan%20Ramon%20Marriott!5e0!3m2!1sen!2sus!4v1"
+                  src={googleMapsUrl}
                   width="100%"
-                  height="200"
+                  height="300px"
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  title="San Ramon Marriott Map"
+                  className="rounded-md"
+                  title={venueName}
                   data-testid="map-iframe"
                 />
               </div>

@@ -106,11 +106,11 @@ exports[`PrizesPage > matches snapshot 1`] = `
           >
             <button
               aria-controls="radix-:rg:-content-all"
-              aria-selected="false"
+              aria-selected="true"
               class="inline-flex items-center justify-center whitespace-nowrap px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
               data-orientation="horizontal"
               data-radix-collection-item=""
-              data-state="inactive"
+              data-state="active"
               data-testid="tab-all-prizes"
               id="radix-:rg:-trigger-all"
               role="tab"
@@ -121,11 +121,11 @@ exports[`PrizesPage > matches snapshot 1`] = `
             </button>
             <button
               aria-controls="radix-:rg:-content-door"
-              aria-selected="true"
+              aria-selected="false"
               class="inline-flex items-center justify-center whitespace-nowrap px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
               data-orientation="horizontal"
               data-radix-collection-item=""
-              data-state="active"
+              data-state="inactive"
               data-testid="tab-door-prizes"
               id="radix-:rg:-trigger-door"
               role="tab"
@@ -155,18 +155,8 @@ exports[`PrizesPage > matches snapshot 1`] = `
           aria-labelledby="radix-:rg:-trigger-all"
           class="ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 px-4 py-4 mt-0"
           data-orientation="horizontal"
-          data-state="inactive"
-          hidden=""
-          id="radix-:rg:-content-all"
-          role="tabpanel"
-          tabindex="0"
-        />
-        <div
-          aria-labelledby="radix-:rg:-trigger-door"
-          class="ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 px-4 py-4 mt-0"
-          data-orientation="horizontal"
           data-state="active"
-          id="radix-:rg:-content-door"
+          id="radix-:rg:-content-all"
           role="tabpanel"
           style="animation-duration: 0s;"
           tabindex="0"
@@ -177,10 +167,20 @@ exports[`PrizesPage > matches snapshot 1`] = `
             <p
               class="text-muted-foreground"
             >
-              No door prizes announced yet
+              No prizes announced yet
             </p>
           </div>
         </div>
+        <div
+          aria-labelledby="radix-:rg:-trigger-door"
+          class="ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 px-4 py-4 mt-0"
+          data-orientation="horizontal"
+          data-state="inactive"
+          hidden=""
+          id="radix-:rg:-content-door"
+          role="tabpanel"
+          tabindex="0"
+        />
         <div
           aria-labelledby="radix-:rg:-trigger-thunting"
           class="ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 px-4 py-4 mt-0"

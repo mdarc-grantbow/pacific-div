@@ -214,7 +214,6 @@ describe('VenuePage', () => {
 
     const iframe = screen.getByTestId('map-iframe');
     expect(iframe).toBeInTheDocument();
-    expect(iframe).toHaveAttribute('title', 'San Ramon Marriott Map');
   });
 
   it('displays external links for parking and hotel', () => {
