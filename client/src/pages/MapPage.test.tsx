@@ -120,29 +120,6 @@ describe('MapPage', () => {
     expect(screen.getByText('Conference Rooms')).toBeInTheDocument();
   });
 
-  it('displays hotel address information', () => {
-    render(<MapPage />);
-
-    expect(screen.getByText('Hotel Address')).toBeInTheDocument();
-    expect(screen.getByText('123 Test Street, Test City, CA 12345')).toBeInTheDocument();
-  });
-
-  it('displays GPS and grid square information', () => {
-    render(<MapPage />);
-
-    expect(screen.getByText(/37.7629351,-121.9674592/)).toBeInTheDocument();
-    expect(screen.getByText(/CM87us/)).toBeInTheDocument();
-  });
-
-  it('displays link to Google Maps', () => {
-    render(<MapPage />);
-
-    const mapsLink = screen.getByTestId('link-maps');
-    expect(mapsLink).toBeInTheDocument();
-    expect(mapsLink).toHaveAttribute('href', expect.stringContaining('maps.google.com'));
-    expect(mapsLink).toHaveAttribute('target', '_blank');
-  });
-
   it('matches snapshot', () => {
     const { asFragment } = render(<MapPage />);
     expect(asFragment()).toMatchSnapshot();

@@ -20,9 +20,6 @@ export default function MapPage() {
   const { currentConference } = useConference();
 
   const venueName = currentConference?.location ?? 'San Ramon Marriott';
-  const venueAddress = currentConference?.locationAddress ?? '2600 Bishop Dr, San Ramon, CA 94583';
-  const gridSquare = currentConference?.gridSquare ?? 'CM87us';
-  const gps = currentConference?.gps ?? '37.7631, -121.9736';
 
   return (
     <div className="flex flex-col h-full">
@@ -76,25 +73,6 @@ export default function MapPage() {
             })}
           </div>
         </div>
-
-        <Card className="p-4 mb-4">
-          <h3 className="font-medium text-foreground mb-2">Hotel Address</h3>
-          <p className="text-sm text-muted-foreground mb-1">{venueName}</p>
-          <p className="text-sm text-muted-foreground mb-2">{venueAddress}</p>
-          <div className="text-xs text-muted-foreground bg-muted/50 p-2 rounded mb-3">
-            <p><span className="font-medium">GPS:</span> {gps}</p>
-            <p><span className="font-medium">Grid Square:</span> {gridSquare}</p>
-          </div>
-          <a
-            href={`https://maps.google.com/?q=${encodeURIComponent(venueAddress)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm text-primary hover:underline"
-            data-testid="link-maps"
-          >
-            Open in Maps
-          </a>
-        </Card>
 
         <Card className="p-2 bg-muted/50">
           <img
