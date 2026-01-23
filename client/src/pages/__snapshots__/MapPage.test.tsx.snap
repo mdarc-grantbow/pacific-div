@@ -339,54 +339,6 @@ exports[`MapPage > matches snapshot 1`] = `
         </div>
       </div>
       <div
-        class="shadcn-card rounded-xl border bg-card border-card-border text-card-foreground shadow-sm p-4 mb-4"
-      >
-        <h3
-          class="font-medium text-foreground mb-2"
-        >
-          Hotel Address
-        </h3>
-        <p
-          class="text-sm text-muted-foreground mb-1"
-        >
-          Test Marriott
-        </p>
-        <p
-          class="text-sm text-muted-foreground mb-2"
-        >
-          123 Test Street, Test City, CA 12345
-        </p>
-        <div
-          class="text-xs text-muted-foreground bg-muted/50 p-2 rounded mb-3"
-        >
-          <p>
-            <span
-              class="font-medium"
-            >
-              GPS:
-            </span>
-             37.7629351,-121.9674592
-          </p>
-          <p>
-            <span
-              class="font-medium"
-            >
-              Grid Square:
-            </span>
-             CM87us
-          </p>
-        </div>
-        <a
-          class="text-sm text-primary hover:underline"
-          data-testid="link-maps"
-          href="https://maps.google.com/?q=123%20Test%20Street%2C%20Test%20City%2C%20CA%2012345"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          Open in Maps
-        </a>
-      </div>
-      <div
         class="shadcn-card rounded-xl border border-card-border text-card-foreground shadow-sm p-2 bg-muted/50"
       >
         <img
@@ -399,6 +351,27 @@ exports[`MapPage > matches snapshot 1`] = `
           class="text-xs text-muted-foreground text-center mt-2"
         >
           Exhibit Space Layout
+        </p>
+      </div>
+      <div
+        class="shadcn-card rounded-xl border border-card-border text-card-foreground shadow-sm p-2 mt-4 bg-muted/50"
+      >
+        <iframe
+          allowfullscreen=""
+          class="rounded-md"
+          data-testid="iframe-google-map"
+          height="300"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          src="https://www.google.com/maps?q=123%20Test%20Street%2C%20Test%20City%2C%20CA%2012345&output=embed"
+          style="border: 0px;"
+          title="Venue Location"
+          width="100%"
+        />
+        <p
+          class="text-xs text-muted-foreground text-center mt-2"
+        >
+          123 Test Street, Test City, CA 12345
         </p>
       </div>
     </main>
