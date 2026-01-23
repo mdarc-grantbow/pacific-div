@@ -120,6 +120,22 @@ describe('MapPage', () => {
     expect(screen.getByText('Conference Rooms')).toBeInTheDocument();
   });
 
+  it('displays Google Maps iframe with venue address', () => {
+    render(<MapPage />);
+
+    const mapIframe = screen.getByTestId('iframe-google-map');
+    expect(mapIframe).toBeInTheDocument();
+    expect(mapIframe).toHaveAttribute('title', 'Venue Location');
+    expect(mapIframe).toHaveAttribute('src', expect.stringContaining('google.com/maps'));
+    expect(mapIframe).toHaveAttribute('src', expect.stringContaining(encodeURIComponent('123 Test Street, Test City, CA 12345')));
+  });
+
+  it('displays venue address below the map', () => {
+    render(<MapPage />);
+
+    expect(screen.getByText('123 Test Street, Test City, CA 12345')).toBeInTheDocument();
+  });
+
   it('matches snapshot', () => {
     const { asFragment } = render(<MapPage />);
     expect(asFragment()).toMatchSnapshot();
