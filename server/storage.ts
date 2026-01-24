@@ -10,6 +10,7 @@ import {
   radioContacts,
   venueInfo,
   surveyResponses,
+  conferenceImages,
   type Conference,
   type User,
   type UpsertUser,
@@ -21,7 +22,8 @@ import {
   type RadioContact,
   type VenueInfo,
   type SurveyResponse,
-  type UserProfile
+  type UserProfile,
+  type ConferenceImage
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, desc, asc } from "drizzle-orm";
@@ -63,6 +65,9 @@ export interface IStorage {
   getSurveyResponse(userId: string, surveyType: string): Promise<SurveyResponse | undefined>;
 
   getUserProfile(userId: string): Promise<UserProfile>;
+
+  // Conference Images
+  getConferenceImages(conferenceId: string, imageType?: string): Promise<ConferenceImage[]>;
 
   seedDatabase(): Promise<void>;
 }
@@ -415,6 +420,24 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
+  async getConferenceImages(conferenceId: string, imageType?: string): Promise<ConferenceImage[]> {
+    try {
+      return await withRetry(async () => {
+        if (imageType) {
+          return await db.select().from(conferenceImages)
+            .where(and(eq(conferenceImages.conferenceId, conferenceId), eq(conferenceImages.imageType, imageType)))
+            .orderBy(asc(conferenceImages.displayOrder));
+        }
+        return await db.select().from(conferenceImages)
+          .where(eq(conferenceImages.conferenceId, conferenceId))
+          .orderBy(asc(conferenceImages.displayOrder));
+      });
+    } catch (error) {
+      if (error instanceof DatabaseError) throw error;
+      handleDatabaseError(error, "getConferenceImages");
+    }
+  }
+
   async seedDatabase(): Promise<void> {
     try {
       // First, seed conferences independently (so it works even if sessions table has issues)
@@ -706,6 +729,71 @@ export class DatabaseStorage implements IStorage {
             registrationOpen: true,
           },
         ]);
+      });
+
+      // Seed conference images
+      await withRetry(async () => {
+        const existingImages = await db.select().from(conferenceImages).limit(1);
+        if (existingImages.length > 0) {
+          return;
+        }
+
+        const [pacificonConf] = await db.select().from(conferences).where(eq(conferences.slug, "pacificon-2025")).limit(1);
+        if (pacificonConf) {
+          await db.insert(conferenceImages).values([
+            {
+              conferenceId: pacificonConf.id,
+              imageType: "venue-map",
+              imagePath: "venue_1764883580906.jpg",
+              caption: "Pacificon Hotel Layout",
+              displayOrder: 1,
+            },
+            {
+              conferenceId: pacificonConf.id,
+              imageType: "exhibitor-map",
+              imagePath: "exhibitors_1764883755395.png",
+              caption: "Exhibit Space Layout",
+              displayOrder: 1,
+            },
+          ]);
+          console.log("Seeded Pacificon 2025 conference images");
+        }
+
+        // Seed HamCation 2026 conference and images if not exists
+        let [hamcationConf] = await db.select().from(conferences).where(eq(conferences.slug, "hamcation-2026")).limit(1);
+        if (!hamcationConf) {
+          const [newHamcation] = await db.insert(conferences).values({
+            name: "HamCation",
+            year: 2026,
+            location: "Central Florida Fairgrounds",
+            startDate: new Date("2026-02-13"),
+            endDate: new Date("2026-02-15T23:59:59"),
+            slug: "hamcation-2026",
+            division: "Southeastern",
+            gridSquare: "EL98",
+            gps: "28.5383, -81.3792",
+            locationAddress: "4603 W Colonial Dr, Orlando, FL 32808",
+            timezone: "America/New_York",
+            primaryColor: "#dc2626",
+            accentColor: "#fbbf24",
+            isActive: true,
+          }).returning();
+          hamcationConf = newHamcation;
+          console.log("Seeded HamCation 2026 conference");
+        }
+        
+        if (hamcationConf) {
+          await db.insert(conferenceImages).values([
+            {
+              conferenceId: hamcationConf.id,
+              imageType: "venue-map",
+              imagePath: "HamCation-Map.jpg",
+              caption: "HamCation Venue Map",
+              displayOrder: 1,
+            },
+          ]);
+          console.log("Seeded HamCation 2026 conference images");
+        }
       });
 
       await seedScheduleData();

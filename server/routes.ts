@@ -420,6 +420,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Conference Images (for maps, banners, etc.)
+  app.get("/api/conferences/:conferenceSlug/images", async (req, res) => {
+    try {
+      const conference = await storage.getConferenceBySlug(req.params.conferenceSlug);
+      if (!conference) {
+        return res.status(404).json({ error: "Conference not found" });
+      }
+      const imageType = req.query.type as string | undefined;
+      const images = await storage.getConferenceImages(conference.id, imageType);
+      res.json(images);
+    } catch (error) {
+      handleApiError(res, error, "Failed to fetch conference images");
+    }
+  });
+
   // Health check endpoint
   app.get("/api/health", async (_req, res) => {
     try {

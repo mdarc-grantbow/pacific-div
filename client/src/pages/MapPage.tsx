@@ -1,12 +1,12 @@
-import React from "react";
 import { Bell, MapPin, Radio, Store, Users } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Link } from "wouter";
 import { useConference } from "@/hooks/useConference";
-import venueMapImage from "@assets/venue_1764883580906.jpg";
-import exhibitorsMapImage from "@assets/exhibitors_1764883755395.png";
 import { ConferenceSelectorDialog } from "@/components/ConferenceSelector";
 import { Button } from "@/components/ui/button";
+import { useQuery } from "@tanstack/react-query";
+import type { ConferenceImage } from "@shared/schema";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const venueLocations = [
   { id: "1", name: "Registration Desk", icon: Users, color: "bg-blue-500" },
@@ -16,10 +16,30 @@ const venueLocations = [
   { id: "5", name: "Conference Rooms", icon: MapPin, color: "bg-green-500" },
 ];
 
+const imageModules = import.meta.glob('/attached_assets/*', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
+
+function getImageUrl(imagePath: string): string {
+  const assetKey = `/attached_assets/${imagePath}`;
+  return imageModules[assetKey] || '';
+}
+
 export default function MapPage() {
   const { currentConference } = useConference();
   const venueName = currentConference?.location ?? 'San Ramon Marriott';
-  const venueAddress = currentConference?.locationAddress ?? '2600 Bishop Dr, San Ramon, CA 94583';
+  const conferenceSlug = currentConference?.slug ?? 'pacificon-2025';
+
+  const { data: images, isLoading } = useQuery<ConferenceImage[]>({
+    queryKey: ['/api/conferences', conferenceSlug, 'images'],
+    queryFn: async () => {
+      const res = await fetch(`/api/conferences/${conferenceSlug}/images`);
+      if (!res.ok) throw new Error('Failed to fetch images');
+      return res.json();
+    },
+    enabled: !!conferenceSlug,
+  });
+
+  const venueMapImages = images?.filter(img => img.imageType === 'venue-map') ?? [];
+  const exhibitorMapImages = images?.filter(img => img.imageType === 'exhibitor-map') ?? [];
 
   return (
     <div className="flex flex-col h-full">
@@ -40,15 +60,26 @@ export default function MapPage() {
       </header>
 
       <main className="flex-1 overflow-y-auto px-4 py-4 pb-20">
-        <Card className="p-2 mb-4 bg-muted/50">
-          <img
-            src={venueMapImage}
-            alt="Pacificon Hotel Layout Map"
-            className="w-full rounded-md"
-            data-testid="img-venue-map"
-          />
-          <p className="text-xs text-muted-foreground text-center mt-2">Pacificon Hotel Layout</p>
-        </Card>
+        {isLoading ? (
+          <Card className="p-2 mb-4 bg-muted/50">
+            <Skeleton className="w-full h-48 rounded-md" />
+            <Skeleton className="h-4 w-32 mx-auto mt-2" />
+          </Card>
+        ) : venueMapImages.length > 0 ? (
+          venueMapImages.map((img) => (
+            <Card key={img.id} className="p-2 mb-4 bg-muted/50">
+              <img
+                src={getImageUrl(img.imagePath)}
+                alt={img.caption || "Venue Map"}
+                className="w-full rounded-md"
+                data-testid={`img-venue-map-${img.id}`}
+              />
+              {img.caption && (
+                <p className="text-xs text-muted-foreground text-center mt-2">{img.caption}</p>
+              )}
+            </Card>
+          ))
+        ) : null}
 
         <div className="mb-4">
           <h2 className="text-base font-medium text-foreground mb-3">Key Locations</h2>
@@ -74,15 +105,26 @@ export default function MapPage() {
           </div>
         </div>
 
-        <Card className="p-2 bg-muted/50">
-          <img
-            src={exhibitorsMapImage}
-            alt="Pacificon Exhibit Space Layout"
-            className="w-full rounded-md"
-            data-testid="img-exhibitors-map"
-          />
-          <p className="text-xs text-muted-foreground text-center mt-2">Exhibit Space Layout</p>
-        </Card>
+        {isLoading ? (
+          <Card className="p-2 bg-muted/50">
+            <Skeleton className="w-full h-48 rounded-md" />
+            <Skeleton className="h-4 w-32 mx-auto mt-2" />
+          </Card>
+        ) : exhibitorMapImages.length > 0 ? (
+          exhibitorMapImages.map((img) => (
+            <Card key={img.id} className="p-2 mb-4 bg-muted/50">
+              <img
+                src={getImageUrl(img.imagePath)}
+                alt={img.caption || "Exhibitor Map"}
+                className="w-full rounded-md"
+                data-testid={`img-exhibitor-map-${img.id}`}
+              />
+              {img.caption && (
+                <p className="text-xs text-muted-foreground text-center mt-2">{img.caption}</p>
+              )}
+            </Card>
+          ))
+        ) : null}
       </main>
     </div>
   );

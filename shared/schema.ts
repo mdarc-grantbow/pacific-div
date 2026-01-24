@@ -205,3 +205,17 @@ export const surveyResponses = pgTable("survey_responses", {
 export const insertSurveyResponseSchema = createInsertSchema(surveyResponses).omit({ id: true });
 export type InsertSurveyResponse = z.infer<typeof insertSurveyResponseSchema>;
 export type SurveyResponse = typeof surveyResponses.$inferSelect;
+
+// Conference Images table (for maps, banners, gallery images, etc.)
+export const conferenceImages = pgTable("conference_images", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  conferenceId: varchar("conference_id").notNull(),
+  imageType: text("image_type").notNull(), // 'venue-map' | 'exhibitor-map' | 'banner' | 'gallery' etc.
+  imagePath: text("image_path").notNull(), // path relative to assets, e.g. 'venue_1764883580906.jpg'
+  caption: text("caption"),
+  displayOrder: integer("display_order").default(0),
+});
+
+export const insertConferenceImageSchema = createInsertSchema(conferenceImages).omit({ id: true });
+export type InsertConferenceImage = z.infer<typeof insertConferenceImageSchema>;
+export type ConferenceImage = typeof conferenceImages.$inferSelect;
