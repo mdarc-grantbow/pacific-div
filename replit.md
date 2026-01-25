@@ -135,3 +135,19 @@ Preferred communication style: Simple, everyday language.
 - Auth flow continues gracefully if user upsert fails (non-fatal)
 - Health check endpoint (/api/health) reports database connection status
 - Server startup handles auth and seeding failures without crashing
+
+## Testing
+
+**Unit Tests (Vitest)**:
+- Run with `npm run test`
+- Configuration in vite.config.ts with jsdom environment
+- Setup file at `client/src/setupTests.ts`
+- Tests located alongside components (*.test.tsx files)
+
+**End-to-End Tests (Playwright)**:
+- Run with `npx playwright test`
+- Configuration in `playwright.config.ts`
+- Tests located in `e2e/` directory
+- Uses Chromium browser with headless mode
+- Server auto-started on port 5000 for tests
+- System dependencies: glib, nss, nspr, mesa, pango, etc. (installed via Nix)
