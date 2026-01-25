@@ -100,7 +100,7 @@ exports[`MapPage > matches snapshot 1`] = `
           alt="Test Hotel Layout"
           class="w-full rounded-md"
           data-testid="img-venue-map-img-1"
-          src=""
+          src="/@fs/home/runner/workspace/attached_assets/venue_1764883580906.jpg"
         />
         <p
           class="text-xs text-muted-foreground text-center mt-2"
@@ -345,7 +345,7 @@ exports[`MapPage > matches snapshot 1`] = `
           alt="Test Exhibit Space Layout"
           class="w-full rounded-md"
           data-testid="img-exhibitor-map-img-2"
-          src=""
+          src="/@fs/home/runner/workspace/attached_assets/exhibitors_1764883755395.png"
         />
         <p
           class="text-xs text-muted-foreground text-center mt-2"

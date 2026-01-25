@@ -5,8 +5,8 @@ import { useAuthContext } from "@/hooks/useAuth";
 const navItems = [
   { path: "/schedule", icon: Calendar, label: "Schedule" },
   { path: "/map", icon: Map, label: "Map" },
-  { path: "/venue", icon: Building2, label: "Venue" },
   { path: "/prizes", icon: Award, label: "Prizes" },
+  { path: "/venue", icon: Building2, label: "Venue" },
 ];
 
 export default function BottomNav() {
