@@ -97,15 +97,15 @@ exports[`MapPage > matches snapshot 1`] = `
         class="shadcn-card rounded-xl border border-card-border text-card-foreground shadow-sm p-2 mb-4 bg-muted/50"
       >
         <img
-          alt="Pacificon Hotel Layout Map"
+          alt="Test Hotel Layout"
           class="w-full rounded-md"
-          data-testid="img-venue-map"
-          src="mocked-venue-map.jpg"
+          data-testid="img-venue-map-img-1"
+          src=""
         />
         <p
           class="text-xs text-muted-foreground text-center mt-2"
         >
-          Pacificon Hotel Layout
+          Test Hotel Layout
         </p>
       </div>
       <div
@@ -339,18 +339,18 @@ exports[`MapPage > matches snapshot 1`] = `
         </div>
       </div>
       <div
-        class="shadcn-card rounded-xl border border-card-border text-card-foreground shadow-sm p-2 bg-muted/50"
+        class="shadcn-card rounded-xl border border-card-border text-card-foreground shadow-sm p-2 mb-4 bg-muted/50"
       >
         <img
-          alt="Pacificon Exhibit Space Layout"
+          alt="Test Exhibit Space Layout"
           class="w-full rounded-md"
-          data-testid="img-exhibitors-map"
-          src="mocked-exhibitors-map.png"
+          data-testid="img-exhibitor-map-img-2"
+          src=""
         />
         <p
           class="text-xs text-muted-foreground text-center mt-2"
         >
-          Exhibit Space Layout
+          Test Exhibit Space Layout
         </p>
       </div>
     </main>

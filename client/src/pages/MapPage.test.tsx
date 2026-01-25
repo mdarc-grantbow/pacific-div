@@ -3,8 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import MapPage from './MapPage';
 
-// Use vi.hoisted to define mock data
-const { mockConference } = vi.hoisted(() => {
+const { mockConference, mockImages } = vi.hoisted(() => {
   return {
     mockConference: {
       id: 'test-conference-2025',
@@ -25,17 +24,33 @@ const { mockConference } = vi.hoisted(() => {
       primaryColor: '#1e40af',
       accentColor: '#f97316',
     },
+    mockImages: [
+      {
+        id: 'img-1',
+        conferenceId: 'test-conference-2025',
+        imageType: 'venue-map',
+        imagePath: 'venue_1764883580906.jpg',
+        caption: 'Test Hotel Layout',
+        displayOrder: 1,
+      },
+      {
+        id: 'img-2',
+        conferenceId: 'test-conference-2025',
+        imageType: 'exhibitor-map',
+        imagePath: 'exhibitors_1764883755395.png',
+        caption: 'Test Exhibit Space Layout',
+        displayOrder: 1,
+      },
+    ],
   };
 });
 
-// Mock wouter
 vi.mock('wouter', () => ({
   Link: ({ children, href }: { children: React.ReactNode; href: string }) => (
     <a href={href}>{children}</a>
   ),
 }));
 
-// Mock the useConference hook
 vi.mock('@/hooks/useConference', () => ({
   useConference: vi.fn(() => ({
     currentConference: mockConference,
@@ -43,28 +58,17 @@ vi.mock('@/hooks/useConference', () => ({
   })),
 }));
 
-// Mock the ConferenceSelector component
 vi.mock('@/components/ConferenceSelector', () => ({
   ConferenceSelectorDialog: () => <div data-testid="conference-selector">Conference Selector</div>,
 }));
 
-// Mock the image imports
-vi.mock('@assets/venue_1764883580906.jpg', () => ({
-  default: 'mocked-venue-map.jpg',
-}));
-
-vi.mock('@assets/exhibitors_1764883755395.png', () => ({
-  default: 'mocked-exhibitors-map.png',
-}));
-
-// Mock TanStack Query to prevent actual API calls during tests
 vi.mock('@tanstack/react-query', async (importOriginal) => {
   const actual = await importOriginal() as Record<string, unknown>;
   return {
     ...actual,
     useQuery: vi.fn(() => ({
       isLoading: false,
-      data: undefined,
+      data: mockImages,
       error: null,
     })),
   };
@@ -86,23 +90,25 @@ describe('MapPage', () => {
   it('displays venue name in header', () => {
     render(<MapPage />);
 
-    //expect(screen.getByText('Test Marriott')).toBeInTheDocument();
+    expect(screen.getByText('Test Marriott')).toBeInTheDocument();
   });
 
-  it('displays venue map image', () => {
+  it('displays venue map image with caption from database', () => {
     render(<MapPage />);
 
-    const venueMap = screen.getByTestId('img-venue-map');
+    const venueMap = screen.getByTestId('img-venue-map-img-1');
     expect(venueMap).toBeInTheDocument();
-    expect(venueMap).toHaveAttribute('alt', 'Pacificon Hotel Layout Map');
+    expect(venueMap).toHaveAttribute('alt', 'Test Hotel Layout');
+    expect(screen.getByText('Test Hotel Layout')).toBeInTheDocument();
   });
 
-  it('displays exhibitors map image', () => {
+  it('displays exhibitors map image with caption from database', () => {
     render(<MapPage />);
 
-    const exhibitorsMap = screen.getByTestId('img-exhibitors-map');
+    const exhibitorsMap = screen.getByTestId('img-exhibitor-map-img-2');
     expect(exhibitorsMap).toBeInTheDocument();
-    expect(exhibitorsMap).toHaveAttribute('alt', 'Pacificon Exhibit Space Layout');
+    expect(exhibitorsMap).toHaveAttribute('alt', 'Test Exhibit Space Layout');
+    expect(screen.getByText('Test Exhibit Space Layout')).toBeInTheDocument();
   });
 
   it('displays all key locations', () => {
@@ -127,27 +133,35 @@ describe('MapPage', () => {
   });
 });
 
-//describe('MapPage with custom conference', () => {
-//  it('displays custom conference location data', () => {
-//    const customConference = {
-//      ...mockConference,
-//      location: 'Custom Venue',
-//      locationAddress: '456 Custom Ave, Custom City, CA 98765',
-//      gridSquare: 'DM79xy',
-//      gps: '38.1234567,-122.9876543',
-//    };
-//
-//    const { useConference } = require('@/hooks/useConference');
-//    vi.mocked(useConference).mockReturnValue({
-//      currentConference: customConference,
-//      setCurrentConference: vi.fn(),
-//    });
-//
-//    render(<MapPage />);
-//
-//    expect(screen.getByText('Custom Venue')).toBeInTheDocument();
-//    expect(screen.getByText('456 Custom Ave, Custom City, CA 98765')).toBeInTheDocument();
-//    expect(screen.getByText(/DM79xy/)).toBeInTheDocument();
-//    expect(screen.getByText(/38.1234567,-122.9876543/)).toBeInTheDocument();
-//  });
-//});
+describe('MapPage loading state', () => {
+  it('shows skeleton loaders when loading', async () => {
+    const { useQuery } = await import('@tanstack/react-query');
+    vi.mocked(useQuery).mockReturnValue({
+      isLoading: true,
+      data: undefined,
+      error: null,
+    } as any);
+
+    render(<MapPage />);
+
+    expect(screen.getByText('Key Locations')).toBeInTheDocument();
+  });
+});
+
+describe('MapPage with no images', () => {
+  it('renders without map images when none exist', async () => {
+    const { useQuery } = await import('@tanstack/react-query');
+    vi.mocked(useQuery).mockReturnValue({
+      isLoading: false,
+      data: [],
+      error: null,
+    } as any);
+
+    render(<MapPage />);
+
+    expect(screen.getByText('Map')).toBeInTheDocument();
+    expect(screen.getByText('Key Locations')).toBeInTheDocument();
+    expect(screen.queryByTestId(/img-venue-map/)).not.toBeInTheDocument();
+    expect(screen.queryByTestId(/img-exhibitor-map/)).not.toBeInTheDocument();
+  });
+});
