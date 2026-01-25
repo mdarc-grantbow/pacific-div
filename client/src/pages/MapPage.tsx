@@ -16,11 +16,22 @@ const venueLocations = [
   { id: "5", name: "Conference Rooms", icon: MapPin, color: "bg-green-500" },
 ];
 
-const imageModules = import.meta.glob('/attached_assets/*', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
+const imageModules = import.meta.glob('../../../attached_assets/*.{jpg,jpeg,png,gif,webp}', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
+
+// Build a lookup map keyed by basename for reliable matching
+const imagesByBasename: Record<string, string> = {};
+for (const [key, url] of Object.entries(imageModules)) {
+  const basename = key.split('/').pop() || '';
+  if (basename) {
+    imagesByBasename[basename] = url;
+  }
+}
 
 function getImageUrl(imagePath: string): string {
-  const assetKey = `/attached_assets/${imagePath}`;
-  return imageModules[assetKey] || '';
+  // imagePath from DB might be just the filename or include path segments
+  const basename = imagePath.split('/').pop() || imagePath;
+  // Return bundled URL if found, otherwise fallback to static path
+  return imagesByBasename[basename] || `/attached_assets/${basename}`;
 }
 
 export default function MapPage() {
